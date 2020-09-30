@@ -1,0 +1,11 @@
+{
+  "name": "service-gui-monorepo",
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
+  "dependencies": {
+    "@changesets/cli": "^2.10.3"
+  }
+}
