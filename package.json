@@ -5,7 +5,13 @@
     "packages/*"
   ],
   "private": true,
-  "dependencies": {
-    "@changesets/cli": "^2.10.3"
+  "devDependencies": {
+    "@changesets/cli": "^2.10.3",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "scripts": {
+    "core": "yarn workspace @service-gui/core",
+    "build": "tsc -b ./tsconfig.monorepo.json"
   }
 }
