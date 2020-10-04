@@ -14,9 +14,8 @@ export const routeMap = makeRouteMap({
     },
   },
   viewService: {
-    path: "/environments/:environmentId/services/:serviceId/view",
+    path: "/services/:serviceId/view",
     params: {
-      environmentId: true,
       serviceId: true,
     },
   },

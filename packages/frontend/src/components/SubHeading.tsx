@@ -1,5 +1,4 @@
 import React, { HTMLAttributes } from "react";
-import classNames from "classnames";
 
 export const SubHeading: React.FC<HTMLAttributes<HTMLHeadingElement>> = (
   props,

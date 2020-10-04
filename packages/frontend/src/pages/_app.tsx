@@ -1,6 +1,10 @@
 import "../styles/tailwind.css";
+import classNames from "classnames";
 
-function MyApp({ Component, pageProps }) {
+// @ts-ignore
+global.classNames = classNames;
+
+function MyApp({ Component, pageProps }: any) {
   return <Component {...pageProps} />;
 }
 

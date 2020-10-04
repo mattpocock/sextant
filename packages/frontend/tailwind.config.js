@@ -9,6 +9,14 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: [
+    "responsive",
+    "group-hover",
+    "disabled",
+    "focus-within",
+    "hover",
+    "focus",
+    "active",
+  ],
   plugins: [],
 };

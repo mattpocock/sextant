@@ -1,14 +1,9 @@
-import classNames from "classnames";
 import Link from "next/link";
 import React from "react";
 import { routeMap } from "./routeMap";
 import { SubHeading } from "./SubHeading";
 
-const linkClasses = classNames(
-  "px-6 py-4 block text-gray-700 tracking-tight text-base",
-);
-
-interface EnvironmentProps {
+export interface EnvironmentProps {
   id: string;
   services?: {
     id: string;
@@ -31,7 +26,6 @@ export const Environment = (props: EnvironmentProps) => {
             <Link
               href={routeMap.viewService({
                 params: {
-                  environmentId: props.id,
                   serviceId: service.id,
                 },
               })}
