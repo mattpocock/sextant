@@ -12,6 +12,9 @@
   },
   "scripts": {
     "core": "yarn workspace @service-gui/core",
-    "build": "tsc -b ./tsconfig.monorepo.json"
+    "frontend": "yarn workspace @service-gui/frontend",
+    "fe": "yarn frontend",
+    "build": "tsc -b ./tsconfig.monorepo.json",
+    "dev": "yarn build --watch"
   }
 }

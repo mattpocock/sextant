@@ -4,9 +4,13 @@ export class DatabaseHandler {
   private database: Database;
   private save: () => Promise<void>;
 
-  constructor(database: Database, save: () => Promise<void>) {
+  constructor(database: Database, save: (database: Database) => Promise<void>) {
     this.database = database;
-    this.save = save;
+    this.save = () => save(this.database);
+  }
+
+  getDatabase(): Database {
+    return this.database;
   }
 
   /**

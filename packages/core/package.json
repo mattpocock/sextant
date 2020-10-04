@@ -1,6 +1,7 @@
 {
   "name": "@service-gui/core",
   "version": "0.0.1",
+  "main": "lib/index.js",
   "dependencies": {
     "graphql": "^15.3.0",
     "handlebars": "^4.7.6",
