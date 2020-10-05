@@ -4,7 +4,8 @@ export const TextInput: React.FC<TextareaHTMLAttributes<HTMLTextAreaElement> & {
   error?: string;
   label?: string;
   hint?: string;
-}> = ({ error, hint, label, className, ...props }) => {
+  textarea?: boolean;
+}> = ({ error, hint, label, textarea, className, ...props }) => {
   return (
     <div className={classNames(className, "focus-within:bg-gray-100 border")}>
       <div className="px-2 py-1 pb-2">
@@ -19,7 +20,8 @@ export const TextInput: React.FC<TextareaHTMLAttributes<HTMLTextAreaElement> & {
           rows={1}
           {...props}
           className={classNames(
-            "focus:outline-none bg-transparent text-gray-700 block w-full resize-y",
+            "focus:outline-none bg-transparent text-gray-700 block w-full",
+            textarea ? "resize-y" : "resize-none",
             "placeholder:text-gray-600",
           )}
         />

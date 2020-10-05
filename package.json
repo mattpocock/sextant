@@ -7,14 +7,18 @@
   "private": true,
   "devDependencies": {
     "@changesets/cli": "^2.10.3",
+    "concurrently": "^5.3.0",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "xstate-codegen": "^0.2.0"
   },
   "scripts": {
     "core": "yarn workspace @service-gui/core",
     "frontend": "yarn workspace @service-gui/frontend",
     "fe": "yarn frontend",
     "build": "tsc -b ./tsconfig.monorepo.json",
-    "dev": "yarn build --watch"
+    "dev": "yarn build --watch",
+    "codegen:machines": "xstate-codegen \"./!(node_modules)/!(node_modules)/**/**.machine.ts\" --once",
+    "postinstall": "npm run codegen:machines"
   }
 }

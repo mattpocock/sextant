@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import HeroIconX from "./icons/HeroIconX";
 import ContentEditable from "react-contenteditable";
 import HeroIconPlus from "./icons/HeroIconPlus";
@@ -54,13 +54,15 @@ const Pill = (props: {
   onChange: (value: string) => void;
   onDelete: () => void;
 }) => {
+  const [hasDrawnFocus, setHasDrawnFocus] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    if (props.value === "") {
+    if (props.value === "" && !hasDrawnFocus) {
       ref.current?.focus();
+      setHasDrawnFocus(true);
     }
-  }, [ref.current]);
+  }, [ref.current, hasDrawnFocus]);
   return (
     <div>
       <div className="inline-flex items-stretch text-sm h-8">
