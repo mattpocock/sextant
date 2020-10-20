@@ -36,6 +36,9 @@ export const sequenceDiagramMachine = Machine<
               actions: ["clearChoices", "registerNewEvent"],
               target: "idle",
             },
+            {
+              actions: ["assignFirstItemChosen"],
+            },
           ],
         },
       },
