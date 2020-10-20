@@ -13,89 +13,142 @@ export default {
 };
 
 export const Default = () => {
-  const [steps, setSteps] = useState<
-    { event: string; from: string; to: string }[]
-  >([]);
-
-  const [environments, setEnvironments] = useState<{ name: string }[]>([
+  const [sequences, setSequences] = useState<
     {
-      name: "Environment",
-    },
-  ]);
+      name: string;
+      steps: { event: string; from: string; to: string }[];
+      environments: {
+        name: string;
+      }[];
+    }[]
+  >([]);
   return (
-    <div className="space-y-6">
-      <h1 className="text-gray-800 text-xl font-bold">Create Contact</h1>
-      <div className="border-2 inline-block">
-        <h2 className="text-gray-700 font-bold text-lg px-3 py-2 border-b-2 bg-gray-100">
-          Success Case
-        </h2>
-        <div className="px-3 py-3">
-          <SequenceDiagram
-            environments={environments}
-            steps={steps}
-            onAddStep={({ index, from, to }) => {
-              setSteps(
-                produce(steps, (draft) => {
-                  draft.splice(index, 0, {
-                    from,
-                    to,
-                    event: "EVENT",
+    <div className="space-y-6 flex-col">
+      {sequences.map((sequence, sequenceIndex) => {
+        return (
+          <div className="inline-block mr-6">
+            <SequenceDiagramWrapper
+              title={sequence.name}
+              onChangeTitle={(title) => {
+                setSequences(
+                  produce(sequences, (draft) => {
+                    draft[sequenceIndex].name = title;
+                  }),
+                );
+              }}
+              onDelete={() => {
+                setSequences(
+                  produce(sequences, (draft) => {
+                    draft.splice(sequenceIndex, 1);
+                  }),
+                );
+              }}
+            >
+              <SequenceDiagram
+                environments={sequence.environments}
+                steps={sequence.steps}
+                onAddStep={({ index, from, to }) => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].steps.splice(index, 0, {
+                        from,
+                        to,
+                        event: "EVENT",
+                      });
+                    }),
+                  );
+                }}
+                onEditEvent={(newEvent, index) => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].steps[index].event = newEvent;
+                    }),
+                  );
+                }}
+                onDeleteStep={(index) => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].steps.splice(index, 1);
+                    }),
+                  );
+                }}
+                onDeleteEnvironment={(index) => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].environments.splice(index, 1);
+                    }),
+                  );
+                }}
+                onCreateEnvironment={() => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].environments.push({ name: "" });
+                    }),
+                  );
+                }}
+                onEditEnvironment={(newName, index) => {
+                  setSequences(
+                    produce(sequences, (draft) => {
+                      draft[sequenceIndex].environments[index].name = newName;
+                    }),
+                  );
+                }}
+              ></SequenceDiagram>
+            </SequenceDiagramWrapper>
+          </div>
+        );
+      })}
+      <div>
+        <button
+          className="px-4 bg-gray-200 h-12"
+          onClick={() => {
+            setSequences(
+              produce(sequences, (draft) => {
+                if (sequences.length === 0) {
+                  draft.push({
+                    name: "New Sequence",
+                    environments: [
+                      {
+                        name: "ENVIRONMENT",
+                      },
+                    ],
+                    steps: [],
                   });
-                }),
-              );
-            }}
-            onDeleteEnvironment={(index) => {
-              setEnvironments(
-                produce(environments, (draft) => {
-                  draft.splice(index, 1);
-                }),
-              );
-            }}
-            onCreateEnvironment={() => {
-              setEnvironments(
-                produce(environments, (draft) => {
-                  draft.push({ name: "" });
-                }),
-              );
-            }}
-            onEditEnvironment={(newName, index) => {
-              setEnvironments(
-                produce(environments, (draft) => {
-                  draft[index].name = newName;
-                }),
-              );
-            }}
-            onEditEvent={(newEvent, index) => {
-              setSteps(
-                produce(steps, (draft) => {
-                  draft[index].event = newEvent;
-                }),
-              );
-            }}
-            onDeleteStep={(index) => {
-              console.log({ index });
-              setSteps(
-                produce(steps, (draft) => {
-                  draft.splice(index, 1);
-                }),
-              );
-            }}
-          ></SequenceDiagram>
-        </div>
+                } else {
+                  draft.push(draft[draft.length - 1]);
+                }
+              }),
+            );
+          }}
+        >
+          New Sequence
+        </button>
       </div>
     </div>
   );
 };
 
-const SequenceDiagramWrapper: React.FC<{ title: string }> = ({
-  children,
-  title,
-}) => {
+const SequenceDiagramWrapper: React.FC<{
+  title: string;
+  onChangeTitle: (title: string) => void;
+  onDelete: () => void;
+}> = ({ children, title, onChangeTitle, onDelete }) => {
   return (
-    <div className="border-2 inline-block">
-      <h2 className="text-gray-700 font-bold text-lg px-3 py-2 border-b-2 bg-gray-100">
-        {title}
-      </h2>
+    <div className="border-2 inline-block relative">
+      <div>
+        <ContentEditable
+          className="text-gray-700 font-bold text-lg px-3 py-2 border-b-2 bg-gray-100"
+          html={title}
+          tagName="h2"
+          onChange={(e) => onChangeTitle(e.target.value)}
+        ></ContentEditable>
+        <button
+          className="absolute top-0 right-0 bg-gray-600 text-white rounded-full w-4 h-4 -mt-2 -mr-2 flex justify-center items-center"
+          onClick={() => onDelete()}
+        >
+          <HeroIconX />
+        </button>
+      </div>
       <div className="px-3 py-3">{children}</div>
     </div>
   );
