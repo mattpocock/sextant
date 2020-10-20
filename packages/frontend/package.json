@@ -28,6 +28,7 @@
     "immer": "^7.0.9",
     "make-route-map": "^1.0.1",
     "next": "9.5.3",
+    "perfect-arrows": "^0.3.3",
     "react": "16.13.1",
     "react-ace": "^9.1.4",
     "react-contenteditable": "^3.3.5",

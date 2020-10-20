@@ -9,17 +9,15 @@ const linkClasses = classNames(
 export const Layout: React.FC = ({ children }) => {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <header className="border-b h-12 flex items-center px-6 flex-shrink-0">
-        Name
-      </header>
+      <header className="border-b h-12 flex items-center px-6 flex-shrink-0"></header>
       <div className="flex flex-grow overflow-hidden">
         <nav className="flex-shrink-0 border-r h-full w-48">
-          <Link href={routeMap.root()}>
+          {/* <Link href={routeMap.root()}>
             <a className={linkClasses}>Home</a>
           </Link>
           <Link href={routeMap.addEnvironment()}>
             <a className={linkClasses}>Add Environment</a>
-          </Link>
+          </Link> */}
         </nav>
         <div className="flex-grow overflow-y-auto">
           <main className="container p-6">{children}</main>

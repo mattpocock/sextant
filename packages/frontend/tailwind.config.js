@@ -15,6 +15,7 @@ module.exports = {
     "disabled",
     "focus-within",
     "hover",
+    "group-focus",
     "focus",
     "active",
   ],

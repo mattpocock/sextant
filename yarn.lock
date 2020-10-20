@@ -9409,6 +9409,11 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+perfect-arrows@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/perfect-arrows/-/perfect-arrows-0.3.3.tgz#62ec57f3a6dedffadd60a0e61119ebfc1ef41bd0"
+  integrity sha512-4VqnAYK9O6dFS4S+WAZNB0iDlFSpfwSxf0EAxqHwuCFga1Q73yXt9Z3x43DHU5tSVDPscPVU3RuvQNgxPz5Jag==
+
 picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1, picomatch@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
