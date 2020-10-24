@@ -1,5 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-graphqlschema";
+import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/ext-language_tools";
 import { EditableServiceTable } from "./EditableServiceTable";
 import { Environment } from "./Environment";
 import { EnvironmentTable } from "./EnvironmentTable";
@@ -8,9 +11,6 @@ import { Layout } from "./Layout";
 import { PillList } from "./PillList";
 import { TextInput } from "./TextInput";
 import { useMachine } from "@xstate/compiled/react";
-import "ace-builds/src-noconflict/mode-graphqlschema";
-import "ace-builds/src-noconflict/theme-xcode";
-import "ace-builds/src-noconflict/ext-language_tools";
 import { changeGraphqlMachine } from "./changeGraphqlFile.machine";
 import produce from "immer";
 import { buildSchema } from "graphql";
@@ -437,73 +437,6 @@ type USER {
   const setEventPayloads = (newString: string) => {
     _setEventPayloads(newString.trim());
   };
-
-  const [, dispatch] = useMachine(changeGraphqlMachine, {
-    actions: {
-      addEventName: (context, { newEvents, oldEvents }) => {
-        const eventToTarget = newEvents.find((ev, index) => {
-          return oldEvents[index] !== ev;
-        });
-        setEventPayloads(
-          [
-            `# type ${eventToTarget || ""} {`,
-            `#   `,
-            `# }`,
-            ``,
-            eventPayloads,
-          ].join("\n"),
-        );
-      },
-      editEventName: (_, { newEvents, oldEvents }) => {
-        const eventIndex = oldEvents.findIndex((ev, index) => {
-          return newEvents[index] !== ev;
-        });
-        if (eventIndex === -1) return;
-
-        const regex = new RegExp(`type ${oldEvents[eventIndex] || ""}`);
-        setEventPayloads(
-          eventPayloads.replace(regex, `type ${newEvents[eventIndex] || ""}`),
-        );
-      },
-      removeEvent: (_, { newEvents, oldEvents }) => {
-        setEventPayloads(
-          produce(eventPayloads, (draft) => {
-            const eventToTarget = oldEvents.find((ev) => {
-              return !newEvents.includes(ev);
-            });
-
-            const regex = new RegExp(`type ${eventToTarget} \{`);
-
-            const payloadsAsArray = draft.split("\n");
-
-            const startIndex = payloadsAsArray.findIndex((line) =>
-              regex.test(line),
-            );
-
-            if (startIndex === -1) {
-              return draft;
-            }
-
-            const sliceOfPayloads = payloadsAsArray.slice(startIndex);
-
-            const endRegex = /\}/;
-
-            const deleteCount = sliceOfPayloads.findIndex((line) =>
-              endRegex.test(line),
-            );
-
-            if (deleteCount === -1) {
-              return draft;
-            }
-
-            payloadsAsArray.splice(startIndex, deleteCount + 1);
-
-            return payloadsAsArray.join("\n");
-          }),
-        );
-      },
-    },
-  });
 
   const gqlError = getGraphQLError(eventPayloads);
 

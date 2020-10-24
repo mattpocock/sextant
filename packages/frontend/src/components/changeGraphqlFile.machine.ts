@@ -26,9 +26,7 @@ export const changeGraphqlMachine = Machine<
             },
             {
               cond: "eventHasBeenAdded",
-              /** Do nothing when it's been added,
-               * because it doesn't have a name yet
-               */
+              actions: ["addEventName"],
               target: "editing",
             },
             {
@@ -62,6 +60,7 @@ export const changeGraphqlMachine = Machine<
         return event.newEvents.length < event.oldEvents.length;
       },
       eventHasBeenAdded: (_, event) => {
+        console.log(event);
         return event.newEvents.length > event.oldEvents.length;
       },
       eventHasBeenEdited: (_, { newEvents, oldEvents }) => {
