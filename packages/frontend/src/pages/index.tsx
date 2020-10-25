@@ -84,89 +84,85 @@ const HomePage = () => {
                 </div>
                 {sequences.map((sequence, sequenceIndex) => {
                   return (
-                    <div className="inline-block mr-6">
-                      <SequenceDiagramWrapper
-                        title={sequence.name}
-                        onChangeTitle={(title) => {
+                    <SequenceDiagramWrapper
+                      title={sequence.name}
+                      onChangeTitle={(title) => {
+                        dispatch({
+                          type: "UPDATE_SEQUENCE_NAME",
+                          name: title,
+                          sequenceId: sequence.id,
+                          serviceId: selectedServiceId,
+                        });
+                      }}
+                      onDuplicate={() => {
+                        dispatch({
+                          type: "DUPLICATE_SEQUENCE",
+                          sequenceId: sequence.id,
+                          serviceId: selectedServiceId,
+                        });
+                      }}
+                      onDelete={() => {
+                        dispatch({
+                          type: "DELETE_SEQUENCE",
+                          sequenceId: sequence.id,
+                          serviceId: selectedServiceId,
+                        });
+                      }}
+                    >
+                      <SequenceDiagram
+                        environments={Object.values(service.environments || {})}
+                        steps={sequence.steps}
+                        onAddStep={({ index, from, to }) => {
                           dispatch({
-                            type: "UPDATE_SEQUENCE_NAME",
-                            name: title,
+                            type: "ADD_STEP",
+                            index,
+                            fromEnvId: from,
+                            toEnvId: to,
                             sequenceId: sequence.id,
                             serviceId: selectedServiceId,
                           });
                         }}
-                        onDuplicate={() => {
+                        onEditEvent={(newEvent, index) => {
                           dispatch({
-                            type: "DUPLICATE_SEQUENCE",
+                            type: "UPDATE_STEP_NAME",
+                            name: newEvent,
+                            sequenceId: sequence.id,
+                            serviceId: selectedServiceId,
+                            stepIndex: index,
+                          });
+                        }}
+                        onDeleteStep={(index) => {
+                          dispatch({
+                            type: "DELETE_STEP",
+                            sequenceId: sequence.id,
+                            serviceId: selectedServiceId,
+                            stepIndex: index,
+                          });
+                        }}
+                        onDeleteEnvironment={(id) => {
+                          dispatch({
+                            type: "DELETE_ENVIRONMENT",
+                            envId: id,
+                            serviceId: selectedServiceId,
+                          });
+                        }}
+                        onCreateEnvironment={() => {
+                          dispatch({
+                            type: "ADD_ENVIRONMENT",
+                            serviceId: selectedServiceId,
+                          });
+                        }}
+                        onEditEnvironment={(newName, id) => {
+                          dispatch({
+                            type: "UPDATE_ENVIRONMENT_NAME",
+                            envId: id,
+                            name: newName,
                             sequenceId: sequence.id,
                             serviceId: selectedServiceId,
                           });
                         }}
-                        onDelete={() => {
-                          dispatch({
-                            type: "DELETE_SEQUENCE",
-                            sequenceId: sequence.id,
-                            serviceId: selectedServiceId,
-                          });
-                        }}
-                      >
-                        <SequenceDiagram
-                          environments={Object.values(
-                            service.environments || {},
-                          )}
-                          steps={sequence.steps}
-                          onAddStep={({ index, from, to }) => {
-                            dispatch({
-                              type: "ADD_STEP",
-                              index,
-                              fromEnvId: from,
-                              toEnvId: to,
-                              sequenceId: sequence.id,
-                              serviceId: selectedServiceId,
-                            });
-                          }}
-                          onEditEvent={(newEvent, index) => {
-                            dispatch({
-                              type: "UPDATE_STEP_NAME",
-                              name: newEvent,
-                              sequenceId: sequence.id,
-                              serviceId: selectedServiceId,
-                              stepIndex: index,
-                            });
-                          }}
-                          onDeleteStep={(index) => {
-                            dispatch({
-                              type: "DELETE_STEP",
-                              sequenceId: sequence.id,
-                              serviceId: selectedServiceId,
-                              stepIndex: index,
-                            });
-                          }}
-                          onDeleteEnvironment={(id) => {
-                            dispatch({
-                              type: "DELETE_ENVIRONMENT",
-                              envId: id,
-                              serviceId: selectedServiceId,
-                            });
-                          }}
-                          onCreateEnvironment={() => {
-                            dispatch({
-                              type: "ADD_ENVIRONMENT",
-                              serviceId: selectedServiceId,
-                            });
-                          }}
-                          onEditEnvironment={(newName, id) => {
-                            dispatch({
-                              type: "UPDATE_ENVIRONMENT_NAME",
-                              envId: id,
-                              name: newName,
-                              sequenceId: sequence.id,
-                              serviceId: selectedServiceId,
-                            });
-                          }}
-                        ></SequenceDiagram>
-                      </SequenceDiagramWrapper>
-                    </div>
+                      ></SequenceDiagram>
+                    </SequenceDiagramWrapper>
                   );
                 })}
                 <div>

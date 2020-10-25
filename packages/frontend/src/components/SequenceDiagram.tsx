@@ -15,7 +15,7 @@ export const SequenceDiagramWrapper: React.FC<{
   onDuplicate: () => void;
 }> = ({ children, title, onChangeTitle, onDelete, onDuplicate }) => {
   return (
-    <div className="border-2 inline-block relative">
+    <div className="border-2 relative">
       <div>
         <div className="flex items-center border-b-2 bg-gray-100">
           <ContentEditable
@@ -40,7 +40,7 @@ export const SequenceDiagramWrapper: React.FC<{
           <HeroIconX />
         </button>
       </div>
-      <div className="px-3 py-3">{children}</div>
+      <div className="px-3 py-3 overflow-x-auto">{children}</div>
     </div>
   );
 };
