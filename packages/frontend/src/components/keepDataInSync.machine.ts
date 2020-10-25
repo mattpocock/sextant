@@ -1,6 +1,8 @@
 import { Machine, assign } from "@xstate/compiled";
 import produce from "immer";
 import { v4 as uuid } from "uuid";
+import { DoneInvokeEvent } from "xstate";
+import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
 
 export interface Database {
   services: Record<string, Service>;
@@ -9,6 +11,9 @@ export interface Database {
 export interface Service {
   sequences: Record<string, Sequence>;
   environments: Record<string, Environment>;
+  eventPayloads: string;
+  name: string;
+  id: string;
 }
 
 export interface Sequence {
@@ -68,6 +73,8 @@ const deleteSequence = (
     delete draft.services[serviceId].sequences[sequenceId];
   });
 
+const DEFAULT_EVENT_NAME = "EVENT";
+
 /** Steps */
 const addStep = ({
   database,
@@ -86,7 +93,7 @@ const addStep = ({
 }): Database =>
   produce(database, (draft) => {
     draft.services[serviceId].sequences[sequenceId].steps.splice(index, 0, {
-      event: "EVENT",
+      event: DEFAULT_EVENT_NAME,
       id: uuid(),
       from: fromEnvId,
       to: toEnvId,
@@ -162,8 +169,60 @@ const deleteEnvironment = (
   });
 };
 
+export const getEventsFromSequences = (sequences: Sequence[]): string[] => {
+  return sequences.reduce((accum, sequence) => {
+    return accum.concat(
+      sequence.steps.reduce((stepAccum, step) => {
+        return stepAccum.concat(step.event);
+      }, [] as string[]),
+    );
+  }, [] as string[]);
+};
+
+const updateServiceEventPayload = (
+  database: Database,
+  serviceId: string,
+  eventPayloads: string,
+) => {
+  return produce(database, (draft) => {
+    draft.services[serviceId].eventPayloads = eventPayloads;
+  });
+};
+
+const updateServiceName = (
+  database: Database,
+  serviceId: string,
+  name: string,
+) => {
+  return produce(database, (draft) => {
+    draft.services[serviceId].name = name;
+  });
+};
+
+const updateServiceEventPayloadWithFunc = (
+  database: Database,
+  serviceId: string,
+  func: (eventPayload: string) => string,
+) => {
+  return produce(database, (draft) => {
+    draft.services[serviceId].eventPayloads = func(
+      draft.services[serviceId].eventPayloads,
+    );
+  });
+};
+
 type Event =
   | { type: "DELETE_ENVIRONMENT"; serviceId: string; envId: string }
+  | {
+      type: "UPDATE_SERVICE_EVENT_PAYLOAD";
+      serviceId: string;
+      eventPayloadString: string;
+    }
+  | {
+      type: "UPDATE_SERVICE_NAME";
+      serviceId: string;
+      name: string;
+    }
   | {
       type: "ADD_SEQUENCE";
       serviceId: string;
@@ -178,6 +237,9 @@ type Event =
       serviceId: string;
       sequenceId: string;
       name: string;
+    }
+  | {
+      type: "ADD_SERVICE";
     }
   | {
       type: "ADD_ENVIRONMENT";
@@ -223,8 +285,11 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       database: {
         services: {
           initial: {
+            id: "initial",
+            name: "Initial",
             environments: {},
             sequences: {},
+            eventPayloads: "",
           },
         },
       },
@@ -235,11 +300,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
         invoke: {
           src: "loadDatabase",
           onDone: {
-            actions: assign((context, event) => {
-              return {
-                database: event.data as Database,
-              };
-            }),
+            actions: ["saveDatabaseToContext"],
             target: "editing",
           },
           onError: {
@@ -251,6 +312,18 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       editing: {
         initial: "idle",
         on: {
+          UPDATE_SERVICE_EVENT_PAYLOAD: {
+            actions: assign((context, event) => {
+              return {
+                database: updateServiceEventPayload(
+                  context.database,
+                  event.serviceId,
+                  event.eventPayloadString,
+                ),
+              };
+            }),
+            target: ".throttling",
+          },
           ADD_ENVIRONMENT: {
             actions: assign((context, event) => {
               return {
@@ -289,46 +362,139 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
             }),
             target: ".throttling",
           },
+          UPDATE_SERVICE_NAME: {
+            target: ".throttling",
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: updateServiceName(
+                    context.database,
+                    event.serviceId,
+                    event.name,
+                  ),
+                };
+              }),
+            ],
+          },
+          ADD_SERVICE: {
+            target: ".throttling",
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: produce(context.database, (draft) => {
+                    const id = uuid();
+                    draft.services[id] = {
+                      id,
+                      environments: {},
+                      eventPayloads: "",
+                      name: "New Service",
+                      sequences: {},
+                    };
+                  }),
+                };
+              }),
+            ],
+          },
           ADD_STEP: {
-            actions: assign((context, event) => {
-              return {
-                database: addStep({
-                  database: context.database,
-                  fromEnvId: event.fromEnvId,
-                  index: event.index,
-                  sequenceId: event.sequenceId,
-                  serviceId: event.serviceId,
-                  toEnvId: event.toEnvId,
-                }),
-              };
-            }),
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: updateServiceEventPayloadWithFunc(
+                    context.database,
+                    event.serviceId,
+                    (eventPayload) => {
+                      return addEvent(eventPayload, DEFAULT_EVENT_NAME);
+                    },
+                  ),
+                };
+              }),
+              assign((context, event) => {
+                return {
+                  database: addStep({
+                    database: context.database,
+                    fromEnvId: event.fromEnvId,
+                    index: event.index,
+                    sequenceId: event.sequenceId,
+                    serviceId: event.serviceId,
+                    toEnvId: event.toEnvId,
+                  }),
+                };
+              }),
+            ],
             target: ".throttling",
           },
           DELETE_STEP: {
-            actions: assign((context, event) => {
-              return {
-                database: deleteStep(
-                  context.database,
-                  event.serviceId,
-                  event.sequenceId,
-                  event.stepIndex,
-                ),
-              };
-            }),
+            actions: [
+              assign((context, event) => {
+                const eventName =
+                  context.database.services[event.serviceId].sequences[
+                    event.sequenceId
+                  ].steps[event.stepIndex].event;
+
+                return {
+                  database: updateServiceEventPayloadWithFunc(
+                    context.database,
+                    event.serviceId,
+                    (eventString) => {
+                      return removeEvent(eventString, eventName);
+                    },
+                  ),
+                };
+              }),
+              assign((context, event) => {
+                return {
+                  database: deleteStep(
+                    context.database,
+                    event.serviceId,
+                    event.sequenceId,
+                    event.stepIndex,
+                  ),
+                };
+              }),
+            ],
             target: ".throttling",
           },
           UPDATE_STEP_NAME: {
-            actions: assign((context, event) => {
-              return {
-                database: updateStepEventName(
-                  context.database,
-                  event.serviceId,
-                  event.sequenceId,
-                  event.stepIndex,
-                  event.name,
-                ),
-              };
-            }),
+            actions: [
+              assign((context, event) => {
+                const targetEvent =
+                  context.database.services[event.serviceId].sequences[
+                    event.sequenceId
+                  ].steps[event.stepIndex].event;
+                return {
+                  database: updateServiceEventPayloadWithFunc(
+                    context.database,
+                    event.serviceId,
+                    (currentEventPayloads) => {
+                      if (event.name === "") {
+                        return removeEvent(currentEventPayloads, targetEvent);
+                      }
+
+                      if (!currentEventPayloads.includes(targetEvent)) {
+                        return addEvent(currentEventPayloads, event.name);
+                      }
+
+                      return editEvent(
+                        currentEventPayloads,
+                        targetEvent,
+                        event.name,
+                      );
+                    },
+                  ),
+                };
+              }),
+              assign((context, event) => {
+                return {
+                  database: updateStepEventName(
+                    context.database,
+                    event.serviceId,
+                    event.sequenceId,
+                    event.stepIndex,
+                    event.name,
+                  ),
+                };
+              }),
+            ],
             target: ".throttling",
           },
           UPDATE_ENVIRONMENT_NAME: {
@@ -377,6 +543,11 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
     },
   },
   {
+    services: {
+      loadDatabase: async () => {
+        return fetch("/api/getDatabase").then((res) => res.json());
+      },
+    },
     guards: {
       canDeleteEnvironment: ({ database }, { envId, serviceId }) => {
         try {
@@ -398,6 +569,19 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       },
     },
     actions: {
+      tellUserWeCannotDeleteTheEnvironment: () => {
+        alert(
+          "You cannot delete this environment because it has steps associated with it.",
+        );
+      },
+      saveDatabaseToContext: assign((context, event) => {
+        if (event.data?.services) {
+          return {
+            database: event.data,
+          };
+        }
+        return {};
+      }),
       saveToDatabase: (context) => {
         fetch(`/api/saveToDatabase`, {
           method: "POST",

@@ -1,37 +1,167 @@
 {
+  "environments": {},
+  "events": {},
   "services": {
-    "initial": {
+    "ee7c975d-7d10-42fe-ba38-7215ba4fe367": {
+      "id": "ee7c975d-7d10-42fe-ba38-7215ba4fe367",
       "environments": {
-        "62aa6210-3633-4c63-a740-89e36c4e6678": {
-          "id": "62aa6210-3633-4c63-a740-89e36c4e6678",
+        "1f47e9be-9a91-4b12-9c08-098700629a8c": {
+          "id": "1f47e9be-9a91-4b12-9c08-098700629a8c",
           "name": "FRONTEND"
         },
-        "9539c152-4860-4ad8-85e7-fde9e96b1111": {
-          "id": "9539c152-4860-4ad8-85e7-fde9e96b1111",
+        "888b506c-d7b5-496a-8602-129f8056f95b": {
+          "id": "888b506c-d7b5-496a-8602-129f8056f95b",
           "name": "LAMBDA"
+        },
+        "98ef2f11-a29f-4e15-9159-01cc71948eb8": {
+          "id": "98ef2f11-a29f-4e15-9159-01cc71948eb8",
+          "name": "TCC"
         }
       },
+      "eventPayloads": "# type NOT_FOUND {\n#   \n# }\n\n# type GET_BENEFICIARY {\n#   \n# }\n\n# type BENEFICIARY {\n#   \n# }\n\n# type GET_BENEFICIARIES {\n#   \n# }\n\n# type BENEFICIARIES {\n#   \n# }\n",
+      "name": "Beneficiary Queries",
       "sequences": {
-        "43d33451-8dee-4016-af47-42d0b60d9a14": {
-          "id": "43d33451-8dee-4016-af47-42d0b60d9a14",
-          "name": "Get Users",
+        "4aec2767-2103-434f-ab2e-5eb1fdcdb04a": {
+          "id": "4aec2767-2103-434f-ab2e-5eb1fdcdb04a",
+          "name": "Success",
           "order": 0,
           "steps": [
             {
-              "event": "GET_USERS",
-              "id": "6f168b7b-980a-42aa-a3aa-45818d5b509d",
-              "from": "62aa6210-3633-4c63-a740-89e36c4e6678",
-              "to": "9539c152-4860-4ad8-85e7-fde9e96b1111"
+              "event": "GET_BENEFICIARIES",
+              "id": "23be7295-1814-4d77-a560-47ed70751f24",
+              "from": "1f47e9be-9a91-4b12-9c08-098700629a8c",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
             },
             {
-              "event": "USERS",
-              "id": "48637635-3516-4aa4-8ea9-bbdaa692b826",
-              "from": "9539c152-4860-4ad8-85e7-fde9e96b1111",
-              "to": "62aa6210-3633-4c63-a740-89e36c4e6678"
+              "event": "GET_BENEFICIARIES",
+              "id": "59d13ca9-af34-4aba-a5cd-361e8cee8371",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "98ef2f11-a29f-4e15-9159-01cc71948eb8"
+            },
+            {
+              "event": "BENEFICIARIES",
+              "id": "37bcb183-cacc-4916-be76-e95f74d76a3d",
+              "from": "98ef2f11-a29f-4e15-9159-01cc71948eb8",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
+            },
+            {
+              "event": "BENEFICIARIES",
+              "id": "60a5318b-99e6-4621-ad46-49895a65007b",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "1f47e9be-9a91-4b12-9c08-098700629a8c"
+            }
+          ]
+        },
+        "8ed84710-4b13-4c35-8b4c-6ae3f9ed3a51": {
+          "id": "8ed84710-4b13-4c35-8b4c-6ae3f9ed3a51",
+          "name": "Get one beneficiary",
+          "order": 1,
+          "steps": [
+            {
+              "event": "GET_BENEFICIARY",
+              "id": "68932ee0-ceb1-4dee-883f-50c0f1d1607e",
+              "from": "1f47e9be-9a91-4b12-9c08-098700629a8c",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
+            },
+            {
+              "event": "GET_BENEFICIARY",
+              "id": "cb8a2805-651f-40be-9815-f5bf78e5c7a4",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "98ef2f11-a29f-4e15-9159-01cc71948eb8"
+            },
+            {
+              "event": "BENEFICIARY",
+              "id": "c23b9519-ff53-404d-98ce-6cc8691a7a9f",
+              "from": "98ef2f11-a29f-4e15-9159-01cc71948eb8",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
+            },
+            {
+              "event": "BENEFICIARY",
+              "id": "7355b34c-bd7d-4482-a7b4-9c80147fea6a",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "1f47e9be-9a91-4b12-9c08-098700629a8c"
+            }
+          ]
+        },
+        "8eb80887-e7b7-4d95-833f-6290a1bcda3b": {
+          "id": "8eb80887-e7b7-4d95-833f-6290a1bcda3b",
+          "name": "Beneficiary not found",
+          "order": 2,
+          "steps": [
+            {
+              "event": "GET_BENEFICIARY",
+              "id": "0f624f9a-f51c-4afd-816b-80d0044fea50",
+              "from": "1f47e9be-9a91-4b12-9c08-098700629a8c",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
+            },
+            {
+              "event": "GET_BENEFICIARY",
+              "id": "499bde40-5d26-4318-b16a-b4f371f113ba",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "98ef2f11-a29f-4e15-9159-01cc71948eb8"
+            },
+            {
+              "event": "NOT_FOUND",
+              "id": "c943ae73-825a-423d-a758-f1075ccb5eed",
+              "from": "98ef2f11-a29f-4e15-9159-01cc71948eb8",
+              "to": "888b506c-d7b5-496a-8602-129f8056f95b"
+            },
+            {
+              "event": "NOT_FOUND",
+              "id": "2f3f5ff6-82f9-4dfb-9487-5b5944ae2faa",
+              "from": "888b506c-d7b5-496a-8602-129f8056f95b",
+              "to": "1f47e9be-9a91-4b12-9c08-098700629a8c"
             }
           ]
         }
       }
+    },
+    "9d5648d6-b494-4fd3-94c2-e4f88fa9117c": {
+      "id": "9d5648d6-b494-4fd3-94c2-e4f88fa9117c",
+      "environments": {
+        "5ebad49d-4f29-4dc4-b4ac-1984db194771": {
+          "id": "5ebad49d-4f29-4dc4-b4ac-1984db194771",
+          "name": "Frontend"
+        },
+        "098f7412-b982-4f68-8f92-c42f82a261c7": {
+          "id": "098f7412-b982-4f68-8f92-c42f82a261c7",
+          "name": "LAmbda"
+        },
+        "c1243f10-9dc2-4cbd-84c2-b9e58567ce8c": {
+          "id": "c1243f10-9dc2-4cbd-84c2-b9e58567ce8c",
+          "name": "TCC"
+        }
+      },
+      "eventPayloads": "# type EVENT {\n#   \n# }\n\n# type GET_USERS {\n#   \n# }\n\n\n\n\n",
+      "name": "Create Beneficiary",
+      "sequences": {
+        "a6603959-8068-4291-9868-6aa0c29530d2": {
+          "id": "a6603959-8068-4291-9868-6aa0c29530d2",
+          "name": "Create Beneficiary",
+          "order": 0,
+          "steps": [
+            {
+              "event": "GET_USERS",
+              "id": "e503b9c6-499a-4c4f-bde8-7bc1bc209f62",
+              "from": "5ebad49d-4f29-4dc4-b4ac-1984db194771",
+              "to": "098f7412-b982-4f68-8f92-c42f82a261c7"
+            },
+            {
+              "event": "EVENT",
+              "id": "a57c23bd-7f14-4654-980c-0912c850c145",
+              "from": "098f7412-b982-4f68-8f92-c42f82a261c7",
+              "to": "5ebad49d-4f29-4dc4-b4ac-1984db194771"
+            }
+          ]
+        }
+      }
+    },
+    "9e253710-d724-434c-afb3-f7817ff60e76": {
+      "id": "9e253710-d724-434c-afb3-f7817ff60e76",
+      "environments": {},
+      "eventPayloads": "",
+      "name": "Awesome Service",
+      "sequences": {}
     }
   }
 }
