@@ -8,7 +8,7 @@ const handler: NextApiHandler = async (req, res) => {
 
     const database: Database = JSON.parse(req.body);
 
-    saveDatabase(database);
+    await saveDatabase(database);
 
     res.json({ success: true });
   }

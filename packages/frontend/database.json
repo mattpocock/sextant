@@ -340,11 +340,11 @@
         },
         "98134481-7093-471c-ac8c-343fa847c3ea": {
           "id": "98134481-7093-471c-ac8c-343fa847c3ea",
-          "name": "LAMBDA"
+          "name": "lambda"
         },
         "f7fec182-8015-4597-8eb7-46e679923005": {
           "id": "f7fec182-8015-4597-8eb7-46e679923005",
-          "name": "HASURA"
+          "name": "hasura"
         }
       },
       "eventPayloads": "# type SUCCESS {\n#   \n# }\n\n# type PAYMENT_FAILED_COMPLIANCE {\n#   \n# }\n\n# type PAYMENT_FAILED_COMPLIANCE {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type PAYMENT_COMPLETED {\n#   \n# }\n\n# type PAYMENT_COMPLETED {\n#   \n# }\n\n",
@@ -474,6 +474,112 @@
               "id": "87190fe0-fc70-4e3e-b3a9-0d1de0ea5c92",
               "from": "996eb6e7-1e31-4acb-9dc9-4e71dbf55278",
               "to": "0b537719-1e91-4bd8-a48d-54e484263487"
+            }
+          ]
+        }
+      }
+    },
+    "1be37a1f-e018-4862-8a99-e781ad615d49": {
+      "id": "1be37a1f-e018-4862-8a99-e781ad615d49",
+      "environments": {
+        "f521d22c-f1a4-49bc-874f-303dae0fde40": {
+          "id": "f521d22c-f1a4-49bc-874f-303dae0fde40",
+          "name": "WEBHOOK"
+        },
+        "66b34e62-73e9-4ec5-b12d-3000ae8f04e9": {
+          "id": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
+          "name": "LAMBDA"
+        },
+        "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd": {
+          "id": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd",
+          "name": "DATABASE"
+        },
+        "aeb1c925-c8ef-4932-bf89-1ef42f298f84": {
+          "id": "aeb1c925-c8ef-4932-bf89-1ef42f298f84",
+          "name": "ERROR TRACKER"
+        }
+      },
+      "eventPayloads": "type REPORT_ERROR {\n  error: String!\n  stack: String!\n}\n\n# type UNKNOWN_ERROR {\n#   \n# }\n\ntype UPDATE_PAYMENT {\n  id: ID!\n}\n\n# type REPORT_PAYMENT_UPDATED {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type CREATE_PAYMENT {\n#   \n# }\n\n# type REPORT_PAYMENT_CREATED {\n#   \n# }\n\n",
+      "name": "Webhook Service",
+      "sequences": {
+        "2803e8a1-c4d5-4fd0-8535-3f8ed6cd5bf6": {
+          "id": "2803e8a1-c4d5-4fd0-8535-3f8ed6cd5bf6",
+          "name": "Create Payment Webhook",
+          "order": 0,
+          "steps": [
+            {
+              "event": "REPORT_PAYMENT_CREATED",
+              "id": "5293f7d3-034a-46fc-8d7a-ff1d851f5ac1",
+              "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            },
+            {
+              "event": "CREATE_PAYMENT",
+              "id": "221f1b55-26e0-4e8a-98a5-ecd502d1c00e",
+              "from": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
+              "to": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "2b264a86-21cd-41de-ac52-41246961ebef",
+              "from": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            }
+          ]
+        },
+        "2457a5a8-2a96-47e6-9f02-212fdfbd5186": {
+          "id": "2457a5a8-2a96-47e6-9f02-212fdfbd5186",
+          "name": "Update Payment Webhook",
+          "order": 1,
+          "steps": [
+            {
+              "event": "REPORT_PAYMENT_UPDATED",
+              "id": "825d1fd4-2747-4f3f-9b40-654dd35b67e9",
+              "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            },
+            {
+              "event": "UPDATE_PAYMENT",
+              "id": "45375412-2afb-44ac-9f81-22417d194a3c",
+              "from": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
+              "to": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "b74dbd11-0fb9-49c7-ad8b-802e32ebdadc",
+              "from": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            }
+          ]
+        },
+        "044a72d0-f919-4464-abc1-88790373513a": {
+          "id": "044a72d0-f919-4464-abc1-88790373513a",
+          "name": "Create Payment Fails",
+          "order": 0,
+          "steps": [
+            {
+              "event": "REPORT_PAYMENT_CREATED",
+              "id": "5293f7d3-034a-46fc-8d7a-ff1d851f5ac1",
+              "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            },
+            {
+              "event": "CREATE_PAYMENT",
+              "id": "221f1b55-26e0-4e8a-98a5-ecd502d1c00e",
+              "from": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
+              "to": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd"
+            },
+            {
+              "event": "UNKNOWN_ERROR",
+              "id": "2b264a86-21cd-41de-ac52-41246961ebef",
+              "from": "99dbc58f-57fc-4e7f-aae7-e1963d8ea2dd",
+              "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
+            },
+            {
+              "event": "REPORT_ERROR",
+              "id": "a8fdccba-6712-4bc1-8a8f-7b2c6732d646",
+              "from": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
+              "to": "aeb1c925-c8ef-4932-bf89-1ef42f298f84"
             }
           ]
         }

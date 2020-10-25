@@ -1,31 +1,42 @@
-interface FromToConfig<From, To> {
-  from: From;
-  to: To;
-}
-
 interface Services {
   {{#each services }}
   '{{camelcase this.name}}': {
     environments: {
       {{#each this.environmentsWithSteps}}
-      '{{camelcase this.name}}': FromToConfig<
-        {
+      '{{camelcase this.name}}': {
+        from: {
           {{#each this.from}}
-            '{{ camelcase this.env}}':
-              {{#each this.events}}
-                | { type: "{{this.event}}" }
-              {{/each}}
-          {{/each}}
-        },
-        {
-          {{#each this.to}}
-            '{{ camelcase this.env}}':
-              {{#each this.events}}
-                | { type: "{{this.event}}" }
-              {{/each}}
+          '{{ camelcase this.env}}': {
+            in:
+            {{#each this.in}}
+              | { type: "{{this.event}}" }
+            {{/each}}
+            {{#unless this.in}}never;{{/unless}}
+            out:
+            {{#each this.out}}
+              | { type: "{{this.event}}" }
+            {{/each}}
+            {{#unless this.out}}never;{{/unless}}
+          }
           {{/each}}
         }
-      >;
+        to: {
+          {{#each this.to}}
+          '{{ camelcase this.env}}': {
+            in:
+            {{#each this.in}}
+              | { type: "{{this.event}}" }
+            {{/each}}
+            {{#unless this.in}}never;{{/unless}}
+            out:
+            {{#each this.out}}
+              | { type: "{{this.event}}" }
+            {{/each}}
+            {{#unless this.out}}never;{{/unless}}
+          }
+          {{/each}}
+        }
+      }
       {{/each}}
     }
   }
@@ -61,7 +72,7 @@ interface Sender<TEventConfig extends EventConfig> {
   promise: (event: TEventConfig['in']) => Promise<TEventConfig['out']>;
 }
 
-const createActor = <
+export const createActor = <
   IService extends keyof Services,
   IInitialEnvironment extends keyof Services[IService]["environments"],
   IFromEnvironment extends keyof Services[IService]["environments"][IInitialEnvironment]["from"]
@@ -78,8 +89,8 @@ const createActor = <
         Services[IService]["environments"][IInitialEnvironment]
       >;
     };
-    to: {
-      [SourceEnvKey in keyof Services[IService]["environments"][IInitialEnvironment]["to"]]: ImplementationFunction<
+    to?: {
+      [SourceEnvKey in keyof Services[IService]["environments"][IInitialEnvironment]["to"]]?: ImplementationFunction<
         Services[IService]["environments"][IInitialEnvironment]["to"][SourceEnvKey],
         Services[IService]["environments"][SourceEnvKey]
       >;

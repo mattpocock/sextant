@@ -2,12 +2,7 @@ import Handlebars from "handlebars";
 import * as helpers from "handlebars-helpers";
 import * as fs from "fs";
 import * as path from "path";
-import {
-  flattenDatabase,
-  FlattenedDatabase,
-  getStepsFromSequences,
-} from "@sextant/core";
-import * as db from "./testDb.json";
+import { FlattenedDatabase, getStepsFromSequences } from "@sextant/core";
 
 export const buildCodeForCreateService = (database: FlattenedDatabase) => {
   const services = database.services.map((service) => {
@@ -21,25 +16,31 @@ export const buildCodeForCreateService = (database: FlattenedDatabase) => {
             .map((fromEnv) => {
               return {
                 env: fromEnv.name,
-                events: allSteps.filter((step) => {
+                in: allSteps.filter((step) => {
                   return step.to === env.id && step.from === fromEnv.id;
+                }),
+                out: allSteps.filter((step) => {
+                  return step.from === env.id && step.to === fromEnv.id;
                 }),
               };
             })
             .filter((fromEnv) => {
-              return fromEnv.events.length > 0;
+              return fromEnv.in.length > 0 || fromEnv.out.length > 0;
             }),
           to: service.environments
             .map((toEnv) => {
               return {
                 env: toEnv.name,
-                events: allSteps.filter((step) => {
+                in: allSteps.filter((step) => {
                   return step.from === env.id && step.to === toEnv.id;
+                }),
+                out: allSteps.filter((step) => {
+                  return step.to === env.id && step.from === toEnv.id;
                 }),
               };
             })
-            .filter((toEnv) => {
-              return toEnv.events.length > 0;
+            .filter((fromEnv) => {
+              return fromEnv.in.length > 0 || fromEnv.out.length > 0;
             }),
         };
       }),
@@ -63,5 +64,3 @@ export const buildCodeForCreateService = (database: FlattenedDatabase) => {
   });
   return result;
 };
-
-console.log(buildCodeForCreateService(flattenDatabase(db)));
