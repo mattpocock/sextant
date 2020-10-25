@@ -1,7 +1,6 @@
-import { Machine, assign } from "@xstate/compiled";
+import { assign, Machine } from "@xstate/compiled";
 import produce from "immer";
 import { v4 as uuid } from "uuid";
-import { DoneInvokeEvent } from "xstate";
 import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
 
 export interface Database {
@@ -71,6 +70,19 @@ const deleteSequence = (
 ): Database =>
   produce(database, (draft) => {
     delete draft.services[serviceId].sequences[sequenceId];
+  });
+
+const duplicateSequence = (
+  database: Database,
+  serviceId: string,
+  sequenceId: string,
+): Database =>
+  produce(database, (draft) => {
+    const newId = uuid();
+    draft.services[serviceId].sequences[newId] = {
+      ...draft.services[serviceId].sequences[sequenceId],
+      id: newId,
+    };
   });
 
 const DEFAULT_EVENT_NAME = "EVENT";
@@ -228,6 +240,11 @@ type Event =
       serviceId: string;
     }
   | {
+      type: "DUPLICATE_SEQUENCE";
+      serviceId: string;
+      sequenceId: string;
+    }
+  | {
       type: "DELETE_SEQUENCE";
       serviceId: string;
       sequenceId: string;
@@ -371,6 +388,20 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                     context.database,
                     event.serviceId,
                     event.name,
+                  ),
+                };
+              }),
+            ],
+          },
+          DUPLICATE_SEQUENCE: {
+            target: ".throttling",
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: duplicateSequence(
+                    context.database,
+                    event.serviceId,
+                    event.sequenceId,
                   ),
                 };
               }),
