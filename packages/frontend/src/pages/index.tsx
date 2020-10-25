@@ -35,8 +35,8 @@ const HomePage = () => {
       return (
         <div className="flex flex-col h-screen overflow-hidden">
           <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4">
-            <h1 className="text-primary-800 font-bold items-center flex">
-              @sextant
+            <h1 className="text-primary-800 font-bold items-center flex uppercase tracking-widest">
+              sextant
             </h1>
           </div>
           <div className="flex flex-grow border-t overflow-hidden">
