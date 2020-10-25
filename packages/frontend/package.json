@@ -1,5 +1,5 @@
 {
-  "name": "@service-gui/frontend",
+  "name": "@sextant/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "codegen": "xstate-codegen \"./!(node_modules)/**/**.machine.ts\""
   },
   "dependencies": {
-    "@service-gui/core": "0.0.1",
+    "@sextant/core": "0.0.1",
     "@storybook/addon-actions": "^6.0.21",
     "@storybook/addon-essentials": "^6.0.21",
     "@storybook/addon-links": "^6.0.21",

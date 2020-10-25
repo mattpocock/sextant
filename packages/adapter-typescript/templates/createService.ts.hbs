@@ -1,0 +1,90 @@
+interface FromToConfig<From, To> {
+  from: From;
+  to: To;
+}
+
+interface Services {
+  {{#each services }}
+  '{{camelcase this.name}}': {
+    environments: {
+      {{#each this.environmentsWithSteps}}
+      '{{camelcase this.name}}': FromToConfig<
+        {
+          {{#each this.from}}
+            '{{ camelcase this.env}}':
+              {{#each this.events}}
+                | { type: "{{this.event}}" }
+              {{/each}}
+          {{/each}}
+        },
+        {
+          {{#each this.to}}
+            '{{ camelcase this.env}}':
+              {{#each this.events}}
+                | { type: "{{this.event}}" }
+              {{/each}}
+          {{/each}}
+        }
+      >;
+      {{/each}}
+    }
+  }
+  {{/each}}
+}
+
+interface EventConfig {
+  in: { type: string };
+  out: { type: string };
+}
+
+interface EnvironmentConfig {
+  from: { [environment: string]: EventConfig };
+  to: { [environment: string]: EventConfig };
+}
+
+type ImplementationFunction<
+  TEventConfig extends EventConfig,
+  TEnvironmentConfig extends EnvironmentConfig
+> = (
+  event: TEventConfig['in'],
+  context: {
+    environments: {
+      [K in keyof TEnvironmentConfig['to']]: Sender<
+        TEnvironmentConfig['to'][K]
+      >;
+    };
+  },
+  callback: (event: TEventConfig['out']) => void,
+) => void | Promise<void>;
+
+interface Sender<TEventConfig extends EventConfig> {
+  promise: (event: TEventConfig['in']) => Promise<TEventConfig['out']>;
+}
+
+const createActor = <
+  IService extends keyof Services,
+  IInitialEnvironment extends keyof Services[IService]["environments"],
+  IFromEnvironment extends keyof Services[IService]["environments"][IInitialEnvironment]["from"]
+>(
+  service: IService,
+  environment: IInitialEnvironment,
+  {
+    to,
+  }: {
+    from: {
+      environment: IFromEnvironment;
+      handler: ImplementationFunction<
+        Services[IService]["environments"][IInitialEnvironment]["from"][IFromEnvironment],
+        Services[IService]["environments"][IInitialEnvironment]
+      >;
+    };
+    to: {
+      [SourceEnvKey in keyof Services[IService]["environments"][IInitialEnvironment]["to"]]: ImplementationFunction<
+        Services[IService]["environments"][IInitialEnvironment]["to"][SourceEnvKey],
+        Services[IService]["environments"][SourceEnvKey]
+      >;
+    };
+  },
+): Sender<Services[IService]["environments"][IInitialEnvironment]["from"][IFromEnvironment]> => {
+  return {} as any;
+};

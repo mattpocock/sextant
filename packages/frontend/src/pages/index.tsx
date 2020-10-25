@@ -3,10 +3,8 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-graphqlschema";
 import "ace-builds/src-noconflict/theme-xcode";
-import {
-  keepDataInSyncMachine,
-  Service,
-} from "components/keepDataInSync.machine";
+import { keepDataInSyncMachine } from "components/keepDataInSync.machine";
+import { Service } from "@sextant/core";
 import {
   SequenceDiagram,
   SequenceDiagramWrapper,
@@ -38,7 +36,7 @@ const HomePage = () => {
         <div className="flex flex-col h-screen overflow-hidden">
           <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4">
             <h1 className="text-primary-800 font-bold items-center flex">
-              @service-gui
+              @sextant
             </h1>
           </div>
           <div className="flex flex-grow border-t overflow-hidden">

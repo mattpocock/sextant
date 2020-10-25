@@ -1,4 +1,4 @@
-import { Database, DatabaseHandler } from "@service-gui/core";
+import { Database, DatabaseHandler } from "@sextant/core";
 import { useEffect, useRef, useState } from "react";
 import { getClient, getDatabase, saveDatabase } from "./client";
 

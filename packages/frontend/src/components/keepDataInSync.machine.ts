@@ -1,227 +1,27 @@
+import {
+  addEnvironment,
+  addSequence,
+  addService,
+  addStep,
+  Database,
+  DEFAULT_EVENT_NAME,
+  deleteEnvironment,
+  deleteSequence,
+  deleteStep,
+  duplicateSequence,
+  updateEnvironmentName,
+  updateSequenceName,
+  updateServiceEventPayload,
+  updateServiceEventPayloadWithFunc,
+  updateServiceName,
+  updateStepEventName,
+} from "@sextant/core";
 import { assign, Machine } from "@xstate/compiled";
-import produce from "immer";
-import { v4 as uuid } from "uuid";
 import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
-
-export interface Database {
-  services: Record<string, Service>;
-}
-
-export interface Service {
-  sequences: Record<string, Sequence>;
-  environments: Record<string, Environment>;
-  eventPayloads: string;
-  name: string;
-  id: string;
-}
-
-export interface Sequence {
-  id: string;
-  name: string;
-  order: number;
-  steps: Step[];
-}
-
-export interface Step {
-  id: string;
-  event: string;
-  from: string;
-  to: string;
-}
-
-export interface Environment {
-  id: string;
-  name: string;
-}
 
 interface Context {
   database: Database;
 }
-
-/** Sequences */
-const addSequence = (database: Database, serviceId: string): Database => {
-  return produce(database, (draft) => {
-    const service = draft.services[serviceId];
-    const id = uuid();
-    service.sequences[id] = {
-      id,
-      name: "New Sequence",
-      order: Object.keys(service.sequences).length,
-      steps: [],
-    };
-  });
-};
-
-const updateSequenceName = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-  name: string,
-): Database => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].name = name;
-  });
-};
-
-const deleteSequence = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-): Database =>
-  produce(database, (draft) => {
-    delete draft.services[serviceId].sequences[sequenceId];
-  });
-
-const duplicateSequence = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-): Database =>
-  produce(database, (draft) => {
-    const newId = uuid();
-    draft.services[serviceId].sequences[newId] = {
-      ...draft.services[serviceId].sequences[sequenceId],
-      id: newId,
-    };
-  });
-
-const DEFAULT_EVENT_NAME = "EVENT";
-
-/** Steps */
-const addStep = ({
-  database,
-  fromEnvId,
-  index,
-  sequenceId,
-  serviceId,
-  toEnvId,
-}: {
-  database: Database;
-  serviceId: string;
-  sequenceId: string;
-  fromEnvId: string;
-  toEnvId: string;
-  index: number;
-}): Database =>
-  produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps.splice(index, 0, {
-      event: DEFAULT_EVENT_NAME,
-      id: uuid(),
-      from: fromEnvId,
-      to: toEnvId,
-    });
-  });
-
-const updateStepEventName = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-  stepIndex: number,
-  name: string,
-): Database =>
-  produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps[
-      stepIndex
-    ].event = name;
-  });
-
-const deleteStep = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-  stepIndex: number,
-): Database => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps.splice(stepIndex, 1);
-  });
-};
-
-/** Environment */
-const addEnvironment = (database: Database, serviceId: string) => {
-  return produce(database, (draft) => {
-    const newId = uuid();
-    draft.services[serviceId].environments[newId] = {
-      id: newId,
-      name: "New Environment",
-    };
-  });
-};
-
-const updateEnvironmentName = (
-  database: Database,
-  serviceId: string,
-  sequenceId: string,
-  envId: string,
-  name: string,
-) => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId];
-    console.log(envId);
-    draft.services[serviceId].environments[envId].name = name;
-  });
-};
-
-const deleteEnvironment = (
-  database: Database,
-  serviceId: string,
-  envId: string,
-) => {
-  Object.values(database.services[serviceId].sequences).forEach((service) => {
-    service.steps.forEach((step) => {
-      if (step.from === envId || step.to === envId) {
-        throw new Error(
-          "This environment cannot be deleted because steps depend on it.",
-        );
-      }
-    });
-  });
-
-  return produce(database, (draft) => {
-    delete draft.services[serviceId].environments[envId];
-  });
-};
-
-export const getEventsFromSequences = (sequences: Sequence[]): string[] => {
-  return sequences.reduce((accum, sequence) => {
-    return accum.concat(
-      sequence.steps.reduce((stepAccum, step) => {
-        return stepAccum.concat(step.event);
-      }, [] as string[]),
-    );
-  }, [] as string[]);
-};
-
-const updateServiceEventPayload = (
-  database: Database,
-  serviceId: string,
-  eventPayloads: string,
-) => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].eventPayloads = eventPayloads;
-  });
-};
-
-const updateServiceName = (
-  database: Database,
-  serviceId: string,
-  name: string,
-) => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].name = name;
-  });
-};
-
-const updateServiceEventPayloadWithFunc = (
-  database: Database,
-  serviceId: string,
-  func: (eventPayload: string) => string,
-) => {
-  return produce(database, (draft) => {
-    draft.services[serviceId].eventPayloads = func(
-      draft.services[serviceId].eventPayloads,
-    );
-  });
-};
 
 type Event =
   | { type: "DELETE_ENVIRONMENT"; serviceId: string; envId: string }
@@ -410,18 +210,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
           ADD_SERVICE: {
             target: ".throttling",
             actions: [
-              assign((context, event) => {
+              assign((context) => {
                 return {
-                  database: produce(context.database, (draft) => {
-                    const id = uuid();
-                    draft.services[id] = {
-                      id,
-                      environments: {},
-                      eventPayloads: "",
-                      name: "New Service",
-                      sequences: {},
-                    };
-                  }),
+                  database: addService(context.database),
                 };
               }),
             ],

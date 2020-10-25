@@ -1,4 +1,4 @@
-import { Database, DatabaseHandler } from "@service-gui/core";
+import { Database, DatabaseHandler } from "@sextant/core";
 
 export const saveDatabase = (database: Database) => {
   return fetch("/api/saveToDatabase", {

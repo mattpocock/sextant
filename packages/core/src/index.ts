@@ -1,2 +1,2 @@
 export * from "./types";
-export { DatabaseHandler } from "./DatabaseHandler";
+export * from "./databaseUtilities";

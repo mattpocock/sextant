@@ -1,4 +1,4 @@
-import { Database, DatabaseHandler } from "@service-gui/core";
+import { Database, DatabaseHandler } from "@sextant/core";
 import { readFileSync } from "fs";
 import { getTargetDatabaseFile } from "./getTargetDir";
 
