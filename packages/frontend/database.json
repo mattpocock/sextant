@@ -444,7 +444,7 @@
         }
       },
       "eventPayloads": "# type SUCCESS {\n#   \n# }\n\n# type DELETE_BENEFICIARY {\n#   \n# }\n\n",
-      "name": "Delete Beneficiary",
+      "name": "EWG - Delete Beneficiary",
       "sequences": {
         "ae2d6fa4-5da8-4479-82f8-8c8eedb95788": {
           "id": "ae2d6fa4-5da8-4479-82f8-8c8eedb95788",
@@ -500,7 +500,7 @@
         }
       },
       "eventPayloads": "type REPORT_ERROR {\n  error: String!\n  stack: String!\n}\n\n# type UNKNOWN_ERROR {\n#   \n# }\n\ntype UPDATE_PAYMENT {\n  id: ID!\n}\n\n# type REPORT_PAYMENT_UPDATED {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type CREATE_PAYMENT {\n#   \n# }\n\n# type REPORT_PAYMENT_CREATED {\n#   \n# }\n\n",
-      "name": "Webhook Service",
+      "name": "EWG - Webhook Service",
       "sequences": {
         "2803e8a1-c4d5-4fd0-8535-3f8ed6cd5bf6": {
           "id": "2803e8a1-c4d5-4fd0-8535-3f8ed6cd5bf6",
@@ -580,6 +580,413 @@
               "id": "a8fdccba-6712-4bc1-8a8f-7b2c6732d646",
               "from": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9",
               "to": "aeb1c925-c8ef-4932-bf89-1ef42f298f84"
+            }
+          ]
+        }
+      }
+    },
+    "5be053e6-1d1c-4e6d-8b4c-854623594148": {
+      "id": "5be053e6-1d1c-4e6d-8b4c-854623594148",
+      "environments": {
+        "a379728f-b2be-4017-9607-0ce442f79622": {
+          "id": "a379728f-b2be-4017-9607-0ce442f79622",
+          "name": "AGENT"
+        },
+        "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241": {
+          "id": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+          "name": "LAMBDA"
+        },
+        "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9": {
+          "id": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+          "name": "HASURA"
+        },
+        "ffbec9aa-725e-44dc-8657-86fda939bb94": {
+          "id": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+          "name": "VIEWER"
+        }
+      },
+      "eventPayloads": "# type NO_PERMISSION {\n#   \n# }\n\n# type NU+ {\n#   \n# }\n\n# type NU+ {\n#   \n# }\n\n# type MUTE_ALL_USERS {\n#   \n# }\n\n\n",
+      "name": "AR - Muting and Excluding Users",
+      "sequences": {
+        "00178475-d233-4060-a4ea-e86ed3ac3c53": {
+          "id": "00178475-d233-4060-a4ea-e86ed3ac3c53",
+          "name": "Mute all users",
+          "order": 0,
+          "steps": [
+            {
+              "event": "SUBSCRIBE_TO_SOCKET",
+              "id": "d858e843-9e55-4351-9890-cdaa3a14d583",
+              "from": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "MUTE_ALL_USERS",
+              "id": "049d4240-2c3b-4887-aa65-8c6dcf94e796",
+              "from": "a379728f-b2be-4017-9607-0ce442f79622",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "MUTE_ALL_USERS",
+              "id": "3eebf179-3a39-4a96-9e49-33b70b8608ee",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "4c840eca-4ecc-4102-b898-e1ce0b8fb141",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "1a2bf806-a3db-40be-9828-5d2ec250bff5",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "a379728f-b2be-4017-9607-0ce442f79622"
+            },
+            {
+              "event": "REPORT_USER_MUTED",
+              "id": "1cade7d4-c309-4786-812d-7ea54852e325",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "ffbec9aa-725e-44dc-8657-86fda939bb94"
+            }
+          ]
+        },
+        "855833d9-6c2e-48f2-bc6c-e8227a151a0f": {
+          "id": "855833d9-6c2e-48f2-bc6c-e8227a151a0f",
+          "name": "Mute a single user",
+          "order": 1,
+          "steps": [
+            {
+              "event": "SUBSCRIBE_TO_SOCKET",
+              "id": "26fcd6ec-ce8f-4d2a-b639-755417dea9da",
+              "from": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "MUTE_A_USER",
+              "id": "05e65862-3959-4f62-be6c-f2cb9d3fc909",
+              "from": "a379728f-b2be-4017-9607-0ce442f79622",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "MUTE_A_USER",
+              "id": "4f2f7676-e003-473a-8df7-ac8a0faaa79d",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "83b081bf-c5cd-402e-b5b0-50357ade1a3a",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "9f7fd71d-10d9-4485-8385-02f5e50fbd32",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "a379728f-b2be-4017-9607-0ce442f79622"
+            },
+            {
+              "event": "MUTE_USER",
+              "id": "b13bcf8c-4dba-4849-9bae-d3c60033192e",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "ffbec9aa-725e-44dc-8657-86fda939bb94"
+            }
+          ]
+        },
+        "8cb021fc-bc7e-418d-8302-a293df202a06": {
+          "id": "8cb021fc-bc7e-418d-8302-a293df202a06",
+          "name": "Kick a user",
+          "order": 2,
+          "steps": [
+            {
+              "event": "SUBSCRIBE_TO_SOCKET",
+              "id": "c4866932-e509-4cd7-813d-0aea0128fdfa",
+              "from": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "KICK_A_USER",
+              "id": "c6621bc8-6957-4a7e-8bbf-829fa70a745e",
+              "from": "a379728f-b2be-4017-9607-0ce442f79622",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "MARK_USER_SESSION_AS_KICKED",
+              "id": "43a37733-6c0f-4950-bb77-cc35d9fa0b27",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "c190277f-4a6e-484b-ab4d-cf9c47023af7",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "b8b00ea5-8553-45db-ad5e-97a07fcebcc6",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "a379728f-b2be-4017-9607-0ce442f79622"
+            },
+            {
+              "event": "YOU_ARE_KICKED",
+              "id": "f84b9402-57f4-4c12-b8b8-09c92a6af174",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "ffbec9aa-725e-44dc-8657-86fda939bb94"
+            }
+          ]
+        },
+        "73e196d6-a83d-4f28-bc48-914d870bc021": {
+          "id": "73e196d6-a83d-4f28-bc48-914d870bc021",
+          "name": "Unmute all users",
+          "order": 0,
+          "steps": [
+            {
+              "event": "SUBSCRIBE_TO_SOCKET",
+              "id": "d858e843-9e55-4351-9890-cdaa3a14d583",
+              "from": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "UNMUTE_ALL_USERS",
+              "id": "049d4240-2c3b-4887-aa65-8c6dcf94e796",
+              "from": "a379728f-b2be-4017-9607-0ce442f79622",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "UNMUTE_ALL_USERS",
+              "id": "3eebf179-3a39-4a96-9e49-33b70b8608ee",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "4c840eca-4ecc-4102-b898-e1ce0b8fb141",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "1a2bf806-a3db-40be-9828-5d2ec250bff5",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "a379728f-b2be-4017-9607-0ce442f79622"
+            },
+            {
+              "event": "REPORT_USER_UNMUTED",
+              "id": "1cade7d4-c309-4786-812d-7ea54852e325",
+              "from": "e1ac1aa6-4484-4551-8e84-fc5a9a5764a9",
+              "to": "ffbec9aa-725e-44dc-8657-86fda939bb94"
+            }
+          ]
+        },
+        "01697508-2652-48f8-b6c9-53a323bdf27a": {
+          "id": "01697508-2652-48f8-b6c9-53a323bdf27a",
+          "name": "No Permission",
+          "order": 4,
+          "steps": [
+            {
+              "event": "MUTE_ALL_USERS",
+              "id": "e808d54d-cc41-4442-821f-9d08068eb440",
+              "from": "ffbec9aa-725e-44dc-8657-86fda939bb94",
+              "to": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241"
+            },
+            {
+              "event": "NO_PERMISSION",
+              "id": "78a90bb7-2da3-4625-810f-d729bde7c192",
+              "from": "b9c0bb39-9e9b-4a7c-b05d-6e10d67d5241",
+              "to": "ffbec9aa-725e-44dc-8657-86fda939bb94"
+            }
+          ]
+        }
+      }
+    },
+    "838fa130-e1b8-4502-8ddf-772adac02c64": {
+      "id": "838fa130-e1b8-4502-8ddf-772adac02c64",
+      "environments": {
+        "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2": {
+          "id": "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2",
+          "name": "FRONTEND"
+        },
+        "9683f48d-5ebe-4092-b9e5-8390691a30a2": {
+          "id": "9683f48d-5ebe-4092-b9e5-8390691a30a2",
+          "name": "HASURA"
+        }
+      },
+      "eventPayloads": "# type SUCCESS {\n#   \n# }\n\n# type SEND_PRIVATE_MESSAGE_TO_VIEWER {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type SEND_PRIVATE_MESSAGE_TO_HOST {\n#   \n# }\n\n",
+      "name": "AR - Private Messages in Viewings",
+      "sequences": {
+        "2aca9ff4-4e60-4a6e-aad4-31e700e60684": {
+          "id": "2aca9ff4-4e60-4a6e-aad4-31e700e60684",
+          "name": "Send a private message to host",
+          "order": 0,
+          "steps": [
+            {
+              "event": "SEND_PRIVATE_MESSAGE_TO_HOST",
+              "id": "d7b735a8-92d9-48a1-bd2f-a510937acbb5",
+              "from": "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2",
+              "to": "9683f48d-5ebe-4092-b9e5-8390691a30a2"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "f5cea836-8990-4c87-bd74-6dfef8f9cc11",
+              "from": "9683f48d-5ebe-4092-b9e5-8390691a30a2",
+              "to": "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2"
+            }
+          ]
+        },
+        "0a9c522b-1ff9-417b-95fe-c2c1e5ceba60": {
+          "id": "0a9c522b-1ff9-417b-95fe-c2c1e5ceba60",
+          "name": "Send a private message to viewer",
+          "order": 1,
+          "steps": [
+            {
+              "event": "SEND_PRIVATE_MESSAGE_TO_VIEWER",
+              "id": "78566a5c-7019-4b75-9883-e31e81900bfc",
+              "from": "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2",
+              "to": "9683f48d-5ebe-4092-b9e5-8390691a30a2"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "257a1829-0518-40b4-b76c-9d7c28d2cc11",
+              "from": "9683f48d-5ebe-4092-b9e5-8390691a30a2",
+              "to": "4ba80389-23f5-4a77-a42f-9d9a9a5f8ac2"
+            }
+          ]
+        }
+      }
+    },
+    "7d6e1b61-2ac6-438b-9258-32bca56dcf54": {
+      "id": "7d6e1b61-2ac6-438b-9258-32bca56dcf54",
+      "environments": {
+        "5927ce33-b054-43e7-a5ef-f9e50c35823b": {
+          "id": "5927ce33-b054-43e7-a5ef-f9e50c35823b",
+          "name": "FRONTEND"
+        },
+        "cf642fea-4eeb-40ae-ae7e-499f428f9165": {
+          "id": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+          "name": "LAMBDA"
+        },
+        "45fdb6e4-5746-4905-973d-8816975741a6": {
+          "id": "45fdb6e4-5746-4905-973d-8816975741a6",
+          "name": "HASURA"
+        },
+        "8a52c91e-0d7f-4989-ac7b-8abab59517ac": {
+          "id": "8a52c91e-0d7f-4989-ac7b-8abab59517ac",
+          "name": "EMAIL SERVER"
+        }
+      },
+      "eventPayloads": "# type YOU_HAVE_BEEN_KICKED {\n#   \n# }\n\n# type USER_HAS_BEEN_KICKED {\n#   \n# }\n\n# type DOES_VIEWING_HAVE_SPACE {\n#   \n# }\n\n# type REGISTER_FOR_OPEN_VIEWING {\n#   \n# }\n\n# type NO_PERMISSION {\n#   \n# }\n\n# type NO_PERMISSION {\n#   \n# }\n\n# type DOES_VIEWING_HAVE_SPACE {\n#   \n# }\n\n# type REGISTER_FOR_OPEN_VIEWING {\n#   \n# }\n\n# type SEND_CONFIRMATION_EMAIL {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type VIEWING_HAS_SPACE {\n#   \n# }\n\n# type DOES_VIEWING_HAVE_SPACE {\n#   \n# }\n\n# type ADD_ANONYMOUS_VIEWING_INVITATION {\n#   \n# }\n\n# type REGISTER_FOR_OPEN_VIEWING {\n#   \n# }\n\n",
+      "name": "AR - Self-registration for an open viewing",
+      "sequences": {
+        "e6a22b7b-f3f8-473b-9b85-5df4719227d3": {
+          "id": "e6a22b7b-f3f8-473b-9b85-5df4719227d3",
+          "name": "Success",
+          "order": 0,
+          "steps": [
+            {
+              "event": "REGISTER_FOR_OPEN_VIEWING",
+              "id": "9c2ca23d-be3f-4e76-b0ae-c484d18f706e",
+              "from": "5927ce33-b054-43e7-a5ef-f9e50c35823b",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "DOES_VIEWING_HAVE_SPACE",
+              "id": "66664cc8-fe19-4605-b258-3d028cf51933",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "45fdb6e4-5746-4905-973d-8816975741a6"
+            },
+            {
+              "event": "VIEWING_HAS_SPACE",
+              "id": "99efaed1-b253-40fd-b3e8-9e0742cea8b5",
+              "from": "45fdb6e4-5746-4905-973d-8816975741a6",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "ADD_ANONYMOUS_VIEWING_INVITATION",
+              "id": "2dee5b78-1b32-47dc-91b0-3c99ee935fa5",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "45fdb6e4-5746-4905-973d-8816975741a6"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "295b2bdd-d512-4c68-897b-7b5bf639f3db",
+              "from": "45fdb6e4-5746-4905-973d-8816975741a6",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "SUCCESS",
+              "id": "24272851-a358-4dc3-9e27-6e30f3ae2459",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "5927ce33-b054-43e7-a5ef-f9e50c35823b"
+            },
+            {
+              "event": "SEND_CONFIRMATION_EMAIL",
+              "id": "9bca9418-5b97-49d8-8343-6e0265ddb7da",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "8a52c91e-0d7f-4989-ac7b-8abab59517ac"
+            }
+          ]
+        },
+        "e5aebcc3-bb4e-49b5-92b6-2c04cf8315e8": {
+          "id": "e5aebcc3-bb4e-49b5-92b6-2c04cf8315e8",
+          "name": "Viewing is full",
+          "order": 1,
+          "steps": [
+            {
+              "event": "REGISTER_FOR_OPEN_VIEWING",
+              "id": "64f1dfa3-44a8-4e2b-b943-ee39f5a5514e",
+              "from": "5927ce33-b054-43e7-a5ef-f9e50c35823b",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "DOES_VIEWING_HAVE_SPACE",
+              "id": "46da94c9-fedd-4141-8e0e-a81577996dc2",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "45fdb6e4-5746-4905-973d-8816975741a6"
+            },
+            {
+              "event": "NOT_ENOUGH_SPACE",
+              "id": "5960bc95-16b8-4e8f-bb80-e9b43627589d",
+              "from": "45fdb6e4-5746-4905-973d-8816975741a6",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "NOT_ENOUGH_SPACE",
+              "id": "3684b899-c3c1-4aad-a3ce-1b2a7450e90d",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "5927ce33-b054-43e7-a5ef-f9e50c35823b"
+            }
+          ]
+        },
+        "ac0e6012-7382-4989-a82a-78ef8bd5e532": {
+          "id": "ac0e6012-7382-4989-a82a-78ef8bd5e532",
+          "name": "User has previously been kicked",
+          "order": 2,
+          "steps": [
+            {
+              "event": "REGISTER_FOR_OPEN_VIEWING",
+              "id": "fdb0f96a-c3bb-48f6-82fd-1094d3e3768c",
+              "from": "5927ce33-b054-43e7-a5ef-f9e50c35823b",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "DOES_VIEWING_HAVE_SPACE",
+              "id": "9680f8b5-76b1-40ab-984c-d807d7451737",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "45fdb6e4-5746-4905-973d-8816975741a6"
+            },
+            {
+              "event": "USER_HAS_BEEN_KICKED",
+              "id": "d33403a5-9a1a-4b05-a9e8-ee69cd1e7626",
+              "from": "45fdb6e4-5746-4905-973d-8816975741a6",
+              "to": "cf642fea-4eeb-40ae-ae7e-499f428f9165"
+            },
+            {
+              "event": "YOU_HAVE_BEEN_KICKED",
+              "id": "474b9b92-7281-427e-b22d-f9800c71c316",
+              "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
+              "to": "5927ce33-b054-43e7-a5ef-f9e50c35823b"
             }
           ]
         }
