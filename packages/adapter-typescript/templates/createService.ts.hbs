@@ -1,3 +1,5 @@
+type EventType<T, K> = { type: K } & T;
+
 interface Services {
   {{#each services }}
   '{{camelcase this.name}}': {
@@ -9,12 +11,12 @@ interface Services {
           '{{ camelcase this.env}}': {
             in:
             {{#each this.in}}
-              | { type: "{{this.event}}" }
+              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.in}}never;{{/unless}}
             out:
             {{#each this.out}}
-              | { type: "{{this.event}}" }
+              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.out}}never;{{/unless}}
           }
@@ -25,12 +27,12 @@ interface Services {
           '{{ camelcase this.env}}': {
             in:
             {{#each this.in}}
-              | { type: "{{this.event}}" }
+              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.in}}never;{{/unless}}
             out:
             {{#each this.out}}
-              | { type: "{{this.event}}" }
+              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.out}}never;{{/unless}}
           }

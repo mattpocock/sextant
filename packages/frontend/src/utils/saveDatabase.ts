@@ -7,9 +7,11 @@ import * as path from "path";
 export const saveDatabase = async (database: Database): Promise<Database> => {
   writeFileSync(getTargetDatabaseFile(), JSON.stringify(database, null, 2));
 
-  writeFileSync(
-    path.resolve(getTargetDir(), "src/createActor.ts"),
-    buildCodeForCreateService(flattenDatabase(database)),
-  );
+  const filesToWrite = buildCodeForCreateService(flattenDatabase(database));
+
+  filesToWrite.forEach((file) => {
+    writeFileSync(file.filename, file.content);
+  });
+
   return Promise.resolve(database);
 };

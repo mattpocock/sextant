@@ -101,7 +101,7 @@
           "name": "TCC"
         }
       },
-      "eventPayloads": "# type BENEFICIARY {\n#   \n# }\n\n# type CREATE_BENEFICIARY {\n#   \n# }\n\n\n\n\n",
+      "eventPayloads": "type BENEFICIARY {\n  id: ID!\n}\n\ntype CREATE_BENEFICIARY {\n  id: ID!\n}\n\n\n\n\n",
       "name": "Create Beneficiary",
       "sequences": {
         "a6603959-8068-4291-9868-6aa0c29530d2": {
@@ -499,7 +499,7 @@
           "name": "ERROR TRACKER"
         }
       },
-      "eventPayloads": "type REPORT_ERROR {\n  error: String!\n  stack: String!\n}\n\n# type UNKNOWN_ERROR {\n#   \n# }\n\ntype UPDATE_PAYMENT {\n  id: ID!\n}\n\n# type REPORT_PAYMENT_UPDATED {\n#   \n# }\n\n# type SUCCESS {\n#   \n# }\n\n# type CREATE_PAYMENT {\n#   \n# }\n\n# type REPORT_PAYMENT_CREATED {\n#   \n# }\n\n",
+      "eventPayloads": "type REPORT_ERROR {\n  error: String!\n  stack: String\n}\n\ntype UNKNOWN_ERROR {\n  error: String!\n}\n\ntype UPDATE_PAYMENT {\n  id: ID!\n  amount: Int\n  beneficiaryId: ID\n}\n\ntype PAYMENT_UPDATED {\n  id: ID!\n  amount: Int!\n  beneficiaryId: ID!\n}\n\n# type SUCCESS {\n#   \n# }\n\ntype CREATE_PAYMENT {\n  externalServiceId: String!\n  amount: Int!\n  beneficiaryId: ID!\n}\n\ntype PAYMENT_CREATED {\n  id: ID!\n  amount: Int!\n  beneficiaryId: ID!\n  \n}\n\n",
       "name": "EWG - Webhook Service",
       "sequences": {
         "2803e8a1-c4d5-4fd0-8535-3f8ed6cd5bf6": {
@@ -508,7 +508,7 @@
           "order": 0,
           "steps": [
             {
-              "event": "REPORT_PAYMENT_CREATED",
+              "event": "PAYMENT_CREATED",
               "id": "5293f7d3-034a-46fc-8d7a-ff1d851f5ac1",
               "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
               "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
@@ -533,7 +533,7 @@
           "order": 1,
           "steps": [
             {
-              "event": "REPORT_PAYMENT_UPDATED",
+              "event": "PAYMENT_UPDATED",
               "id": "825d1fd4-2747-4f3f-9b40-654dd35b67e9",
               "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
               "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
@@ -558,7 +558,7 @@
           "order": 0,
           "steps": [
             {
-              "event": "REPORT_PAYMENT_CREATED",
+              "event": "PAYMENT_CREATED",
               "id": "5293f7d3-034a-46fc-8d7a-ff1d851f5ac1",
               "from": "f521d22c-f1a4-49bc-874f-303dae0fde40",
               "to": "66b34e62-73e9-4ec5-b12d-3000ae8f04e9"
@@ -987,6 +987,130 @@
               "id": "474b9b92-7281-427e-b22d-f9800c71c316",
               "from": "cf642fea-4eeb-40ae-ae7e-499f428f9165",
               "to": "5927ce33-b054-43e7-a5ef-f9e50c35823b"
+            }
+          ]
+        }
+      }
+    },
+    "d077c581-f6d9-4b6e-b629-e68b518e634b": {
+      "id": "d077c581-f6d9-4b6e-b629-e68b518e634b",
+      "environments": {
+        "827e0495-c385-446f-b5aa-0ae2e39ac8d0": {
+          "id": "827e0495-c385-446f-b5aa-0ae2e39ac8d0",
+          "name": "FRONTEND"
+        },
+        "25f96612-2984-4e86-9ab0-72da47668edc": {
+          "id": "25f96612-2984-4e86-9ab0-72da47668edc",
+          "name": "Server"
+        },
+        "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86": {
+          "id": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86",
+          "name": "DATABASE"
+        },
+        "b121049b-de80-424c-93d0-e5f7c843f60e": {
+          "id": "b121049b-de80-424c-93d0-e5f7c843f60e",
+          "name": "ERROR TRACKER"
+        }
+      },
+      "eventPayloads": "# type CHARACTERS {\n#   \n# }\n\n# type GET_CHARACTERS_FROM_DATABASE {\n#   \n# }\n\ntype GET_CHARACTERS {\n  id: [ID!]!\n}\n\ntype REPORT_ERROR {\n  error: String!\n  json: String\n}\n\n\n# type UNKNOWN_ERROR {\n# }\n\ntype GET_CHARACTER {\n  id: ID!\n}\n\ntype CHARACTER_FROM_DATABASE {\n  character: Character!\n}\n\ntype Character {\n  id: ID!\n  name: String!\n  age: Int!\n}\n\ntype GET_CHARACTER_FROM_DATABASE {\n  id: ID!\n}",
+      "name": "Get Star Wars Character",
+      "sequences": {
+        "a2ff8b74-42c8-4f5c-bfd2-57109dd7d7db": {
+          "id": "a2ff8b74-42c8-4f5c-bfd2-57109dd7d7db",
+          "name": "Success",
+          "order": 0,
+          "steps": [
+            {
+              "event": "GET_CHARACTER",
+              "id": "d3a97e89-6090-493e-9cd5-73f3fe37acf6",
+              "from": "827e0495-c385-446f-b5aa-0ae2e39ac8d0",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "GET_CHARACTER_FROM_DATABASE",
+              "id": "5bb6ea93-b73e-4865-86d7-8f47a0f2c75a",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86"
+            },
+            {
+              "event": "CHARACTER_FROM_DATABASE",
+              "id": "23512d7e-63a0-4317-8776-75c0f8bd97c0",
+              "from": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "CHARACTER",
+              "id": "b1d80612-3dbd-4f15-a176-d98ed8e24ef7",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "827e0495-c385-446f-b5aa-0ae2e39ac8d0"
+            }
+          ]
+        },
+        "02d4c632-aab8-402c-aa61-3777427cf2b3": {
+          "id": "02d4c632-aab8-402c-aa61-3777427cf2b3",
+          "name": "Success",
+          "order": 0,
+          "steps": [
+            {
+              "event": "GET_CHARACTER",
+              "id": "d3a97e89-6090-493e-9cd5-73f3fe37acf6",
+              "from": "827e0495-c385-446f-b5aa-0ae2e39ac8d0",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "GET_CHARACTER_FROM_DATABASE",
+              "id": "5bb6ea93-b73e-4865-86d7-8f47a0f2c75a",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86"
+            },
+            {
+              "event": "UNKNOWN_ERROR",
+              "id": "23512d7e-63a0-4317-8776-75c0f8bd97c0",
+              "from": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "UNKNOWN_ERROR",
+              "id": "b1d80612-3dbd-4f15-a176-d98ed8e24ef7",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "827e0495-c385-446f-b5aa-0ae2e39ac8d0"
+            },
+            {
+              "event": "REPORT_ERROR",
+              "id": "002987fb-33d4-4481-b064-8cc6b0efdd08",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "b121049b-de80-424c-93d0-e5f7c843f60e"
+            }
+          ]
+        },
+        "ea36e43b-d8d9-400d-a976-a07d1f5d9ef9": {
+          "id": "ea36e43b-d8d9-400d-a976-a07d1f5d9ef9",
+          "name": "New Sequence",
+          "order": 2,
+          "steps": [
+            {
+              "event": "GET_CHARACTERS",
+              "id": "8aa6470b-53ff-47f6-8f38-958d2945c81b",
+              "from": "827e0495-c385-446f-b5aa-0ae2e39ac8d0",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "GET_CHARACTERS_FROM_DATABASE",
+              "id": "82646e37-066c-4163-bccf-f8772579bc67",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86"
+            },
+            {
+              "event": "CHARACTERS",
+              "id": "00938301-1a34-41ee-8ad1-405c45befba4",
+              "from": "ddd4bc9d-fda9-4490-926b-bfb20e6e8d86",
+              "to": "25f96612-2984-4e86-9ab0-72da47668edc"
+            },
+            {
+              "event": "CHARACTERS",
+              "id": "380ba343-cf7f-4a39-8f20-98a9661327d3",
+              "from": "25f96612-2984-4e86-9ab0-72da47668edc",
+              "to": "827e0495-c385-446f-b5aa-0ae2e39ac8d0"
             }
           ]
         }
