@@ -1,7 +1,6 @@
 import React from "react";
 import HeroIconCheveronRight from "./icons/HeroIconCheveronRight";
 import Link from "next/link";
-import { routeMap } from "./routeMap";
 
 export const EditableServiceTable = (props: {
   environments: { id: string }[];

@@ -77,6 +77,7 @@ interface Sender<TEventConfig extends EventConfig> {
 export const createActor = <
   IService extends keyof Services,
   IInitialEnvironment extends keyof Services[IService]["environments"],
+  // @ts-ignore
   IFromEnvironment extends keyof Services[IService]["environments"][IInitialEnvironment]["from"]
 >(
   service: IService,
@@ -87,17 +88,23 @@ export const createActor = <
     from: {
       environment: IFromEnvironment;
       handler: ImplementationFunction<
+        // @ts-ignore
         Services[IService]["environments"][IInitialEnvironment]["from"][IFromEnvironment],
+        // @ts-ignore
         Services[IService]["environments"][IInitialEnvironment]
       >;
     };
     to?: {
+      // @ts-ignore
       [SourceEnvKey in keyof Services[IService]["environments"][IInitialEnvironment]["to"]]?: ImplementationFunction<
+        // @ts-ignore
         Services[IService]["environments"][IInitialEnvironment]["to"][SourceEnvKey],
+        // @ts-ignore
         Services[IService]["environments"][SourceEnvKey]
       >;
     };
   },
+  // @ts-ignore
 ): Sender<Services[IService]["environments"][IInitialEnvironment]["from"][IFromEnvironment]> => {
   return {} as any;
 };

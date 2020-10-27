@@ -4,7 +4,7 @@ import * as camelcase from "lodash/camelCase";
 import * as upperFirst from "lodash/upperFirst";
 import * as fs from "fs";
 import * as path from "path";
-import { FlattenedDatabase, getStepsFromSequences } from "@sextant/core";
+import { FlattenedDatabase, getStepsFromSequences } from "@sextant-tools/core";
 import { TsVisitor } from "@graphql-codegen/typescript";
 import { buildSchema, printSchema, parse, visit } from "graphql";
 

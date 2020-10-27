@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { routeMap } from "./routeMap";
 
 const linkClasses = classNames(
   "px-6 py-4 block text-gray-700 tracking-tight text-base",

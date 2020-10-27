@@ -4,12 +4,12 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-graphqlschema";
 import "ace-builds/src-noconflict/theme-xcode";
 import { keepDataInSyncMachine } from "components/keepDataInSync.machine";
-import { Service } from "@sextant/core";
+import { Service } from "@sextant-tools/core";
 import {
   SequenceDiagram,
   SequenceDiagramWrapper,
 } from "components/SequenceDiagram";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import ContentEditable from "react-contenteditable";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -17,7 +17,18 @@ import Link from "next/link";
 const HomePage = () => {
   const router = useRouter();
 
-  const [state, dispatch] = useMachine(keepDataInSyncMachine, {});
+  const [state, dispatch] = useMachine(keepDataInSyncMachine, {
+    actions: {
+      goToInitialService() {
+        router.push(`/?serviceId=initial`);
+      },
+      goToFirstService(context) {
+        const targetServiceId = Object.values(context.database.services)[0].id;
+
+        router.push("/?serviceId=" + targetServiceId);
+      },
+    },
+  });
 
   const selectedServiceId = router.query.serviceId as string;
 
@@ -27,6 +38,14 @@ const HomePage = () => {
   const sequences = useMemo(() => Object.values(service?.sequences || {}), [
     service,
   ]);
+
+  useEffect(() => {
+    if (!service) {
+      dispatch({
+        type: "SERVICE_NOT_FOUND",
+      });
+    }
+  }, [service, state.value]);
 
   switch (true) {
     case state.matches("errored"):

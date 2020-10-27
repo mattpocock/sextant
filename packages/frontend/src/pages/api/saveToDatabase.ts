@@ -1,4 +1,4 @@
-import { Database } from "@sextant/core";
+import { Database } from "@sextant-tools/core";
 import { NextApiHandler } from "next";
 import { saveDatabase } from "../../utils/saveDatabase";
 

@@ -15,7 +15,7 @@ import {
   updateServiceEventPayloadWithFunc,
   updateServiceName,
   updateStepEventName,
-} from "@sextant/core";
+} from "@sextant-tools/core";
 import { assign, Machine } from "@xstate/compiled";
 import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
 
@@ -29,6 +29,9 @@ type Event =
       type: "UPDATE_SERVICE_EVENT_PAYLOAD";
       serviceId: string;
       eventPayloadString: string;
+    }
+  | {
+      type: "SERVICE_NOT_FOUND";
     }
   | {
       type: "UPDATE_SERVICE_NAME";
@@ -116,19 +119,49 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       loading: {
         invoke: {
           src: "loadDatabase",
-          onDone: {
-            actions: ["saveDatabaseToContext"],
-            target: "editing",
-          },
+          onDone: [
+            {
+              cond: "databaseHasAtLeastOneService",
+              actions: ["saveDatabaseToContext"],
+              target: "editing",
+            },
+            {
+              actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
+              target: "editing",
+            },
+          ],
           onError: {
             target: "errored",
           },
         },
       },
-      errored: {},
+      errored: {
+        always: [
+          {
+            cond: "databaseFromContextHasAtLeastOneService",
+            actions: ["goToFirstService"],
+            target: "editing",
+          },
+          {
+            actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
+            target: "editing",
+          },
+        ],
+      },
       editing: {
         initial: "idle",
         on: {
+          SERVICE_NOT_FOUND: [
+            {
+              cond: "databaseFromContextHasAtLeastOneService",
+              actions: ["goToFirstService"],
+              target: "editing",
+            },
+            {
+              actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
+              target: "editing",
+            },
+          ],
           UPDATE_SERVICE_EVENT_PAYLOAD: {
             actions: assign((context, event) => {
               return {
@@ -371,6 +404,12 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       },
     },
     guards: {
+      databaseFromContextHasAtLeastOneService: (context) => {
+        return Object.keys(context.database).length > 0;
+      },
+      databaseHasAtLeastOneService: (context, event) => {
+        return Object.keys(event.data.services).length > 0;
+      },
       canDeleteEnvironment: ({ database }, { envId, serviceId }) => {
         try {
           Object.values(database.services[serviceId].sequences).forEach(
@@ -396,6 +435,21 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
           "You cannot delete this environment because it has steps associated with it.",
         );
       },
+      saveDefaultDatabaseToContext: assign((context) => {
+        return {
+          database: {
+            services: {
+              initial: {
+                environments: {},
+                eventPayloads: "",
+                id: "initial",
+                name: "Your First Service",
+                sequences: {},
+              },
+            },
+          },
+        };
+      }),
       saveDatabaseToContext: assign((context, event) => {
         if (event.data?.services) {
           return {

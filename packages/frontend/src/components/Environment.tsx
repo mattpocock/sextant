@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import { routeMap } from "./routeMap";
 import { SubHeading } from "./SubHeading";
 
 export interface EnvironmentProps {
@@ -23,13 +22,7 @@ export const Environment = (props: EnvironmentProps) => {
       <div className="grid grid-cols-2 p-6 gap-x-8 gap-y-10">
         {props.services?.map((service) => {
           return (
-            <Link
-              href={routeMap.viewService({
-                params: {
-                  serviceId: service.id,
-                },
-              })}
-            >
+            <Link href={"#"}>
               <a key={service.id}>
                 <h3 className="text-gray-700 font-bold">{service.id}</h3>
                 <div className="flex items-center space-x-2">
