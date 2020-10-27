@@ -2,7 +2,6 @@
 
 const { execSync } = require("child_process");
 const path = require("path");
-const { target } = require("tailwindcss/stubs/defaultConfig.stub");
 
 const [, , targetDir] = process.argv;
 

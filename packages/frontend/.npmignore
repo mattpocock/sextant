@@ -6,3 +6,4 @@ database.json
 tailwind.config.js
 postcss.config.js
 tsconfig.json
+.next/cache

@@ -1,18 +1,19 @@
 {
   "name": "@sextant-tools/frontend",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "bin": {
-    "sextant": "node bin/index.js"
+    "sextant": "bin/index.js"
   },
   "scripts": {
     "dev": "concurrently \"next dev\" \"npm run codegen\"",
-    "build": "next build",
+    "build": "(cd ../../ && yarn build) && next build",
     "start": "next start",
     "storybook": "concurrently \"start-storybook -p 6006\" \"npm run codegen\"",
     "build-storybook": "build-storybook",
     "codegen": "xstate-codegen \"./!(node_modules)/**/**.machine.ts\"",
     "local-link": "yarn unlink && yarn build && yarn link",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "chmod:index": "chmod +x bin/index.js"
   },
   "dependencies": {
     "@sextant-tools/core": "0.0.1",

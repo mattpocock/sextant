@@ -89,7 +89,7 @@ export const buildCodeForCreateService = (
   const template = Handlebars.compile(
     fs
       .readFileSync(
-        path.resolve(__dirname, "../templates/createService.ts.hbs"),
+        path.resolve(__dirname, "../templates/sextant-types.ts.hbs"),
       )
       .toString(),
   );
@@ -122,7 +122,7 @@ export const buildCodeForCreateService = (
   return [
     {
       content: [importStatementText, result].join("\n\n"),
-      filename: "createActor.generated.ts",
+      filename: "sextant-types.generated.ts",
     },
     ...typeFiles,
   ];
