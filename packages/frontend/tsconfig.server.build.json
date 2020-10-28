@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.server.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./bin",
+    "rootDir": "./src/bin",
+    "isolatedModules": false
+  },
+  "include": [
+    "./src/bin"
+  ]
+}

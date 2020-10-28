@@ -461,6 +461,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
       saveToDatabase: (context) => {
         fetch(`/api/saveToDatabase`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(context.database),
         });
       },

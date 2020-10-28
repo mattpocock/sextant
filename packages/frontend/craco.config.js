@@ -8,4 +8,9 @@ module.exports = {
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  devServer: {
+    proxy: {
+      "/api": "http://localhost:4000",
+    },
+  },
 };

@@ -1,9 +1,0 @@
-src
-public
-.storybook
-next-env.d.ts
-database.json
-tailwind.config.js
-postcss.config.js
-tsconfig.json
-.next/cache

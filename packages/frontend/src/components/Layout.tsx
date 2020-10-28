@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 
 const linkClasses = classNames(
   "px-6 py-4 block text-gray-700 tracking-tight text-base",

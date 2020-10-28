@@ -13,7 +13,7 @@ import {
 import { useEffect, useMemo } from "react";
 import ContentEditable from "react-contenteditable";
 import { useHistory, useLocation, Link } from "react-router-dom";
-import { useSearchParams } from "utils/useSearchParams";
+import { useSearchParams } from "components/useSearchParams";
 
 const HomePage = () => {
   const history = useHistory();

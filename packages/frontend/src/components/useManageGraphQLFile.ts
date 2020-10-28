@@ -18,7 +18,7 @@ export const editEvent = (
 
 export const removeEvent = (eventPayloads: string, targetEvent: string) => {
   return produce(eventPayloads, (draft) => {
-    const regex = new RegExp(`type ${targetEvent} \{`);
+    const regex = new RegExp(`type ${targetEvent} {`);
 
     const payloadsAsArray = draft.split("\n");
 
