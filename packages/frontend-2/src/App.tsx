@@ -1,5 +1,7 @@
+import React from "react";
 import { Service } from "@sextant-tools/core";
 import { useMachine } from "@xstate/compiled/react";
+import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-graphqlschema";
 import "ace-builds/src-noconflict/theme-xcode";
@@ -8,29 +10,29 @@ import {
   SequenceDiagram,
   SequenceDiagramWrapper,
 } from "components/SequenceDiagram";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
-import AceEditor from "react-ace";
 import ContentEditable from "react-contenteditable";
+import { useHistory, useLocation, Link } from "react-router-dom";
+import { useSearchParams } from "utils/useSearchParams";
 
 const HomePage = () => {
-  const router = useRouter();
+  const history = useHistory();
+  const params = useSearchParams<{ serviceId: string }>();
 
   const [state, dispatch] = useMachine(keepDataInSyncMachine, {
     actions: {
       goToInitialService() {
-        router.push(`/?serviceId=initial`);
+        history.push(`/?serviceId=initial`);
       },
       goToFirstService(context) {
         const targetServiceId = Object.values(context.database.services)[0].id;
 
-        router.push("/?serviceId=" + targetServiceId);
+        history.push("/?serviceId=" + targetServiceId);
       },
     },
   });
 
-  const selectedServiceId = router.query.serviceId as string;
+  const selectedServiceId = params?.serviceId as string;
 
   const service: Service | undefined =
     state.context.database.services[selectedServiceId || ""];
@@ -65,10 +67,11 @@ const HomePage = () => {
                 {Object.values(state.context.database.services).map(
                   (service) => {
                     return (
-                      <Link href={`/?serviceId=${service.id}`}>
-                        <a className="text-sm text-gray-700 block">
-                          {service.name}
-                        </a>
+                      <Link
+                        to={`/?serviceId=${service?.id}`}
+                        className="text-sm text-gray-700 block"
+                      >
+                        {service?.name}
                       </Link>
                     );
                   },
@@ -129,7 +132,9 @@ const HomePage = () => {
                       }}
                     >
                       <SequenceDiagram
-                        environments={Object.values(service.environments || {})}
+                        environments={Object.values(
+                          service?.environments || {},
+                        )}
                         steps={sequence.steps}
                         onAddStep={({ index, from, to }) => {
                           dispatch({

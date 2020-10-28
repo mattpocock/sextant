@@ -17,6 +17,7 @@
     "frontend": "yarn workspace @sextant-tools/frontend",
     "ts": "yarn workspace @sextant-tools/adapter-typescript",
     "fe": "yarn frontend",
+    "fe2": "yarn workspace @sextant-tools/frontend-2",
     "build": "tsc -b ./tsconfig.monorepo.json",
     "dev": "yarn build --watch",
     "codegen:machines": "xstate-codegen \"./!(node_modules)/!(node_modules)/**/**.machine.ts\" --once",
