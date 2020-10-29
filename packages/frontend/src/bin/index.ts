@@ -4,22 +4,26 @@ import express from "express";
 import * as path from "path";
 import { setupServer } from "./server/setupServer";
 import open from "open";
+import { program } from "commander";
 
-const app = express();
+program
+  .description("Start the sextant server pointing at a target directory.")
+  .option(
+    "-p --port",
+    "Your chosen port to run the app. Defaults to 3000",
+    "3000",
+  )
+  .action((event, [targetDir, port]) => {
+    const app = express();
+    process.env.TARGET_DIR = targetDir;
 
-const [, , targetDir] = process.argv;
+    setupServer(app);
 
-if (!targetDir) {
-  console.log("You must pass a target directory. For instance: sextant ./");
-  process.exit(1);
-}
+    app.use("/", express.static(path.resolve(__dirname, "../build")));
 
-process.env.TARGET_DIR = targetDir;
+    app.listen(port || 3000, () => {
+      open(`http://localhost:${port || 3000}`);
+    });
+  });
 
-setupServer(app);
-
-app.use("/", express.static(path.resolve(__dirname, "../build")));
-
-app.listen(3000, () => {
-  open(`http://localhost:3000`);
-});
+program.parse(process.argv);
