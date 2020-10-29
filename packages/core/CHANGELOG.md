@@ -1,5 +1,11 @@
 # @sextant-tools/core
 
+## 0.0.4
+
+### Patch Changes
+
+- Added a description field to services and sequences
+
 ## 0.0.3
 
 ### Patch Changes

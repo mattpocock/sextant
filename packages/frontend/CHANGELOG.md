@@ -1,5 +1,14 @@
 # @sextant-tools/frontend
 
+## 0.2.6
+
+### Patch Changes
+
+- Added a description field to services and sequences
+- Updated dependencies [undefined]
+  - @sextant-tools/adapter-typescript@0.0.4
+  - @sextant-tools/core@0.0.4
+
 ## 0.2.5
 
 ### Patch Changes

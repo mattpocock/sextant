@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "lib/index.js",
   "dependencies": {
     "graphql": "^15.3.0",
