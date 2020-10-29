@@ -105,7 +105,8 @@ export const buildCodeForCreateService = (
     .map((service) => {
       return {
         content: service.typescriptDefText,
-        filename: `${camelcase(service.name)}.generated.ts`,
+        filename: `${camelcase(service.id)}.generated.ts`,
+        id: service.id,
         importName: upperFirst(camelcase(service.name)),
       };
     });
@@ -114,7 +115,7 @@ export const buildCodeForCreateService = (
     .map(
       (file) =>
         `import * as ${file.importName} from './${camelcase(
-          file.importName,
+          file.id,
         )}.generated';`,
     )
     .join("\n");

@@ -1,5 +1,11 @@
 # @sextant-tools/frontend
 
+## 0.2.4
+
+### Patch Changes
+
+- b499636: Added an option for adjusting which port it runs on
+
 ## 0.2.3
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/frontend",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "bin": {
     "sextant": "bin/index.js"
   },
@@ -65,7 +65,7 @@
     "tailwindcss": "^1.8.10",
     "ts-node-dev": "^1.0.0",
     "typescript": "^4.0.3",
-    "uuid": "^8.3.0",
+    "human-id": "^2.0.1",
     "xstate": "^4.13.0"
   }
 }

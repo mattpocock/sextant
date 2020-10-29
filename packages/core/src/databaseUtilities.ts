@@ -1,6 +1,8 @@
 import { Database, FlattenedDatabase, Sequence, Step } from "./types";
 import produce from "immer";
-import { v4 as uuid } from "uuid";
+import humanId from "human-id";
+
+const uuid = () => humanId();
 
 export const flattenDatabase = (database: Database): FlattenedDatabase => {
   return {
