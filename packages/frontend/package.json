@@ -1,19 +1,25 @@
 {
   "name": "@sextant-tools/frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.3",
+  "bin": {
+    "sextant": "bin/index.js"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "open": "^7.3.0",
+    "@sextant-tools/core": "0.0.2",
+    "@sextant-tools/adapter-typescript": "0.0.2"
   },
   "scripts": {
     "start": "concurrently \"craco start\" \"npm run codegen\" \"npm run start:api\"",
     "start:api": "ts-node-dev -T --project tsconfig.server.json src/bin/server/devServer.ts",
-    "build": "(cd ../../ && yarn build) && craco build",
+    "build": "(cd ../../ && yarn build) && npm run codegen -- --once && craco build && npm run build:api && npm run chmod:index",
     "build:api": "tsc --project tsconfig.server.build.json",
     "test": "craco test",
     "codegen": "xstate-codegen \"./!(node_modules)/**/**.machine.ts\"",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "chmod:index": "chmod +x bin/index.js"
   },
   "eslintConfig": {
     "extends": [

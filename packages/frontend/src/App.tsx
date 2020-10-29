@@ -5,15 +5,15 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-graphqlschema";
 import "ace-builds/src-noconflict/theme-xcode";
-import { keepDataInSyncMachine } from "components/keepDataInSync.machine";
+import { keepDataInSyncMachine } from "./components/keepDataInSync.machine";
 import {
   SequenceDiagram,
   SequenceDiagramWrapper,
-} from "components/SequenceDiagram";
+} from "./components/SequenceDiagram";
 import { useEffect, useMemo } from "react";
 import ContentEditable from "react-contenteditable";
 import { useHistory, useLocation, Link } from "react-router-dom";
-import { useSearchParams } from "components/useSearchParams";
+import { useSearchParams } from "./components/useSearchParams";
 
 const HomePage = () => {
   const history = useHistory();

@@ -1,14 +1,13 @@
 {
   "name": "@sextant-tools/adapter-typescript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "dependencies": {
     "@graphql-codegen/typescript": "^1.17.11",
-    "@sextant-tools/core": "0.0.1",
+    "@sextant-tools/core": "0.0.2",
     "graphql": "^15.4.0",
     "handlebars": "^4.7.6",
     "handlebars-helpers": "^0.10.0",
-    "json-schema-to-typescript": "^9.1.1",
     "lodash": "^4.17.20"
   }
 }
