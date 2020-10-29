@@ -26,6 +26,7 @@ export const addSequence = (
     const id = uuid();
     service.sequences[id] = {
       id,
+      description: "Description",
       name: "New Sequence",
       order: Object.keys(service.sequences).length,
       steps: [],
@@ -39,6 +40,7 @@ export const addService = (database: Database) => {
     draft.services[id] = {
       id,
       environments: {},
+      description: "Description",
       eventPayloads: "",
       name: "New Service",
       sequences: {},
@@ -54,6 +56,17 @@ export const updateSequenceName = (
 ): Database => {
   return produce(database, (draft) => {
     draft.services[serviceId].sequences[sequenceId].name = name;
+  });
+};
+
+export const updateSequenceDescription = (
+  database: Database,
+  serviceId: string,
+  sequenceId: string,
+  description: string,
+): Database => {
+  return produce(database, (draft) => {
+    draft.services[serviceId].sequences[sequenceId].description = description;
   });
 };
 
@@ -202,6 +215,16 @@ export const updateServiceName = (
 ) => {
   return produce(database, (draft) => {
     draft.services[serviceId].name = name;
+  });
+};
+
+export const updateServiceDescription = (
+  database: Database,
+  serviceId: string,
+  description: string,
+) => {
+  return produce(database, (draft) => {
+    draft.services[serviceId].description = description;
   });
 };
 

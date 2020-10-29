@@ -1,11 +1,10 @@
 {
   "name": "@sextant-tools/core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "lib/index.js",
   "dependencies": {
     "graphql": "^15.3.0",
     "handlebars": "^4.7.6",
-    "json-schema-to-typescript": "^9.1.1",
     "immer": "7.0.14",
     "human-id": "^2.0.1"
   }

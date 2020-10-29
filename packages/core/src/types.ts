@@ -7,6 +7,7 @@ export interface Service {
   environments: Record<string, Environment>;
   eventPayloads: string;
   name: string;
+  description: string;
   id: string;
 }
 
@@ -25,6 +26,7 @@ export interface FlattenedService {
 export interface Sequence {
   id: string;
   name: string;
+  description: string;
   order: number;
   steps: Step[];
 }

@@ -103,6 +103,18 @@ const HomePage = () => {
                       });
                     }}
                   ></ContentEditable>
+                  <ContentEditable
+                    html={service?.description || ""}
+                    tagName="p"
+                    onChange={(e) => {
+                      dispatch({
+                        type: "UPDATE_SERVICE_DESCRIPTION",
+                        description: e.target.value,
+                        serviceId: selectedServiceId,
+                      });
+                    }}
+                    className="text-xs text-gray-700 mt-1 leading-relaxed"
+                  ></ContentEditable>
                 </div>
                 {sequences.map((sequence, sequenceIndex) => {
                   return (
@@ -114,6 +126,15 @@ const HomePage = () => {
                           name: title,
                           sequenceId: sequence.id,
                           serviceId: selectedServiceId,
+                        });
+                      }}
+                      description={sequence.description}
+                      onChangeDescription={(description) => {
+                        dispatch({
+                          type: "UPDATE_SEQUENCE_DESCRIPTION",
+                          description,
+                          sequenceId: sequence.id,
+                          serviceId: service.id,
                         });
                       }}
                       onDuplicate={() => {

@@ -4,7 +4,7 @@
       "environments": {
         "1a3ea9cb-855b-4be3-a1ee-59d6c7e159d4": {
           "id": "1a3ea9cb-855b-4be3-a1ee-59d6c7e159d4",
-          "name": "wdawdawd"
+          "name": "SOMETHING"
         }
       },
       "eventPayloads": "",
@@ -15,9 +15,11 @@
           "id": "9862d90c-25d5-4f49-83f5-cc0087d7ddaf",
           "name": "New Sequence",
           "order": 0,
-          "steps": []
+          "steps": [],
+          "description": "Absolutely wonderful service with this name"
         }
-      }
+      },
+      "description": ""
     }
   }
 }

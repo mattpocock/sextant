@@ -5,7 +5,7 @@ export type EventType<T, K> = { type: K } & T;
 export interface SextantServices {
   'yourFirstService': {
     environments: {
-      'wdawdawd': {
+      'something': {
         from: {
         }
         to: {

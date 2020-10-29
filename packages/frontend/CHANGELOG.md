@@ -1,5 +1,14 @@
 # @sextant-tools/frontend
 
+## 0.2.5
+
+### Patch Changes
+
+- f2238a6: Removed uuid and replaced with human-id for easier to read filenames
+- Updated dependencies [f2238a6]
+  - @sextant-tools/adapter-typescript@0.0.3
+  - @sextant-tools/core@0.0.3
+
 ## 0.2.4
 
 ### Patch Changes

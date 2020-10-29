@@ -15,6 +15,8 @@ import {
   updateServiceEventPayloadWithFunc,
   updateServiceName,
   updateStepEventName,
+  updateSequenceDescription,
+  updateServiceDescription,
 } from "@sextant-tools/core";
 import { assign, Machine } from "@xstate/compiled";
 import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
@@ -29,6 +31,17 @@ type Event =
       type: "UPDATE_SERVICE_EVENT_PAYLOAD";
       serviceId: string;
       eventPayloadString: string;
+    }
+  | {
+      type: "UPDATE_SEQUENCE_DESCRIPTION";
+      serviceId: string;
+      sequenceId: string;
+      description: string;
+    }
+  | {
+      type: "UPDATE_SERVICE_DESCRIPTION";
+      serviceId: string;
+      description: string;
     }
   | {
       type: "SERVICE_NOT_FOUND";
@@ -106,6 +119,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
         services: {
           initial: {
             id: "initial",
+            description: "Description",
             name: "Initial",
             environments: {},
             sequences: {},
@@ -246,6 +260,35 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
               assign((context) => {
                 return {
                   database: addService(context.database),
+                };
+              }),
+            ],
+          },
+          UPDATE_SEQUENCE_DESCRIPTION: {
+            target: ".throttling",
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: updateSequenceDescription(
+                    context.database,
+                    event.serviceId,
+                    event.sequenceId,
+                    event.description,
+                  ),
+                };
+              }),
+            ],
+          },
+          UPDATE_SERVICE_DESCRIPTION: {
+            target: ".throttling",
+            actions: [
+              assign((context, event) => {
+                return {
+                  database: updateServiceDescription(
+                    context.database,
+                    event.serviceId,
+                    event.description,
+                  ),
                 };
               }),
             ],
@@ -440,6 +483,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
           database: {
             services: {
               initial: {
+                description: "Description",
                 environments: {},
                 eventPayloads: "",
                 id: "initial",
