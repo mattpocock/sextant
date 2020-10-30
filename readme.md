@@ -1,4 +1,4 @@
-![Sextant](./assets/social-card.png "Sextant Logo")
+![Sextant](./assets/sextant-demo-new.gif "Sextant Logo")
 
 # Sextant
 
