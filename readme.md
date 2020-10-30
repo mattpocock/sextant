@@ -6,6 +6,8 @@ Application logic is getting out of control? Feel like there are corners of your
 
 You should try Sextant.
 
+## What is Sextant?
+
 Sextant lets you **chart your application flows, then implement them in code**. Just run a CLI command, which opens a GUI. You can:
 
 - Build chains of events that span across multiple systems
