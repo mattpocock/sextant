@@ -17,7 +17,7 @@
     "start:api": "ts-node-dev -T --project tsconfig.server.json src/bin/server/devServer.ts",
     "build": "(cd ../../ && yarn build) && npm run codegen -- --once && craco build && npm run build:api && npm run chmod:index",
     "build:api": "tsc --project tsconfig.server.build.json",
-    "test": "craco test",
+    "lint": "tsc --noEmit",
     "codegen": "xstate-codegen \"./!(node_modules)/**/**.machine.ts\"",
     "prepublishOnly": "npm run build",
     "chmod:index": "chmod +x bin/index.js"
