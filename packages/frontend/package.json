@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/frontend",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "bin": {
     "sextant": "bin/index.js"
   },
@@ -21,8 +21,8 @@
   "license": "MIT",
   "description": "Chart application flows, then implement them in code",
   "dependencies": {
-    "@sextant-tools/adapter-typescript": "0.0.4",
-    "@sextant-tools/core": "0.0.4",
+    "@sextant-tools/adapter-typescript": "0.0.5",
+    "@sextant-tools/core": "0.0.5",
     "body-parser": "^1.19.0",
     "commander": "^6.2.0",
     "express": "^4.17.1",

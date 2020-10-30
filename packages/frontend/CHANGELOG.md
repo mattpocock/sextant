@@ -1,5 +1,14 @@
 # @sextant-tools/frontend
 
+## 0.2.7
+
+### Patch Changes
+
+- 97e3584: Added npm details
+- Updated dependencies [97e3584]
+  - @sextant-tools/adapter-typescript@0.0.5
+  - @sextant-tools/core@0.0.5
+
 ## 0.2.6
 
 ### Patch Changes

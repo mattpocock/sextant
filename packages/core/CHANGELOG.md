@@ -1,5 +1,11 @@
 # @sextant-tools/core
 
+## 0.0.5
+
+### Patch Changes
+
+- 97e3584: Added npm details
+
 ## 0.0.4
 
 ### Patch Changes
