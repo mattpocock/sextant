@@ -2,7 +2,7 @@
 
 # Sextant
 
-Application logic is getting out of control? Feel like there are corners of your application where no-one knows what's going on?
+Application logic is getting out of control? Feel like there are corners of your app where no-one knows what's going on?
 
 You should try Sextant.
 
@@ -15,11 +15,11 @@ Sextant lets you **chart your application flows, then implement them in code**. 
 - Fully type all events that pass between systems using GraphQL
 - Generate type-safe code right to your IDE
 
-This means you get:
+This means:
 
-- A tool that stays useful all the way from early planning to long-term maintenance
-- Documentation that never goes out of date
-- The ability to write type-safe code across languages and domains
+- The same tool you use to plan your app can be used to maintain it
+- Your documentation never goes out of date
+- You get type-safe code _across languages and domains_
 
 Right now, **Sextant only works with Typescript**. But we're planning to offer a plugin system that can generate code in any language. PR's welcome!
 
