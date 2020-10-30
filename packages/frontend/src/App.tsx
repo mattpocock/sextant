@@ -60,8 +60,8 @@ const HomePage = () => {
               sextant
             </h1>
           </div>
-          <div className="flex flex-grow border-t overflow-hidden">
-            <div className="flex-shrink-0 w-48 border-r h-full py-4 px-4">
+          <div className="flex flex-grow border-t-2 overflow-hidden">
+            <div className="flex-shrink-0 w-48 border-r-2 h-full py-4 px-4">
               <h1 className="mb-2">Services</h1>
               <div className="space-y-2 mb-4">
                 {Object.values(state.context.database.services).map(
@@ -224,7 +224,7 @@ const HomePage = () => {
                   </button>
                 </div>
               </div>
-              <div className="p-6 space-y-6 flex-shrink-0 overflow-y-auto border-l">
+              <div className="p-6 space-y-6 flex-shrink-0 overflow-y-auto border-l-2">
                 <h1 className="text-2xl">Event Payloads</h1>
                 <AceEditor
                   mode="graphqlschema"
