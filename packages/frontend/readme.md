@@ -6,14 +6,14 @@ Application logic is getting out of control? Feel like there are corners of your
 
 You should try Sextant.
 
-Sextant lets you chart your application flows, then implement them in code. Just run a simple CLI command, which opens a GUI. You can:
+Sextant lets you **chart your application flows, then implement them in code**. Just run a CLI command, which opens a GUI. You can:
 
 - Build chains of events that span across multiple systems
 - Annotate them with descriptions, test cases, and branches
 - Fully type all events that pass between systems using GraphQL
 - Generate type-safe code right to your IDE
 
-This means you get:
+**This means you get**:
 
 - A tool that stays useful all the way from early planning to long-term maintenance
 - Documentation that never goes out of date
