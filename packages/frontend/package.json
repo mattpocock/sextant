@@ -1,13 +1,12 @@
 {
   "name": "@sextant-tools/frontend",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "bin": {
     "sextant": "bin/index.js"
   },
   "repository": {
     "url": "https://github.com/mattpocock/sextant"
   },
-  "homepage": "https://github.com/mattpocock/sextant",
   "author": {
     "name": "Matt Pocock",
     "email": "mpocock@me.com"

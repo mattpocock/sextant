@@ -1,5 +1,11 @@
 # @sextant-tools/frontend
 
+## 0.2.8
+
+### Patch Changes
+
+- Fixed a bug where CRA would prefix mattpocock/sextant to the home page
+
 ## 0.2.7
 
 ### Patch Changes
