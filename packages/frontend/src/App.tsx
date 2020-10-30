@@ -12,7 +12,7 @@ import {
 } from "./components/SequenceDiagram";
 import { useEffect, useMemo } from "react";
 import ContentEditable from "react-contenteditable";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useSearchParams } from "./components/useSearchParams";
 
 const HomePage = () => {
