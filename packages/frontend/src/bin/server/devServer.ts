@@ -1,3 +1,7 @@
+/**
+ * Runs a local server for the backend you
+ * can use during development
+ */
 import express from "express";
 import { setupServer } from "./setupServer";
 
