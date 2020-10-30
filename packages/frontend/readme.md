@@ -1,4 +1,4 @@
-![Sextant](../../assets/sextant-demo.gif "Sextant Logo")
+![Sextant](../../assets/sextant-demo-new.gif "Sextant Logo")
 
 ## Getting Started
 
