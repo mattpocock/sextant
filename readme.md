@@ -2,7 +2,9 @@
 
 # Sextant
 
-Application logic is getting out of control? Feel like there are corners of your app where no-one knows what's going on?
+Application logic getting out of control?
+
+Feel like there are corners of your app where no-one knows what's going on?
 
 You should try Sextant.
 
