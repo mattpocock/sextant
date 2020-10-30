@@ -14,11 +14,11 @@ This opens the Sextant GUI, ready for you to start creating flows and services.
 
 Sextant will generate type files in this directory, so choose carefully!
 
-### Using the types
+## Using the types
 
 Sextant generates two main types currently:
 
-#### SextantEvent
+### SextantEvent
 
 ```ts
 /**
@@ -43,7 +43,7 @@ const specificEvent: SextantEvent<
 >;
 ```
 
-#### SextantHandler
+### SextantHandler
 
 ```ts
 /**
@@ -56,3 +56,7 @@ const handler: SextantHandler<
   "toThisEnvironment"
 > = () => {};
 ```
+
+## Suggestions
+
+Got ideas for what else Sextant could be useful for? Open an issue, and let's build what you need.
