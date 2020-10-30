@@ -1,6 +1,15 @@
 {
   "name": "@sextant-tools/adapter-typescript",
   "version": "0.0.4",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/mattpocock/sextant"
+  },
+  "homepage": "https://github.com/mattpocock/sextant",
+  "author": {
+    "name": "Matt Pocock",
+    "email": "mpocock@me.com"
+  },
   "main": "lib/index.js",
   "dependencies": {
     "@graphql-codegen/typescript": "^1.17.11",

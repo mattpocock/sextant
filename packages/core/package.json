@@ -2,6 +2,15 @@
   "name": "@sextant-tools/core",
   "version": "0.0.4",
   "main": "lib/index.js",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/mattpocock/sextant"
+  },
+  "homepage": "https://github.com/mattpocock/sextant",
+  "author": {
+    "name": "Matt Pocock",
+    "email": "mpocock@me.com"
+  },
   "dependencies": {
     "graphql": "^15.3.0",
     "handlebars": "^4.7.6",

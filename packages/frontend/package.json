@@ -4,6 +4,22 @@
   "bin": {
     "sextant": "bin/index.js"
   },
+  "repository": {
+    "url": "https://github.com/mattpocock/sextant"
+  },
+  "homepage": "https://github.com/mattpocock/sextant",
+  "author": {
+    "name": "Matt Pocock",
+    "email": "mpocock@me.com"
+  },
+  "keywords": [
+    "frontend",
+    "typescript",
+    "sextant",
+    "state"
+  ],
+  "license": "MIT",
+  "description": "Chart application flows, then implement them in code",
   "dependencies": {
     "@sextant-tools/adapter-typescript": "0.0.4",
     "@sextant-tools/core": "0.0.4",
