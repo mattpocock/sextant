@@ -10,6 +10,8 @@ To run:
 
 `sextant ./target-directory`
 
+This opens the Sextant GUI, ready for you to start creating flows and services.
+
 Sextant will generate type files in this directory, so choose carefully!
 
 ### Using the types

@@ -21,7 +21,7 @@ This means you get:
 - Documentation that never goes out of date
 - The ability to write type-safe code across languages and domains
 
-Right now, **Sextant only works with Typescript**. But we're planning to offer a plugin system that can generate _any_ type of code. PR's welcome!
+Right now, **Sextant only works with Typescript**. But we're planning to offer a plugin system that can generate code in any language. PR's welcome!
 
 > Sextant is currently in an experimental, proof-of-concept stage. We're looking for feedback, and passionate open-source contributors to help.
 
