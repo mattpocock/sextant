@@ -30,6 +30,11 @@ jobs:
         env:
           CI: true
 
+      - name: Run xstate-codegen on all packages
+        run: yarn codegen:machines
+        env:
+          CI: true
+
       - name: Typecheck frontend
         run: yarn fe lint
         env:
