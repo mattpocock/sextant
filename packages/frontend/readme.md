@@ -1,3 +1,5 @@
+![Sextant](../../assets/social-card.png "Sextant Logo")
+
 # Sextant
 
 Chart your application flows, then implement them as typesafe code.
