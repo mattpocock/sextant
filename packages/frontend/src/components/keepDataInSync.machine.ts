@@ -19,7 +19,7 @@ import {
   updateServiceDescription,
 } from "@sextant-tools/core";
 import { assign, Machine } from "@xstate/compiled";
-import { addEvent, editEvent, removeEvent } from "./useManageGraphQLFile";
+import { addEvent, editEvent, removeEvent } from "./eventUtilities";
 
 interface Context {
   database: Database;

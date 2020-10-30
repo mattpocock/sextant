@@ -1,4 +1,3 @@
-/** TODO - refactor this file into a utilities file */
 import produce from "immer";
 
 export const addEvent = (eventPayloads: string, event: string) => {
