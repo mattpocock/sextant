@@ -4,7 +4,7 @@
 
 To install:
 
-`npm i -g @sextant-tools/frontend`
+`npm i -g sextant`
 
 To run:
 

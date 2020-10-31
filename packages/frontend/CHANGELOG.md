@@ -1,4 +1,4 @@
-# @sextant-tools/frontend
+# sextant
 
 ## 0.2.8
 
