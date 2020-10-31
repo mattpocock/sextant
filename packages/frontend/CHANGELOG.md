@@ -1,5 +1,11 @@
 # sextant
 
+## 0.2.10
+
+### Patch Changes
+
+- 7e4f00e: Ensured that the directory that sextant targets always exists
+
 ## 0.2.9
 
 ### Patch Changes
