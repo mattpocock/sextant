@@ -47,6 +47,7 @@ const HomePage = () => {
         type: "SERVICE_NOT_FOUND",
       });
     }
+    // eslint-disable-next-line
   }, [service, state.value]);
 
   switch (true) {
