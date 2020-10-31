@@ -14,6 +14,10 @@ This opens the Sextant GUI, ready for you to start creating flows and services.
 
 Sextant will generate type files in this directory, so choose carefully!
 
+### Demo
+
+[Try the demo version here](https://demo.sextant.tools)
+
 ## Using the types
 
 Sextant generates two main types currently:

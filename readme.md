@@ -8,6 +8,8 @@ Feel like there are corners of your app where no-one knows what's going on?
 
 You should try Sextant.
 
+[Try the demo version here](https://demo.sextant.tools)
+
 ## What is Sextant?
 
 Sextant lets you **chart your application flows, then implement them in code**. Just run a CLI command, which opens a GUI. You can:
