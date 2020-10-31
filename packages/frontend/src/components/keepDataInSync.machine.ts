@@ -19,6 +19,10 @@ import {
   updateServiceDescription,
 } from "@sextant-tools/core";
 import { assign, Machine } from "@xstate/compiled";
+import {
+  clientLoadDatabase,
+  clientSaveToDatabase,
+} from "./clientSaveToDatabase";
 import { addEvent, editEvent, removeEvent } from "./eventUtilities";
 
 interface Context {
@@ -108,7 +112,7 @@ type Event =
     }
   | {
       type: "done.invoke.loadDatabase";
-      data: Database;
+      data: Database | undefined;
     };
 
 export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
@@ -443,7 +447,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
   {
     services: {
       loadDatabase: async () => {
-        return fetch("/api/getDatabase").then((res) => res.json());
+        return clientLoadDatabase();
       },
     },
     guards: {
@@ -451,7 +455,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
         return Object.keys(context.database).length > 0;
       },
       databaseHasAtLeastOneService: (context, event) => {
-        return Object.keys(event.data.services).length > 0;
+        return Object.keys(event.data?.services || {}).length > 0;
       },
       canDeleteEnvironment: ({ database }, { envId, serviceId }) => {
         try {
@@ -503,13 +507,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
         return {};
       }),
       saveToDatabase: (context) => {
-        fetch(`/api/saveToDatabase`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(context.database),
-        });
+        return clientSaveToDatabase(context.database);
       },
       deleteEnvironment: assign((context, event) => {
         return {
