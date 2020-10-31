@@ -1,4 +1,4 @@
-![Sextant](../../assets/sextant-demo-new.gif "Sextant Logo")
+![Sextant](https://raw.githubusercontent.com/mattpocock/sextant/master/assets/social-card.png "Sextant Logo")
 
 ## Getting Started
 
