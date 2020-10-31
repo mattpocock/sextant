@@ -1,5 +1,5 @@
 {
-  "name": "@sextant-tools/frontend",
+  "name": "sextant",
   "version": "0.2.8",
   "bin": {
     "sextant": "bin/index.js"
