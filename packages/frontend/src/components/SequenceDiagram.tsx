@@ -1,10 +1,10 @@
-import { useMachine } from "@xstate/compiled/react";
+import {useMachine} from "@xstate/compiled/react";
 import React from "react";
-import ContentEditable from "react-contenteditable";
 import HeroIconPlus from "./icons/HeroIconPlus";
 import HeroIconX from "./icons/HeroIconX";
-import { sequenceDiagramMachine } from "./SequenceDiagram.machine";
-import { StepArrow } from "./StepArrow";
+import {sequenceDiagramMachine} from "./SequenceDiagram.machine";
+import {StepArrow} from "./StepArrow";
+import {Input} from "./Input";
 
 export const SequenceDiagramWrapper: React.FC<{
   title: string;
@@ -14,25 +14,28 @@ export const SequenceDiagramWrapper: React.FC<{
   onDelete: () => void;
   onDuplicate: () => void;
 }> = ({
-  children,
-  title,
-  onChangeTitle,
-  onDelete,
-  onDuplicate,
-  description,
-  onChangeDescription,
-}) => {
+        children,
+        title,
+        onChangeTitle,
+        onDelete,
+        onDuplicate,
+        description,
+        onChangeDescription,
+      }) => {
   return (
     <div className="border-2 relative">
       <div>
         <div className="border-b-2 bg-gray-100">
           <div className="flex items-center">
-            <ContentEditable
-              className="text-gray-700 font-bold text-lg flex-grow px-3 py-2 "
-              html={title}
-              tagName="h2"
+            <Input
+              label={"Diagram"}
+              classNames={{
+                wrapper: "flex-grow px-3 py-2",
+                input: "text-gray-700 font-bold text-lg"
+              }}
+              value={title}
               onChange={(e) => onChangeTitle(e.target.value)}
-            ></ContentEditable>
+            ></Input>
             <div className="px-3 flex-shrink-0">
               <button
                 onClick={onDuplicate}
@@ -42,19 +45,21 @@ export const SequenceDiagramWrapper: React.FC<{
               </button>
             </div>
           </div>
-          <ContentEditable
-            className="text-xs px-3 py-2 -mt-3 text-gray-700 leading-relaxed"
+          <Input
+            label={'Description'}
+            classNames={{
+              wrapper: "px-3 py-2 -mt-3",
+              input: "text-xs text-gray-700 leading-relaxed"
+            }}
+            value={description || ""}
             onChange={(e) => onChangeDescription(e.target.value)}
-            placeholder="Description"
-            tagName="p"
-            html={description || ""}
-          />
+          ></Input>
         </div>
         <button
           className="absolute top-0 right-0 bg-gray-600 text-white rounded-full w-4 h-4 -mt-2 -mr-2 flex justify-center items-center"
           onClick={() => onDelete()}
         >
-          <HeroIconX />
+          <HeroIconX/>
         </button>
       </div>
       <div className="px-3 py-3 overflow-x-auto">{children}</div>
@@ -96,18 +101,23 @@ export const SequenceDiagram = (props: {
         {props.environments.map((env, index) => {
           return (
             <div className="relative">
-              <ContentEditable
-                className="p-4 bg-gray-200 text-gray-800 uppercase w-48 block text-center"
-                html={env.name}
+              <Input
+                label={'Environment'}
+                classNames={{
+                  wrapper: "p-4 bg-gray-200 w-48 block",
+                  input: "text-gray-800 uppercase text-center"
+                }
+                }
+                value={env.name}
                 onChange={(e) =>
                   props.onEditEnvironment(e.target.value, env.id)
                 }
-              ></ContentEditable>
+              ></Input>
               <button
                 className="absolute top-0 right-0 bg-gray-600 text-white rounded-full w-4 h-4 -mt-2 -mr-2 flex justify-center items-center"
                 onClick={() => props.onDeleteEnvironment(env.id)}
               >
-                <HeroIconX />
+                <HeroIconX/>
               </button>
             </div>
           );
@@ -219,11 +229,15 @@ export const SequenceDiagram = (props: {
       <div className="flex space-x-6">
         {props.environments.map((env, index) => {
           return (
-            <ContentEditable
-              className="p-4 bg-gray-200 text-gray-800 uppercase w-48 block text-center"
-              html={env.name}
+            <Input
+              classNames={{
+                wrapper: "p-4 bg-gray-200 w-48 block",
+                input: "text-center text-gray-800 uppercase"
+              }}
+              label={"New Environment"}
+              value={env.name}
               onChange={(e) => props.onEditEnvironment(e.target.value, env.id)}
-            ></ContentEditable>
+            ></Input>
           );
         })}
         <button

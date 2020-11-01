@@ -1,8 +1,8 @@
 import React from "react";
-import ContentEditable from "react-contenteditable";
 import HeroIconCheveronLeft from "./icons/HeroIconCheveronLeft";
 import HeroIconCheveronRight from "./icons/HeroIconCheveronRight";
 import HeroIconX from "./icons/HeroIconX";
+import {Input} from "./Input";
 
 export const StepArrow = (props: {
   step: {
@@ -118,12 +118,16 @@ export const EventLabel = (props: {
         style={{ transform: "translateY(calc(-50% + 1px))" }}
       >
         <div className="w-4" />
-        <ContentEditable
-          className="bg-white border-2 border-gray-600 px-2 text-xs text-gray-800 text-center flex items-center appearance-none break-all"
-          html={props.value}
-          style={{ maxWidth: "8rem" }}
-          onChange={(e) => props.onChange(e.target.value)}
-        ></ContentEditable>
+        <Input onChange={(e) => props.onChange(e.target.value)}
+               ignoreKeys={['\n', '\\t', '\\s']}
+               label="Event Label"
+               value={props.value}
+               style={{ maxWidth: "8rem" }}
+               classNames={{
+                 wrapper: 'bg-white border-2 border-gray-600',
+                 input: 'px-2 text-xs text-gray-800 text-center '
+               }}
+        ></Input>
         <button
           className="w-4 h-4 bg-gray-600 flex justify-center items-center text-white rounded-full"
           onClick={props.onDelete}

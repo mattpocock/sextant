@@ -11,9 +11,9 @@ import {
   SequenceDiagramWrapper,
 } from "./components/SequenceDiagram";
 import { useEffect, useMemo } from "react";
-import ContentEditable from "react-contenteditable";
 import { useHistory, Link } from "react-router-dom";
 import { useSearchParams } from "./components/useSearchParams";
+import {Input} from "./components/Input";
 
 const HomePage = () => {
   const history = useHistory();
@@ -92,10 +92,13 @@ const HomePage = () => {
             <div className="flex overflow-hidden flex-grow">
               <div className="space-y-6 flex-col p-6 flex-1 overflow-y-auto">
                 <div>
-                  <ContentEditable
-                    className="text-2xl inline-block"
-                    html={service?.name}
-                    tagName="h1"
+                  <Input
+                    label="Service Name"
+                    classNames={{
+                      wrapper: "inline-block",
+                      input: "text-2xl"
+                    }}
+                    value={service?.name}
                     onChange={(e) => {
                       dispatch({
                         type: "UPDATE_SERVICE_NAME",
@@ -103,10 +106,10 @@ const HomePage = () => {
                         serviceId: selectedServiceId,
                       });
                     }}
-                  ></ContentEditable>
-                  <ContentEditable
-                    html={service?.description || ""}
-                    tagName="p"
+                  ></Input>
+                  <Input
+                    label="Service Description"
+                    value={service?.description || ""}
                     onChange={(e) => {
                       dispatch({
                         type: "UPDATE_SERVICE_DESCRIPTION",
@@ -114,8 +117,11 @@ const HomePage = () => {
                         serviceId: selectedServiceId,
                       });
                     }}
-                    className="text-xs text-gray-700 mt-1 leading-relaxed"
-                  ></ContentEditable>
+                    classNames={{
+                      wrapper: "mt-1",
+                      input: "text-xs text-gray-700 leading-relaxed"
+                    }}
+                  ></Input>
                 </div>
                 {sequences.map((sequence, sequenceIndex) => {
                   return (
