@@ -1,27 +1,23 @@
-import React from 'react';
 import { Service } from '@sextant-tools/core';
 import { useMachine } from '@xstate/compiled/react';
-import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-graphqlschema';
 import 'ace-builds/src-noconflict/theme-xcode';
+import React, { useEffect, useMemo } from 'react';
+import AceEditor from 'react-ace';
+import ContentEditable from 'react-contenteditable';
+import { Link, useHistory } from 'react-router-dom';
+import {
+  assignToSearchParams,
+  clientSaveToDatabase,
+} from './components/clientSaveToDatabase';
+import HeroIconGlobe from './components/icons/HeroIconGlobe';
 import { keepDataInSyncMachine } from './components/keepDataInSync.machine';
 import {
   SequenceDiagram,
   SequenceDiagramWrapper,
 } from './components/SequenceDiagram';
-import { useEffect, useMemo } from 'react';
-import ContentEditable from 'react-contenteditable';
-import { useHistory, Link } from 'react-router-dom';
 import { useSearchParams } from './components/useSearchParams';
-import {
-  assignToSearchParams,
-  clientSaveToDatabase,
-} from './components/clientSaveToDatabase';
-import { assign } from 'xstate/lib/actionTypes';
-import HeroIconLink from './components/icons/HeroIconLink';
-import HeroIconDuplicate from './components/icons/HeroIconDuplicate';
-import HeroIconGlobe from './components/icons/HeroIconGlobe';
 
 const HomePage = () => {
   const history = useHistory();
