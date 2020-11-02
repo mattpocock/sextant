@@ -1,10 +1,10 @@
 import { Service } from '@sextant-tools/core';
 import { useMachine } from '@xstate/compiled/react';
+import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-graphqlschema';
 import 'ace-builds/src-noconflict/theme-xcode';
 import React, { useEffect, useMemo } from 'react';
-import AceEditor from 'react-ace';
 import ContentEditable from 'react-contenteditable';
 import { Link, useHistory } from 'react-router-dom';
 import {
