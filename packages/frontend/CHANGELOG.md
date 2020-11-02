@@ -1,5 +1,11 @@
 # sextant
 
+## 0.3.0
+
+### Minor Changes
+
+- Added a share link to allow for sharing of sextant diagrams
+
 ## 0.2.10
 
 ### Patch Changes
