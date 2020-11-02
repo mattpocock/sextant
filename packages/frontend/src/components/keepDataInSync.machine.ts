@@ -17,80 +17,80 @@ import {
   updateStepEventName,
   updateSequenceDescription,
   updateServiceDescription,
-} from "@sextant-tools/core";
-import { assign, Machine } from "@xstate/compiled";
+} from '@sextant-tools/core';
+import { assign, Machine } from '@xstate/compiled';
 import {
   clientLoadDatabase,
   clientSaveToDatabase,
-} from "./clientSaveToDatabase";
-import { addEvent, editEvent, removeEvent } from "./eventUtilities";
+} from './clientSaveToDatabase';
+import { addEvent, editEvent, removeEvent } from './eventUtilities';
 
 interface Context {
   database: Database;
 }
 
 type Event =
-  | { type: "DELETE_ENVIRONMENT"; serviceId: string; envId: string }
+  | { type: 'DELETE_ENVIRONMENT'; serviceId: string; envId: string }
   | {
-      type: "UPDATE_SERVICE_EVENT_PAYLOAD";
+      type: 'UPDATE_SERVICE_EVENT_PAYLOAD';
       serviceId: string;
       eventPayloadString: string;
     }
   | {
-      type: "UPDATE_SEQUENCE_DESCRIPTION";
+      type: 'UPDATE_SEQUENCE_DESCRIPTION';
       serviceId: string;
       sequenceId: string;
       description: string;
     }
   | {
-      type: "UPDATE_SERVICE_DESCRIPTION";
+      type: 'UPDATE_SERVICE_DESCRIPTION';
       serviceId: string;
       description: string;
     }
   | {
-      type: "SERVICE_NOT_FOUND";
+      type: 'SERVICE_NOT_FOUND';
     }
   | {
-      type: "UPDATE_SERVICE_NAME";
+      type: 'UPDATE_SERVICE_NAME';
       serviceId: string;
       name: string;
     }
   | {
-      type: "ADD_SEQUENCE";
+      type: 'ADD_SEQUENCE';
       serviceId: string;
     }
   | {
-      type: "DUPLICATE_SEQUENCE";
-      serviceId: string;
-      sequenceId: string;
-    }
-  | {
-      type: "DELETE_SEQUENCE";
+      type: 'DUPLICATE_SEQUENCE';
       serviceId: string;
       sequenceId: string;
     }
   | {
-      type: "UPDATE_SEQUENCE_NAME";
+      type: 'DELETE_SEQUENCE';
+      serviceId: string;
+      sequenceId: string;
+    }
+  | {
+      type: 'UPDATE_SEQUENCE_NAME';
       serviceId: string;
       sequenceId: string;
       name: string;
     }
   | {
-      type: "ADD_SERVICE";
+      type: 'ADD_SERVICE';
     }
   | {
-      type: "ADD_ENVIRONMENT";
+      type: 'ADD_ENVIRONMENT';
       serviceId: string;
     }
   | {
-      type: "UPDATE_ENVIRONMENT_NAME";
+      type: 'UPDATE_ENVIRONMENT_NAME';
       serviceId: string;
       sequenceId: string;
       envId: string;
       name: string;
     }
   | {
-      type: "ADD_STEP";
+      type: 'ADD_STEP';
       serviceId: string;
       sequenceId: string;
       fromEnvId: string;
@@ -98,36 +98,36 @@ type Event =
       index: number;
     }
   | {
-      type: "UPDATE_STEP_NAME";
+      type: 'UPDATE_STEP_NAME';
       serviceId: string;
       sequenceId: string;
       stepIndex: number;
       name: string;
     }
   | {
-      type: "DELETE_STEP";
+      type: 'DELETE_STEP';
       serviceId: string;
       sequenceId: string;
       stepIndex: number;
     }
   | {
-      type: "done.invoke.loadDatabase";
+      type: 'done.invoke.loadDatabase';
       data: Database | undefined;
     };
 
-export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
+export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
   {
-    initial: "loading",
+    initial: 'loading',
     context: {
       database: {
         services: {
           initial: {
-            id: "initial",
-            description: "Description",
-            name: "Initial",
+            id: 'initial',
+            description: 'Description',
+            name: 'Initial',
             environments: {},
             sequences: {},
-            eventPayloads: "",
+            eventPayloads: '',
           },
         },
       },
@@ -136,48 +136,48 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
     states: {
       loading: {
         invoke: {
-          src: "loadDatabase",
+          src: 'loadDatabase',
           onDone: [
             {
-              cond: "databaseHasAtLeastOneService",
-              actions: ["saveDatabaseToContext"],
-              target: "editing",
+              cond: 'databaseHasAtLeastOneService',
+              actions: ['saveDatabaseToContext'],
+              target: 'editing',
             },
             {
-              actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
-              target: "editing",
+              actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+              target: 'editing',
             },
           ],
           onError: {
-            target: "errored",
+            target: 'errored',
           },
         },
       },
       errored: {
         always: [
           {
-            cond: "databaseFromContextHasAtLeastOneService",
-            actions: ["goToFirstService"],
-            target: "editing",
+            cond: 'databaseFromContextHasAtLeastOneService',
+            actions: ['goToFirstService'],
+            target: 'editing',
           },
           {
-            actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
-            target: "editing",
+            actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+            target: 'editing',
           },
         ],
       },
       editing: {
-        initial: "idle",
+        initial: 'idle',
         on: {
           SERVICE_NOT_FOUND: [
             {
-              cond: "databaseFromContextHasAtLeastOneService",
-              actions: ["goToFirstService"],
-              target: "editing",
+              cond: 'databaseFromContextHasAtLeastOneService',
+              actions: ['goToFirstService'],
+              target: 'editing',
             },
             {
-              actions: ["saveDefaultDatabaseToContext", "goToInitialService"],
-              target: "editing",
+              actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+              target: 'editing',
             },
           ],
           UPDATE_SERVICE_EVENT_PAYLOAD: {
@@ -190,7 +190,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 ),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
           ADD_ENVIRONMENT: {
             actions: assign((context, event) => {
@@ -198,16 +198,16 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 database: addEnvironment(context.database, event.serviceId),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
           DELETE_ENVIRONMENT: [
             {
-              cond: "canDeleteEnvironment",
-              actions: ["deleteEnvironment"],
-              target: ".throttling",
+              cond: 'canDeleteEnvironment',
+              actions: ['deleteEnvironment'],
+              target: '.throttling',
             },
             {
-              actions: ["tellUserWeCannotDeleteTheEnvironment"],
+              actions: ['tellUserWeCannotDeleteTheEnvironment'],
             },
           ],
           ADD_SEQUENCE: {
@@ -216,7 +216,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 database: addSequence(context.database, event.serviceId),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
           DELETE_SEQUENCE: {
             actions: assign((context, event) => {
@@ -228,10 +228,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 ),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
           UPDATE_SERVICE_NAME: {
-            target: ".throttling",
+            target: '.throttling',
             actions: [
               assign((context, event) => {
                 return {
@@ -245,7 +245,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
             ],
           },
           DUPLICATE_SEQUENCE: {
-            target: ".throttling",
+            target: '.throttling',
             actions: [
               assign((context, event) => {
                 return {
@@ -259,7 +259,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
             ],
           },
           ADD_SERVICE: {
-            target: ".throttling",
+            target: '.throttling',
             actions: [
               assign((context) => {
                 return {
@@ -269,7 +269,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
             ],
           },
           UPDATE_SEQUENCE_DESCRIPTION: {
-            target: ".throttling",
+            target: '.throttling',
             actions: [
               assign((context, event) => {
                 return {
@@ -284,7 +284,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
             ],
           },
           UPDATE_SERVICE_DESCRIPTION: {
-            target: ".throttling",
+            target: '.throttling',
             actions: [
               assign((context, event) => {
                 return {
@@ -323,7 +323,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 };
               }),
             ],
-            target: ".throttling",
+            target: '.throttling',
           },
           DELETE_STEP: {
             actions: [
@@ -354,7 +354,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 };
               }),
             ],
-            target: ".throttling",
+            target: '.throttling',
           },
           UPDATE_STEP_NAME: {
             actions: [
@@ -368,7 +368,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                     context.database,
                     event.serviceId,
                     (currentEventPayloads) => {
-                      if (event.name === "") {
+                      if (event.name === '') {
                         return removeEvent(currentEventPayloads, targetEvent);
                       }
 
@@ -397,7 +397,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 };
               }),
             ],
-            target: ".throttling",
+            target: '.throttling',
           },
           UPDATE_ENVIRONMENT_NAME: {
             actions: assign((context, event) => {
@@ -411,7 +411,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 ),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
           UPDATE_SEQUENCE_NAME: {
             actions: assign((context, event) => {
@@ -424,20 +424,20 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
                 ),
               };
             }),
-            target: ".throttling",
+            target: '.throttling',
           },
         },
         states: {
           idle: {},
           throttling: {
             after: {
-              800: "saving",
+              800: 'saving',
             },
           },
           saving: {
             always: {
-              target: "idle",
-              actions: "saveToDatabase",
+              target: 'idle',
+              actions: 'saveToDatabase',
             },
           },
         },
@@ -464,7 +464,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
               service.steps.forEach((step) => {
                 if (step.from === envId || step.to === envId) {
                   throw new Error(
-                    "This environment cannot be deleted because steps depend on it.",
+                    'This environment cannot be deleted because steps depend on it.',
                   );
                 }
               });
@@ -479,7 +479,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
     actions: {
       tellUserWeCannotDeleteTheEnvironment: () => {
         alert(
-          "You cannot delete this environment because it has steps associated with it.",
+          'You cannot delete this environment because it has steps associated with it.',
         );
       },
       saveDefaultDatabaseToContext: assign((context) => {
@@ -487,11 +487,11 @@ export const keepDataInSyncMachine = Machine<Context, Event, "keepDataInSync">(
           database: {
             services: {
               initial: {
-                description: "Description",
+                description: 'Description',
                 environments: {},
-                eventPayloads: "",
-                id: "initial",
-                name: "Your First Service",
+                eventPayloads: '',
+                id: 'initial',
+                name: 'Your First Service',
                 sequences: {},
               },
             },

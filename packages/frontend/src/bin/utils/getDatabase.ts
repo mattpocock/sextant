@@ -1,6 +1,6 @@
-import { Database } from "@sextant-tools/core";
-import { readFileSync } from "fs";
-import { getTargetDatabaseFile } from "./getTargetDir";
+import { Database } from '@sextant-tools/core';
+import { readFileSync } from 'fs';
+import { getTargetDatabaseFile } from './getTargetDir';
 
 export const getDatabase = async (): Promise<[boolean, Database]> => {
   try {

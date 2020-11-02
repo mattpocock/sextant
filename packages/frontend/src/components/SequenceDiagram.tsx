@@ -1,10 +1,10 @@
-import { useMachine } from "@xstate/compiled/react";
-import React from "react";
-import ContentEditable from "react-contenteditable";
-import HeroIconPlus from "./icons/HeroIconPlus";
-import HeroIconX from "./icons/HeroIconX";
-import { sequenceDiagramMachine } from "./SequenceDiagram.machine";
-import { StepArrow } from "./StepArrow";
+import { useMachine } from '@xstate/compiled/react';
+import React from 'react';
+import ContentEditable from 'react-contenteditable';
+import HeroIconPlus from './icons/HeroIconPlus';
+import HeroIconX from './icons/HeroIconX';
+import { sequenceDiagramMachine } from './SequenceDiagram.machine';
+import { StepArrow } from './StepArrow';
 
 export const SequenceDiagramWrapper: React.FC<{
   title: string;
@@ -47,7 +47,7 @@ export const SequenceDiagramWrapper: React.FC<{
             onChange={(e) => onChangeDescription(e.target.value)}
             placeholder="Description"
             tagName="p"
-            html={description || ""}
+            html={description || ''}
           />
         </div>
         <button
@@ -139,11 +139,11 @@ export const SequenceDiagram = (props: {
 
                     <button
                       className={classNames(
-                        "absolute h-6 w-24 mt-2 top-0 flex justify-center group",
+                        'absolute h-6 w-24 mt-2 top-0 flex justify-center group',
                       )}
                       onClick={() => {
                         dispatch({
-                          type: "CLICK_PLUS_ICON",
+                          type: 'CLICK_PLUS_ICON',
                           environment: env.id,
                           index,
                         });
@@ -151,10 +151,10 @@ export const SequenceDiagram = (props: {
                     >
                       <div
                         className={classNames(
-                          "w-6 h-6 rounded-full bg-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 group-focus:opacity-100",
+                          'w-6 h-6 rounded-full bg-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 group-focus:opacity-100',
                           env.id === state.context.environmentChosen &&
                             index === state.context.indexChosen &&
-                            "opacity-100 bg-blue-200 text-blue-800",
+                            'opacity-100 bg-blue-200 text-blue-800',
                         )}
                       >
                         <HeroIconPlus />
@@ -188,14 +188,14 @@ export const SequenceDiagram = (props: {
             <div className="flex justify-center w-48">
               <button
                 className={classNames(
-                  "bg-gray-200 rounded-full h-10 w-10 flex justify-center items-center text-gray-600",
+                  'bg-gray-200 rounded-full h-10 w-10 flex justify-center items-center text-gray-600',
                   env.id === state.context.environmentChosen &&
                     props.steps.length === state.context.indexChosen &&
-                    "bg-blue-200 text-blue-800",
+                    'bg-blue-200 text-blue-800',
                 )}
                 onClick={() => {
                   dispatch({
-                    type: "CLICK_PLUS_ICON",
+                    type: 'CLICK_PLUS_ICON',
                     environment: env.id,
                     index: props.steps.length,
                   });

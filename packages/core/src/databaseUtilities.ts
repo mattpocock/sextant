@@ -1,6 +1,6 @@
-import { Database, FlattenedDatabase, Sequence, Step } from "./types";
-import produce from "immer";
-import humanId from "human-id";
+import { Database, FlattenedDatabase, Sequence, Step } from './types';
+import produce from 'immer';
+import humanId from 'human-id';
 
 const uuid = () => humanId();
 
@@ -26,8 +26,8 @@ export const addSequence = (
     const id = uuid();
     service.sequences[id] = {
       id,
-      description: "Description",
-      name: "New Sequence",
+      description: 'Description',
+      name: 'New Sequence',
       order: Object.keys(service.sequences).length,
       steps: [],
     };
@@ -40,9 +40,9 @@ export const addService = (database: Database) => {
     draft.services[id] = {
       id,
       environments: {},
-      description: "Description",
-      eventPayloads: "",
-      name: "New Service",
+      description: 'Description',
+      eventPayloads: '',
+      name: 'New Service',
       sequences: {},
     };
   });
@@ -92,7 +92,7 @@ export const duplicateSequence = (
     };
   });
 
-export const DEFAULT_EVENT_NAME = "EVENT";
+export const DEFAULT_EVENT_NAME = 'EVENT';
 
 /** Steps */
 export const addStep = ({
@@ -149,7 +149,7 @@ export const addEnvironment = (database: Database, serviceId: string) => {
     const newId = uuid();
     draft.services[serviceId].environments[newId] = {
       id: newId,
-      name: "New Environment",
+      name: 'New Environment',
     };
   });
 };
@@ -177,7 +177,7 @@ export const deleteEnvironment = (
     service.steps.forEach((step) => {
       if (step.from === envId || step.to === envId) {
         throw new Error(
-          "This environment cannot be deleted because steps depend on it.",
+          'This environment cannot be deleted because steps depend on it.',
         );
       }
     });

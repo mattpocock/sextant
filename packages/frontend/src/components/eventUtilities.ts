@@ -1,8 +1,8 @@
-import produce from "immer";
+import produce from 'immer';
 
 export const addEvent = (eventPayloads: string, event: string) => {
-  return [`# type ${event || ""} {`, `#   `, `# }`, ``, eventPayloads].join(
-    "\n",
+  return [`# type ${event || ''} {`, `#   `, `# }`, ``, eventPayloads].join(
+    '\n',
   );
 };
 
@@ -11,15 +11,15 @@ export const editEvent = (
   targetEvent: string,
   newEventName: string,
 ) => {
-  const regex = new RegExp(`type ${targetEvent || ""} {`);
-  return eventPayloads.replace(regex, `type ${newEventName || ""} {`);
+  const regex = new RegExp(`type ${targetEvent || ''} {`);
+  return eventPayloads.replace(regex, `type ${newEventName || ''} {`);
 };
 
 export const removeEvent = (eventPayloads: string, targetEvent: string) => {
   return produce(eventPayloads, (draft) => {
     const regex = new RegExp(`type ${targetEvent} {`);
 
-    const payloadsAsArray = draft.split("\n");
+    const payloadsAsArray = draft.split('\n');
 
     const startIndex = payloadsAsArray.findIndex((line) => regex.test(line));
 
@@ -41,6 +41,6 @@ export const removeEvent = (eventPayloads: string, targetEvent: string) => {
 
     payloadsAsArray.splice(startIndex, deleteCount + 1);
 
-    return payloadsAsArray.join("\n");
+    return payloadsAsArray.join('\n');
   });
 };

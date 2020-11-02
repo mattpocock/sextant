@@ -1,19 +1,19 @@
-import React from "react";
-import { Service } from "@sextant-tools/core";
-import { useMachine } from "@xstate/compiled/react";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/mode-graphqlschema";
-import "ace-builds/src-noconflict/theme-xcode";
-import { keepDataInSyncMachine } from "./components/keepDataInSync.machine";
+import React from 'react';
+import { Service } from '@sextant-tools/core';
+import { useMachine } from '@xstate/compiled/react';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/mode-graphqlschema';
+import 'ace-builds/src-noconflict/theme-xcode';
+import { keepDataInSyncMachine } from './components/keepDataInSync.machine';
 import {
   SequenceDiagram,
   SequenceDiagramWrapper,
-} from "./components/SequenceDiagram";
-import { useEffect, useMemo } from "react";
-import ContentEditable from "react-contenteditable";
-import { useHistory, Link } from "react-router-dom";
-import { useSearchParams } from "./components/useSearchParams";
+} from './components/SequenceDiagram';
+import { useEffect, useMemo } from 'react';
+import ContentEditable from 'react-contenteditable';
+import { useHistory, Link } from 'react-router-dom';
+import { useSearchParams } from './components/useSearchParams';
 
 const HomePage = () => {
   const history = useHistory();
@@ -22,12 +22,12 @@ const HomePage = () => {
   const [state, dispatch] = useMachine(keepDataInSyncMachine, {
     actions: {
       goToInitialService() {
-        history.push(`/?serviceId=initial`);
+        history.replace(`/?serviceId=initial`);
       },
       goToFirstService(context) {
         const targetServiceId = Object.values(context.database.services)[0].id;
 
-        history.push("/?serviceId=" + targetServiceId);
+        history.replace('/?serviceId=' + targetServiceId);
       },
     },
   });
@@ -35,7 +35,7 @@ const HomePage = () => {
   const selectedServiceId = params?.serviceId as string;
 
   const service: Service | undefined =
-    state.context.database.services[selectedServiceId || ""];
+    state.context.database.services[selectedServiceId || ''];
 
   const sequences = useMemo(() => Object.values(service?.sequences || {}), [
     service,
@@ -44,16 +44,16 @@ const HomePage = () => {
   useEffect(() => {
     if (!service) {
       dispatch({
-        type: "SERVICE_NOT_FOUND",
+        type: 'SERVICE_NOT_FOUND',
       });
     }
     // eslint-disable-next-line
   }, [service, state.value]);
 
   switch (true) {
-    case state.matches("errored"):
+    case state.matches('errored'):
       return <div>Something went wrong</div>;
-    case Boolean(state.matches("editing") && service): {
+    case Boolean(state.matches('editing') && service): {
       return (
         <div className="flex flex-col h-screen overflow-hidden">
           <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4">
@@ -81,7 +81,7 @@ const HomePage = () => {
               <button
                 onClick={() => {
                   dispatch({
-                    type: "ADD_SERVICE",
+                    type: 'ADD_SERVICE',
                   });
                 }}
                 className="bg-gray-200 text-gray-700 px-3 text-sm py-1"
@@ -98,18 +98,18 @@ const HomePage = () => {
                     tagName="h1"
                     onChange={(e) => {
                       dispatch({
-                        type: "UPDATE_SERVICE_NAME",
+                        type: 'UPDATE_SERVICE_NAME',
                         name: e.target.value,
                         serviceId: selectedServiceId,
                       });
                     }}
                   ></ContentEditable>
                   <ContentEditable
-                    html={service?.description || ""}
+                    html={service?.description || ''}
                     tagName="p"
                     onChange={(e) => {
                       dispatch({
-                        type: "UPDATE_SERVICE_DESCRIPTION",
+                        type: 'UPDATE_SERVICE_DESCRIPTION',
                         description: e.target.value,
                         serviceId: selectedServiceId,
                       });
@@ -123,7 +123,7 @@ const HomePage = () => {
                       title={sequence.name}
                       onChangeTitle={(title) => {
                         dispatch({
-                          type: "UPDATE_SEQUENCE_NAME",
+                          type: 'UPDATE_SEQUENCE_NAME',
                           name: title,
                           sequenceId: sequence.id,
                           serviceId: selectedServiceId,
@@ -132,7 +132,7 @@ const HomePage = () => {
                       description={sequence.description}
                       onChangeDescription={(description) => {
                         dispatch({
-                          type: "UPDATE_SEQUENCE_DESCRIPTION",
+                          type: 'UPDATE_SEQUENCE_DESCRIPTION',
                           description,
                           sequenceId: sequence.id,
                           serviceId: service.id,
@@ -140,14 +140,14 @@ const HomePage = () => {
                       }}
                       onDuplicate={() => {
                         dispatch({
-                          type: "DUPLICATE_SEQUENCE",
+                          type: 'DUPLICATE_SEQUENCE',
                           sequenceId: sequence.id,
                           serviceId: selectedServiceId,
                         });
                       }}
                       onDelete={() => {
                         dispatch({
-                          type: "DELETE_SEQUENCE",
+                          type: 'DELETE_SEQUENCE',
                           sequenceId: sequence.id,
                           serviceId: selectedServiceId,
                         });
@@ -160,7 +160,7 @@ const HomePage = () => {
                         steps={sequence.steps}
                         onAddStep={({ index, from, to }) => {
                           dispatch({
-                            type: "ADD_STEP",
+                            type: 'ADD_STEP',
                             index,
                             fromEnvId: from,
                             toEnvId: to,
@@ -170,7 +170,7 @@ const HomePage = () => {
                         }}
                         onEditEvent={(newEvent, index) => {
                           dispatch({
-                            type: "UPDATE_STEP_NAME",
+                            type: 'UPDATE_STEP_NAME',
                             name: newEvent,
                             sequenceId: sequence.id,
                             serviceId: selectedServiceId,
@@ -179,7 +179,7 @@ const HomePage = () => {
                         }}
                         onDeleteStep={(index) => {
                           dispatch({
-                            type: "DELETE_STEP",
+                            type: 'DELETE_STEP',
                             sequenceId: sequence.id,
                             serviceId: selectedServiceId,
                             stepIndex: index,
@@ -187,20 +187,20 @@ const HomePage = () => {
                         }}
                         onDeleteEnvironment={(id) => {
                           dispatch({
-                            type: "DELETE_ENVIRONMENT",
+                            type: 'DELETE_ENVIRONMENT',
                             envId: id,
                             serviceId: selectedServiceId,
                           });
                         }}
                         onCreateEnvironment={() => {
                           dispatch({
-                            type: "ADD_ENVIRONMENT",
+                            type: 'ADD_ENVIRONMENT',
                             serviceId: selectedServiceId,
                           });
                         }}
                         onEditEnvironment={(newName, id) => {
                           dispatch({
-                            type: "UPDATE_ENVIRONMENT_NAME",
+                            type: 'UPDATE_ENVIRONMENT_NAME',
                             envId: id,
                             name: newName,
                             sequenceId: sequence.id,
@@ -216,7 +216,7 @@ const HomePage = () => {
                     className="px-4 bg-gray-200 h-12"
                     onClick={() => {
                       dispatch({
-                        type: "ADD_SEQUENCE",
+                        type: 'ADD_SEQUENCE',
                         serviceId: selectedServiceId,
                       });
                     }}
@@ -231,10 +231,10 @@ const HomePage = () => {
                   mode="graphqlschema"
                   theme="xcode"
                   tabSize={2}
-                  value={service?.eventPayloads || ""}
+                  value={service?.eventPayloads || ''}
                   onChange={(eventPayloads) => {
                     dispatch({
-                      type: "UPDATE_SERVICE_EVENT_PAYLOAD",
+                      type: 'UPDATE_SERVICE_EVENT_PAYLOAD',
                       eventPayloadString: eventPayloads,
                       serviceId: selectedServiceId,
                     });

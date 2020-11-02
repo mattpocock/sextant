@@ -1,12 +1,12 @@
-import Handlebars from "handlebars";
-import * as helpers from "handlebars-helpers";
-import * as camelcase from "lodash/camelCase";
-import * as upperFirst from "lodash/upperFirst";
-import * as fs from "fs";
-import * as path from "path";
-import { FlattenedDatabase, getStepsFromSequences } from "@sextant-tools/core";
-import { TsVisitor } from "@graphql-codegen/typescript";
-import { buildSchema, printSchema, parse, visit } from "graphql";
+import Handlebars from 'handlebars';
+import * as helpers from 'handlebars-helpers';
+import * as camelcase from 'lodash/camelCase';
+import * as upperFirst from 'lodash/upperFirst';
+import * as fs from 'fs';
+import * as path from 'path';
+import { FlattenedDatabase, getStepsFromSequences } from '@sextant-tools/core';
+import { TsVisitor } from '@graphql-codegen/typescript';
+import { buildSchema, printSchema, parse, visit } from 'graphql';
 
 export const buildCodeForCreateService = (
   database: FlattenedDatabase,
@@ -37,13 +37,13 @@ export const buildCodeForCreateService = (
       .map((step) => {
         return `export type ${step.event} = {};`;
       })
-      .join("\n\n");
+      .join('\n\n');
 
     return {
       ...service,
       typescriptDefText: [typescriptDefText, emptyTypeDefs]
         .filter(Boolean)
-        .join("\n\n"),
+        .join('\n\n'),
       environmentsWithSteps: service.environments.map((env) => {
         return {
           ...env,
@@ -89,7 +89,7 @@ export const buildCodeForCreateService = (
   const template = Handlebars.compile(
     fs
       .readFileSync(
-        path.resolve(__dirname, "../templates/sextant-types.ts.hbs"),
+        path.resolve(__dirname, '../templates/sextant-types.ts.hbs'),
       )
       .toString(),
   );
@@ -118,12 +118,12 @@ export const buildCodeForCreateService = (
           file.id,
         )}.generated';`,
     )
-    .join("\n");
+    .join('\n');
 
   return [
     {
-      content: [importStatementText, result].join("\n\n"),
-      filename: "sextant-types.generated.ts",
+      content: [importStatementText, result].join('\n\n'),
+      filename: 'sextant-types.generated.ts',
     },
     ...typeFiles,
   ];
@@ -133,7 +133,7 @@ const getTypescriptedEventPayloads = (eventPayloads: string) => {
   try {
     const schema = buildSchema(eventPayloads);
     const visitor = new TsVisitor(schema, {
-      namingConvention: "keep",
+      namingConvention: 'keep',
       skipTypename: true,
     });
     const printedSchema = printSchema(schema);
@@ -148,10 +148,10 @@ const getTypescriptedEventPayloads = (eventPayloads: string) => {
         ...visitor.getScalarsImports(),
         ...visitor.getWrapperDefinitions(),
       ],
-      content: [scalars, ...visitorResult.definitions].join("\n"),
+      content: [scalars, ...visitorResult.definitions].join('\n'),
     };
 
-    return `${result.prepend.join("\n")}\n\n${result.content}`;
+    return `${result.prepend.join('\n')}\n\n${result.content}`;
   } catch (e) {}
-  return "";
+  return '';
 };

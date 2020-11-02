@@ -1,25 +1,25 @@
-import { Machine, assign } from "@xstate/compiled";
+import { Machine, assign } from '@xstate/compiled';
 
 interface Context {
   indexChosen: number;
   environmentChosen: string;
 }
 
-type Event = { type: "CLICK_PLUS_ICON"; index: number; environment: string };
+type Event = { type: 'CLICK_PLUS_ICON'; index: number; environment: string };
 
 export const sequenceDiagramMachine = Machine<
   Context,
   Event,
-  "sequenceDiagram"
+  'sequenceDiagram'
 >(
   {
-    initial: "idle",
+    initial: 'idle',
     states: {
       idle: {
         on: {
           CLICK_PLUS_ICON: {
-            target: "chosenFrom",
-            actions: ["assignFirstItemChosen"],
+            target: 'chosenFrom',
+            actions: ['assignFirstItemChosen'],
           },
         },
       },
@@ -27,17 +27,17 @@ export const sequenceDiagramMachine = Machine<
         on: {
           CLICK_PLUS_ICON: [
             {
-              cond: "isSameAsChosen",
-              target: "idle",
-              actions: ["clearChoices"],
+              cond: 'isSameAsChosen',
+              target: 'idle',
+              actions: ['clearChoices'],
             },
             {
-              cond: "isSameIndexAsChosen",
-              actions: ["clearChoices", "registerNewEvent"],
-              target: "idle",
+              cond: 'isSameIndexAsChosen',
+              actions: ['clearChoices', 'registerNewEvent'],
+              target: 'idle',
             },
             {
-              actions: ["assignFirstItemChosen"],
+              actions: ['assignFirstItemChosen'],
             },
           ],
         },

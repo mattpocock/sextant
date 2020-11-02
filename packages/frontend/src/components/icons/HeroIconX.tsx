@@ -1,4 +1,4 @@
-import React, { SVGAttributes } from "react";
+import React, { SVGAttributes } from 'react';
 
 function HeroIconX(props: SVGAttributes<HTMLOrSVGElement>) {
   return (

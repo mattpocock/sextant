@@ -1,8 +1,8 @@
-import React from "react";
-import ContentEditable from "react-contenteditable";
-import HeroIconCheveronLeft from "./icons/HeroIconCheveronLeft";
-import HeroIconCheveronRight from "./icons/HeroIconCheveronRight";
-import HeroIconX from "./icons/HeroIconX";
+import React from 'react';
+import ContentEditable from 'react-contenteditable';
+import HeroIconCheveronLeft from './icons/HeroIconCheveronLeft';
+import HeroIconCheveronRight from './icons/HeroIconCheveronRight';
+import HeroIconX from './icons/HeroIconX';
 
 export const StepArrow = (props: {
   step: {
@@ -31,8 +31,8 @@ export const StepArrow = (props: {
     return (
       <div
         className={classNames(
-          "flex items-center",
-          !doesTheArrowGoRight && "justify-end",
+          'flex items-center',
+          !doesTheArrowGoRight && 'justify-end',
         )}
       >
         <div className="w-24"></div>
@@ -70,7 +70,7 @@ export const StepArrow = (props: {
   }
 
   return (
-    <div className={classNames("h-4 flex items-center")}>
+    <div className={classNames('h-4 flex items-center')}>
       <div className="w-24"> </div>
       {[...new Array(endIndex)].map(() => {
         return (
@@ -115,13 +115,13 @@ export const EventLabel = (props: {
     <div className="absolute top-0 left-0 w-full flex items-center justify-center z-10">
       <div
         className="relative flex space-x-2 items-center"
-        style={{ transform: "translateY(calc(-50% + 1px))" }}
+        style={{ transform: 'translateY(calc(-50% + 1px))' }}
       >
         <div className="w-4" />
         <ContentEditable
           className="bg-white border-2 border-gray-600 px-2 text-xs text-gray-800 text-center flex items-center appearance-none break-all"
           html={props.value}
-          style={{ maxWidth: "8rem" }}
+          style={{ maxWidth: '8rem' }}
           onChange={(e) => props.onChange(e.target.value)}
         ></ContentEditable>
         <button

@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 export const useSearchParams = <P extends {}>(): P | null => {
   const { search } = useLocation();
@@ -10,7 +10,7 @@ export const useSearchParams = <P extends {}>(): P | null => {
     });
     return obj;
   } catch (e) {
-    console.log("Something went wrong in useSearchParams", e);
+    console.log('Something went wrong in useSearchParams', e);
     return null;
   }
 };

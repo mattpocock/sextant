@@ -1,9 +1,9 @@
-import { Database, flattenDatabase } from "@sextant-tools/core";
-import { buildCodeForCreateService } from "@sextant-tools/adapter-typescript";
-import { writeFileSync } from "fs";
-import * as fsExtra from "fs-extra";
-import { getTargetDatabaseFile, getTargetDir } from "./getTargetDir";
-import * as path from "path";
+import { Database, flattenDatabase } from '@sextant-tools/core';
+import { buildCodeForCreateService } from '@sextant-tools/adapter-typescript';
+import { writeFileSync } from 'fs';
+import * as fsExtra from 'fs-extra';
+import { getTargetDatabaseFile, getTargetDir } from './getTargetDir';
+import * as path from 'path';
 
 export const saveDatabase = async (database: Database): Promise<Database> => {
   const targetDir = getTargetDir();

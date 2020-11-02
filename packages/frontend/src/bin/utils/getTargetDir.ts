@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from 'path';
 
 export const getTargetDir = () => {
   if (process.env.TARGET_DIR) {
@@ -8,5 +8,5 @@ export const getTargetDir = () => {
 };
 
 export const getTargetDatabaseFile = () => {
-  return path.resolve(getTargetDir(), "database.json");
+  return path.resolve(getTargetDir(), 'database.json');
 };
