@@ -2,6 +2,10 @@ import { useLocation } from 'react-router-dom';
 
 export const useSearchParams = <P extends {}>(): P | null => {
   const { search } = useLocation();
+  return getSearchParams(search);
+};
+
+export const getSearchParams = <P extends {}>(search: string): P | null => {
   try {
     let obj: any = {};
     const queryParams = new URLSearchParams(search);
@@ -10,7 +14,7 @@ export const useSearchParams = <P extends {}>(): P | null => {
     });
     return obj;
   } catch (e) {
-    console.log('Something went wrong in useSearchParams', e);
+    console.log('Something went wrong in getSearchParams', e);
     return null;
   }
 };

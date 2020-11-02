@@ -10,20 +10,21 @@ import {
   deleteStep,
   duplicateSequence,
   updateEnvironmentName,
+  updateSequenceDescription,
   updateSequenceName,
+  updateServiceDescription,
   updateServiceEventPayload,
   updateServiceEventPayloadWithFunc,
   updateServiceName,
   updateStepEventName,
-  updateSequenceDescription,
-  updateServiceDescription,
 } from '@sextant-tools/core';
 import { assign, Machine } from '@xstate/compiled';
 import {
   clientLoadDatabase,
-  clientSaveToDatabase,
+  getSearchParamsWithSavedDatabase,
 } from './clientSaveToDatabase';
 import { addEvent, editEvent, removeEvent } from './eventUtilities';
+import { copyToUserClipboard } from './useCopyToClipboard';
 
 interface Context {
   database: Database;
@@ -81,6 +82,9 @@ type Event =
   | {
       type: 'ADD_ENVIRONMENT';
       serviceId: string;
+    }
+  | {
+      type: 'GET_SHARE_LINK';
     }
   | {
       type: 'UPDATE_ENVIRONMENT_NAME';
@@ -243,6 +247,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
                 };
               }),
             ],
+          },
+          GET_SHARE_LINK: {
+            actions: 'copyShareLinkToClipboard',
           },
           DUPLICATE_SEQUENCE: {
             target: '.throttling',
@@ -482,6 +489,14 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           'You cannot delete this environment because it has steps associated with it.',
         );
       },
+      copyShareLinkToClipboard(context) {
+        copyToUserClipboard(
+          `https://demo.sextant.tools/?${getSearchParamsWithSavedDatabase(
+            context.database,
+          )}`,
+        );
+        alert('Copied share link to clipboard!');
+      },
       saveDefaultDatabaseToContext: assign((context) => {
         return {
           database: {
@@ -506,9 +521,6 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
         }
         return {};
       }),
-      saveToDatabase: (context) => {
-        return clientSaveToDatabase(context.database);
-      },
       deleteEnvironment: assign((context, event) => {
         return {
           database: deleteEnvironment(

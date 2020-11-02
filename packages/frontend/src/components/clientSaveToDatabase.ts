@@ -1,11 +1,37 @@
 import { Database } from '@sextant-tools/core';
+import { useHistory } from 'react-router-dom';
+import { getDatabaseSaveMode } from './getDatabaseSaveMode';
+import { getSearchParams } from './useSearchParams';
 
-const LOCAL_STORAGE_KEY = 'sextant-localstorage-save';
+const SEARCH_PARAMS_KEY = 'd';
 
-export const clientSaveToDatabase = (database: Database) => {
-  switch (process.env.REACT_APP_DATABASE_SAVE_MODE) {
+export const getBase64StringOfDatabase = (database: Database) => {
+  return btoa(JSON.stringify(database));
+};
+
+export const getSearchParamsWithSavedDatabase = (database: Database) => {
+  return assignToSearchParams(window.location.search, {
+    [SEARCH_PARAMS_KEY]: getBase64StringOfDatabase(database),
+  });
+};
+
+export const assignToSearchParams = (search: string, toAppend: {}) => {
+  const searchParams = getSearchParams(search);
+  return new URLSearchParams({
+    ...searchParams,
+    ...toAppend,
+  }).toString();
+};
+
+export const clientSaveToDatabase = (
+  database: Database,
+  history: ReturnType<typeof useHistory>,
+) => {
+  switch (getDatabaseSaveMode()) {
     case 'localStorage':
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(database));
+      const newUrl = `/?${getSearchParamsWithSavedDatabase(database)}`;
+      history.replace(newUrl);
+
       break;
     default:
       return fetch(`/api/saveToDatabase`, {
@@ -19,11 +45,17 @@ export const clientSaveToDatabase = (database: Database) => {
 };
 
 export const clientLoadDatabase = (): Promise<Database | undefined> => {
-  switch (process.env.REACT_APP_DATABASE_SAVE_MODE) {
+  switch (getDatabaseSaveMode()) {
     case 'localStorage':
       try {
         return Promise.resolve(
-          JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || 'null'),
+          JSON.parse(
+            atob(
+              getSearchParams<{ [SEARCH_PARAMS_KEY]: string }>(
+                window.location.search || '',
+              )?.[SEARCH_PARAMS_KEY] || '',
+            ),
+          ),
         );
       } catch (e) {
         return Promise.resolve(undefined);

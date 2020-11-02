@@ -163,7 +163,6 @@ export const updateEnvironmentName = (
 ) => {
   return produce(database, (draft) => {
     draft.services[serviceId].sequences[sequenceId];
-    console.log(envId);
     draft.services[serviceId].environments[envId].name = name;
   });
 };

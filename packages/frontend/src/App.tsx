@@ -14,6 +14,14 @@ import { useEffect, useMemo } from 'react';
 import ContentEditable from 'react-contenteditable';
 import { useHistory, Link } from 'react-router-dom';
 import { useSearchParams } from './components/useSearchParams';
+import {
+  assignToSearchParams,
+  clientSaveToDatabase,
+} from './components/clientSaveToDatabase';
+import { assign } from 'xstate/lib/actionTypes';
+import HeroIconLink from './components/icons/HeroIconLink';
+import HeroIconDuplicate from './components/icons/HeroIconDuplicate';
+import HeroIconGlobe from './components/icons/HeroIconGlobe';
 
 const HomePage = () => {
   const history = useHistory();
@@ -22,12 +30,23 @@ const HomePage = () => {
   const [state, dispatch] = useMachine(keepDataInSyncMachine, {
     actions: {
       goToInitialService() {
-        history.replace(`/?serviceId=initial`);
+        history.replace(
+          `/?${assignToSearchParams(window.location.search, {
+            serviceId: 'initial',
+          })}`,
+        );
       },
       goToFirstService(context) {
         const targetServiceId = Object.values(context.database.services)[0].id;
 
-        history.replace('/?serviceId=' + targetServiceId);
+        history.replace(
+          `/?${assignToSearchParams(window.location.search, {
+            serviceId: targetServiceId,
+          })}`,
+        );
+      },
+      saveToDatabase: (context) => {
+        return clientSaveToDatabase(context.database, history);
       },
     },
   });
@@ -56,10 +75,17 @@ const HomePage = () => {
     case Boolean(state.matches('editing') && service): {
       return (
         <div className="flex flex-col h-screen overflow-hidden">
-          <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4">
+          <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4 justify-between">
             <h1 className="text-primary-800 font-bold items-center flex uppercase tracking-widest">
               sextant
             </h1>
+            <button
+              className="text-sm text-gray-700 mr-4 flex space-x-2 items-center tracking-wider"
+              onClick={() => dispatch('GET_SHARE_LINK')}
+            >
+              <HeroIconGlobe className="w-5 h-5 text-gray-600" />
+              <span>Share</span>
+            </button>
           </div>
           <div className="flex flex-grow border-t-2 overflow-hidden">
             <div className="flex-shrink-0 w-48 border-r-2 h-full py-4 px-4">
@@ -69,7 +95,9 @@ const HomePage = () => {
                   (service) => {
                     return (
                       <Link
-                        to={`/?serviceId=${service?.id}`}
+                        to={`/?${assignToSearchParams(window.location.search, {
+                          serviceId: service.id,
+                        })}`}
                         className="text-sm text-gray-700 block"
                       >
                         {service?.name}
