@@ -1,6 +1,6 @@
-const path = require("path");
-const tailwindcss = require("tailwindcss")("./tailwind.config.js");
-const autoprefixer = require("autoprefixer");
+const path = require('path');
+const tailwindcss = require('tailwindcss')('./tailwind.config.js');
+const autoprefixer = require('autoprefixer');
 
 module.exports = {
   style: {
@@ -8,9 +8,12 @@ module.exports = {
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  eslint: {
+    enable: false,
+  },
   devServer: {
     proxy: {
-      "/api": "http://localhost:4000",
+      '/api': 'http://localhost:4000',
     },
   },
 };
