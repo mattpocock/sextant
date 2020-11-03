@@ -19,7 +19,7 @@
   "scripts": {
     "core": "yarn workspace @sextant-tools/core",
     "frontend": "yarn workspace sextant",
-    "ts": "yarn workspace @sextant-tools/adapter-typescript",
+    "ts": "yarn workspace @sextant-tools/plugin-typescript",
     "fe": "yarn frontend",
     "build": "tsc -b ./tsconfig.monorepo.json",
     "dev": "yarn build --watch",

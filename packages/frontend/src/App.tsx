@@ -71,22 +71,22 @@ const HomePage = () => {
     case Boolean(state.matches('editing') && service): {
       return (
         <div className="flex flex-col h-screen overflow-hidden">
-          <div className="flex-shrink-0 h-12 border-t-4 border-primary-600 flex items-center px-4 justify-between">
-            <h1 className="text-primary-800 font-bold items-center flex uppercase tracking-widest">
+          <div className="flex items-center justify-between flex-shrink-0 h-12 px-4 border-t-4 border-primary-600">
+            <h1 className="flex items-center font-bold tracking-widest uppercase text-primary-800">
               sextant
             </h1>
             <button
-              className="text-sm text-gray-700 mr-4 flex space-x-2 items-center tracking-wider"
+              className="flex items-center mr-4 space-x-2 text-sm tracking-wider text-gray-700"
               onClick={() => dispatch('GET_SHARE_LINK')}
             >
               <HeroIconGlobe className="w-5 h-5 text-gray-600" />
               <span>Share</span>
             </button>
           </div>
-          <div className="flex flex-grow border-t-2 overflow-hidden">
-            <div className="flex-shrink-0 w-48 border-r-2 h-full py-4 px-4">
+          <div className="flex flex-grow overflow-hidden border-t-2">
+            <div className="flex-shrink-0 w-48 h-full px-4 py-4 border-r-2">
               <h1 className="mb-2">Services</h1>
-              <div className="space-y-2 mb-4">
+              <div className="mb-4 space-y-2">
                 {Object.values(state.context.database.services).map(
                   (service) => {
                     return (
@@ -94,7 +94,7 @@ const HomePage = () => {
                         to={`/?${assignToSearchParams(window.location.search, {
                           serviceId: service.id,
                         })}`}
-                        className="text-sm text-gray-700 block"
+                        className="block text-sm text-gray-700"
                       >
                         {service?.name}
                       </Link>
@@ -108,16 +108,16 @@ const HomePage = () => {
                     type: 'ADD_SERVICE',
                   });
                 }}
-                className="bg-gray-200 text-gray-700 px-3 text-sm py-1"
+                className="px-3 py-1 text-sm text-gray-700 bg-gray-200"
               >
                 Add Service
               </button>
             </div>
-            <div className="flex overflow-hidden flex-grow">
-              <div className="space-y-6 flex-col p-6 flex-1 overflow-y-auto">
+            <div className="flex flex-grow overflow-hidden">
+              <div className="flex-col flex-1 p-6 space-y-6 overflow-y-auto">
                 <div>
                   <ContentEditable
-                    className="text-2xl inline-block"
+                    className="inline-block text-2xl"
                     html={service?.name}
                     tagName="h1"
                     onChange={(e) => {
@@ -138,7 +138,7 @@ const HomePage = () => {
                         serviceId: selectedServiceId,
                       });
                     }}
-                    className="text-xs text-gray-700 mt-1 leading-relaxed"
+                    className="mt-1 text-xs leading-relaxed text-gray-700"
                   ></ContentEditable>
                 </div>
                 {sequences.map((sequence, sequenceIndex) => {
@@ -237,7 +237,7 @@ const HomePage = () => {
                 })}
                 <div>
                   <button
-                    className="px-4 bg-gray-200 h-12"
+                    className="h-12 px-4 bg-gray-200"
                     onClick={() => {
                       dispatch({
                         type: 'ADD_SEQUENCE',
@@ -249,7 +249,7 @@ const HomePage = () => {
                   </button>
                 </div>
               </div>
-              <div className="p-6 space-y-6 flex-shrink-0 overflow-y-auto border-l-2">
+              <div className="flex-shrink-0 p-6 space-y-6 overflow-y-auto border-l-2">
                 <h1 className="text-2xl">Event Payloads</h1>
                 <AceEditor
                   mode="graphqlschema"

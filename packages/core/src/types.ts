@@ -1,3 +1,15 @@
+import { SextantPlugin } from './createSextantPlugin';
+
+export interface SextantConfigFile {
+  plugins?: SextantPluginDeclaration[];
+}
+
+/**
+ * Either an inline string describing a module to be imported,
+ * or an inline plugin
+ */
+export type SextantPluginDeclaration = string | SextantPlugin;
+
 export interface Database {
   services: Record<string, Service>;
 }

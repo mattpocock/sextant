@@ -1,9 +1,12 @@
-import { Database, flattenDatabase } from '@sextant-tools/core';
-import { buildCodeForCreateService } from '@sextant-tools/adapter-typescript';
+import {
+  Database,
+  executeConfigFile,
+  getTargetDatabaseFile,
+  getTargetDir,
+  ensureConfigFileExists,
+} from '@sextant-tools/core';
 import { writeFileSync } from 'fs';
 import * as fsExtra from 'fs-extra';
-import { getTargetDatabaseFile, getTargetDir } from './getTargetDir';
-import * as path from 'path';
 
 export const saveDatabase = async (database: Database): Promise<Database> => {
   const targetDir = getTargetDir();
@@ -12,11 +15,9 @@ export const saveDatabase = async (database: Database): Promise<Database> => {
 
   writeFileSync(getTargetDatabaseFile(), JSON.stringify(database, null, 2));
 
-  const filesToWrite = buildCodeForCreateService(flattenDatabase(database));
+  ensureConfigFileExists();
 
-  filesToWrite.forEach((file) => {
-    writeFileSync(path.resolve(getTargetDir(), file.filename), file.content);
-  });
+  executeConfigFile(database);
 
   return Promise.resolve(database);
 };

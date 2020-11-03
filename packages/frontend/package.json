@@ -20,7 +20,6 @@
   "license": "MIT",
   "description": "Chart application flows, then implement them in code",
   "dependencies": {
-    "@sextant-tools/adapter-typescript": "0.0.5",
     "@sextant-tools/core": "0.0.5",
     "body-parser": "^1.19.0",
     "commander": "^6.2.0",
@@ -30,7 +29,7 @@
   },
   "scripts": {
     "start": "concurrently \"craco start\" \"npm run codegen\" \"npm run start:api\"",
-    "start:api": "ts-node-dev -T --project tsconfig.server.json src/bin/server/devServer.ts",
+    "start:api": "TARGET_DIR=\"./sextant\" ts-node-dev -T --project tsconfig.server.json src/bin/server/devServer.ts",
     "start:demo": "REACT_APP_DATABASE_SAVE_MODE=localStorage concurrently \"craco start\" \"npm run codegen\"",
     "build": "(cd ../../ && yarn build) && npm run codegen -- --once && craco build && npm run build:api && npm run chmod:index",
     "build:demo": "(cd ../../ && yarn build) && npm run codegen -- --once && REACT_APP_DATABASE_SAVE_MODE=localStorage craco build",

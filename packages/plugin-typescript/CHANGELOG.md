@@ -1,4 +1,4 @@
-# @sextant-tools/adapter-typescript
+# @sextant-tools/plugin-typescript
 
 ## 0.0.5
 

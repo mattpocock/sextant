@@ -5,6 +5,7 @@ import * as path from 'path';
 import { setupServer } from './server/setupServer';
 import open from 'open';
 import { program } from 'commander';
+import { ensureConfigFileExists } from '@sextant-tools/core';
 
 program
   .description('Start the sextant server pointing at a target directory.')
@@ -16,6 +17,8 @@ program
   .action((event, [targetDir, port]) => {
     const app = express();
     process.env.TARGET_DIR = targetDir;
+
+    ensureConfigFileExists();
 
     setupServer(app);
 

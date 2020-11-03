@@ -1,5 +1,5 @@
-import express, { Express } from 'express';
 import bodyParser from 'body-parser';
+import { Express } from 'express';
 import { getDatabase } from '../utils/getDatabase';
 import { saveDatabase } from '../utils/saveDatabase';
 
