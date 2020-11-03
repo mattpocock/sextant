@@ -5,7 +5,7 @@
       "path": "./packages/core"
     },
     {
-      "path": "./packages/adapter-typescript"
+      "path": "./packages/plugin-typescript"
     },
   ]
 }
