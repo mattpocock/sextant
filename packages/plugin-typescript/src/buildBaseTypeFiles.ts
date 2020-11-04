@@ -8,7 +8,7 @@ import { FlattenedDatabase, getStepsFromSequences } from '@sextant-tools/core';
 import { TsVisitor } from '@graphql-codegen/typescript';
 import { buildSchema, printSchema, parse, visit } from 'graphql';
 
-export const buildCodeForCreateService = (
+export const buildBaseTypeFiles = (
   database: FlattenedDatabase,
 ): { filename: string; content: string }[] => {
   const services = database.services.map((service) => {

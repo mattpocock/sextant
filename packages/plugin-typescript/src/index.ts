@@ -1,12 +1,5 @@
-import { createSextantPlugin } from '@sextant-tools/core';
-import { buildCodeForCreateService } from './buildCreateServiceFunc';
+import { plugin } from './plugin';
 
-export const plugin = createSextantPlugin((context) => {
-  const files = buildCodeForCreateService(context.database);
+export * from './buildBaseTypeFiles';
 
-  files.forEach((file) => {
-    context.writeFileSync(file.filename, file.content);
-  });
-});
-
-export default typescriptPlugin;
+export default plugin;
