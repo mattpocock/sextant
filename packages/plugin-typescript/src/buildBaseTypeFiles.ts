@@ -5,6 +5,8 @@ import {
   Step,
 } from '@sextant-tools/core';
 import * as fs from 'fs';
+import * as camelcase from 'lodash/camelCase';
+import * as upperFirst from 'lodash/upperFirst';
 import { buildSchema, parse, printSchema, visit } from 'graphql';
 import Handlebars from 'handlebars';
 import * as helpers from 'handlebars-helpers';
@@ -18,7 +20,7 @@ export const buildBaseTypeFiles = (
 
     const typescriptDef = getTypescriptedEventPayloads(
       service.eventPayloads,
-      service.id,
+      upperFirst(camelcase(service.name)),
       allSteps,
     );
 
@@ -129,7 +131,7 @@ const getTypescriptedEventPayloads = (
     const emptyTypeDefs = steps
       .filter((step) => {
         const shouldFilterOut = result.content.includes(
-          `export type ${serviceId.toUpperCase()}__${step.event}`,
+          `export type ${serviceId}__${step.event}`,
         );
 
         if (typeDefSet.has(step.event)) {
@@ -141,7 +143,7 @@ const getTypescriptedEventPayloads = (
         return !shouldFilterOut;
       })
       .map((step) => {
-        return `export type ${serviceId.toUpperCase()}__${step.event} = {};`;
+        return `export type ${serviceId}__${step.event} = {};`;
       });
 
     return {
@@ -162,6 +164,6 @@ const appendServiceIdToEventPayloads = (
   serviceId: string,
 ) => {
   return eventPayloads.replace(typeRegex, (match) => {
-    return match.replace(/^type /, `type ${serviceId.toUpperCase()}__`);
+    return match.replace(/^type /, `type ${serviceId}__`);
   });
 };
