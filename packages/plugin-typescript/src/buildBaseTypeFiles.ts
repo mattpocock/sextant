@@ -1,49 +1,30 @@
+import { TsVisitor } from '@graphql-codegen/typescript';
+import {
+  FlattenedDatabase,
+  getStepsFromSequences,
+  Step,
+} from '@sextant-tools/core';
+import * as fs from 'fs';
+import { buildSchema, parse, printSchema, visit } from 'graphql';
 import Handlebars from 'handlebars';
 import * as helpers from 'handlebars-helpers';
-import * as camelcase from 'lodash/camelCase';
-import * as upperFirst from 'lodash/upperFirst';
-import * as fs from 'fs';
 import * as path from 'path';
-import { FlattenedDatabase, getStepsFromSequences } from '@sextant-tools/core';
-import { TsVisitor } from '@graphql-codegen/typescript';
-import { buildSchema, printSchema, parse, visit } from 'graphql';
 
 export const buildBaseTypeFiles = (
   database: FlattenedDatabase,
-): { filename: string; content: string }[] => {
+): { filename: string; content: string } => {
   const services = database.services.map((service) => {
     const allSteps = getStepsFromSequences(service.sequences);
 
-    const typescriptDefText = getTypescriptedEventPayloads(
+    const typescriptDef = getTypescriptedEventPayloads(
       service.eventPayloads,
+      service.id,
+      allSteps,
     );
-
-    const typeDefSet = new Set<string>();
-
-    const emptyTypeDefs = allSteps
-      .filter((step) => {
-        const shouldFilterIn = !typescriptDefText.includes(
-          `export type ${step.event} = {`,
-        );
-
-        if (typeDefSet.has(step.event)) {
-          return false;
-        }
-
-        typeDefSet.add(step.event);
-
-        return shouldFilterIn;
-      })
-      .map((step) => {
-        return `export type ${step.event} = {};`;
-      })
-      .join('\n\n');
 
     return {
       ...service,
-      typescriptDefText: [typescriptDefText, emptyTypeDefs]
-        .filter(Boolean)
-        .join('\n\n'),
+      typescriptDef,
       environmentsWithSteps: service.environments.map((env) => {
         return {
           ...env,
@@ -98,60 +79,89 @@ export const buildBaseTypeFiles = (
     services,
   });
 
-  const typeFiles = services
-    .filter((service) => {
-      return Boolean(service.typescriptDefText);
-    })
-    .map((service) => {
-      return {
-        content: service.typescriptDefText,
-        filename: `${camelcase(service.id)}.generated.ts`,
-        id: service.id,
-        importName: upperFirst(camelcase(service.name)),
-      };
-    });
-
-  const importStatementText = typeFiles
-    .map(
-      (file) =>
-        `import * as ${file.importName} from './${camelcase(
-          file.id,
-        )}.generated';`,
-    )
-    .join('\n');
-
-  return [
-    {
-      content: [importStatementText, result].join('\n\n'),
-      filename: 'sextant-types.generated.ts',
-    },
-    ...typeFiles,
-  ];
+  return {
+    content: [
+      services?.[0]?.typescriptDef?.prepend || '',
+      ...services.map((service) => {
+        return service.typescriptDef.content;
+      }),
+      result,
+    ].join('\n\n'),
+    filename: 'sextant-types.generated.ts',
+  };
 };
 
-const getTypescriptedEventPayloads = (eventPayloads: string) => {
+const getTypescriptedEventPayloads = (
+  untransformedEventPayloads: string,
+  serviceId: string,
+  steps: Step[],
+) => {
   try {
+    const eventPayloads = appendServiceIdToEventPayloads(
+      untransformedEventPayloads,
+      serviceId,
+    );
+
     const schema = buildSchema(eventPayloads);
     const visitor = new TsVisitor(schema, {
       namingConvention: 'keep',
       skipTypename: true,
+      scalars: {},
     });
     const printedSchema = printSchema(schema);
     const astNode = parse(printedSchema);
     const visitorResult = visit(astNode, { leave: visitor });
 
-    const scalars = visitor.scalarsDefinition;
+    // const scalars = visitor.scalarsDefinition;
 
     const result = {
       prepend: [
         ...visitor.getEnumsImports(),
         ...visitor.getScalarsImports(),
         ...visitor.getWrapperDefinitions(),
+        visitor.scalarsDefinition,
       ],
-      content: [scalars, ...visitorResult.definitions].join('\n'),
+      content: [...visitorResult.definitions].join('\n'),
     };
 
-    return `${result.prepend.join('\n')}\n\n${result.content}`;
+    const typeDefSet = new Set<string>();
+
+    const emptyTypeDefs = steps
+      .filter((step) => {
+        const shouldFilterOut = result.content.includes(
+          `export type ${serviceId.toUpperCase()}__${step.event}`,
+        );
+
+        if (typeDefSet.has(step.event)) {
+          return false;
+        }
+
+        typeDefSet.add(step.event);
+
+        return !shouldFilterOut;
+      })
+      .map((step) => {
+        return `export type ${serviceId.toUpperCase()}__${step.event} = {};`;
+      });
+
+    return {
+      prepend: result.prepend.join('\n\n'),
+      content: [result.content, ...emptyTypeDefs].join('\n\n'),
+    };
   } catch (e) {}
-  return '';
+  return {
+    prepend: '',
+    content: '',
+  };
+};
+
+const typeRegex = /^type ([A-Z|a-z|_]{1,}) \{/gm;
+
+const appendServiceIdToEventPayloads = (
+  eventPayloads: string,
+  serviceId: string,
+) => {
+  return eventPayloads.replace(typeRegex, (match) => {
+    return match.replace(/^type /, `type ${serviceId.toUpperCase()}__`);
+  });
 };

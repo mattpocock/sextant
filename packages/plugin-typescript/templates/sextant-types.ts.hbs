@@ -11,12 +11,12 @@ export interface SextantServices {
           '{{ camelcase this.env}}': {
             in:
             {{#each this.in}}
-              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
+              | EventType<{{uppercase ../../../id}}__{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.in}}never;{{/unless}}
             out:
             {{#each this.out}}
-              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
+              | EventType<{{uppercase ../../../id}}__{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.out}}never;{{/unless}}
           }
@@ -27,12 +27,12 @@ export interface SextantServices {
           '{{ camelcase this.env}}': {
             in:
             {{#each this.in}}
-              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
+              | EventType<{{uppercase ../../../id}}__{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.in}}never;{{/unless}}
             out:
             {{#each this.out}}
-              | EventType<{{pascalcase ../../../name}}.{{this.event}}, "{{this.event}}">
+              | EventType<{{uppercase ../../../id}}__{{this.event}}, "{{this.event}}">
             {{/each}}
             {{#unless this.out}}never;{{/unless}}
           }

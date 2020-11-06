@@ -1,5 +1,5 @@
 {
-  "name": "@sextant-tools/plugin-typescript",
+  "name": "@sextant-tools/plugin-express",
   "version": "0.0.5",
   "license": "MIT",
   "repository": {
@@ -12,15 +12,8 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@graphql-codegen/typescript": "^1.17.11",
+    "@sextant-tools/plugin-typescript": "0.0.5",
     "@sextant-tools/core": "0.0.5",
-    "fs-extra": "^9.0.1",
-    "graphql": "^15.4.0",
-    "handlebars": "^4.7.6",
-    "handlebars-helpers": "^0.10.0",
-    "lodash": "^4.17.20"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.3"
+    "handlebars": "^4.7.6"
   }
 }
