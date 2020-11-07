@@ -4,11 +4,19 @@ export interface SextantConfigFile {
   plugins?: SextantPluginDeclaration[];
 }
 
+export interface DefaultConfig {}
+
 /**
  * Either an inline string describing a module to be imported,
  * or an inline plugin
  */
-export type SextantPluginDeclaration = string | SextantPlugin;
+export type SextantPluginDeclaration =
+  | string
+  | [string]
+  | [string, DefaultConfig]
+  | SextantPlugin
+  | [SextantPlugin]
+  | [SextantPlugin, DefaultConfig];
 
 export interface Database {
   services: Record<string, Service>;

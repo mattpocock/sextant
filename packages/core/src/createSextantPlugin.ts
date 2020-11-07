@@ -16,21 +16,28 @@ export interface SextantContext {
   writeFileSync: (relativePath: string, contents: string) => void;
 }
 
-export type SextantPlugin = (database: Database) => void;
-
-export type SextantPluginImplementation = (
-  sextantContext: SextantContext,
+export type SextantPlugin = <TConfig extends {}>(
+  database: Database,
+  config: TConfig,
 ) => void;
 
-export const createSextantPlugin = (
-  implementation: SextantPluginImplementation,
+export type SextantPluginImplementation<TConfig extends {}> = (
+  sextantContext: SextantContext,
+  config: TConfig,
+) => void;
+
+export const createSextantPlugin = <TConfig extends {}>(
+  implementation: SextantPluginImplementation<TConfig>,
 ) =>
-  function plugin(database: Database) {
-    implementation({
-      database: flattenDatabase(database),
-      writeFileSync: (relativePath, contents) => {
-        const targetDir = getTargetDir();
-        fs.writeFileSync(path.resolve(targetDir, relativePath), contents);
+  function plugin(database: Database, config: TConfig) {
+    implementation(
+      {
+        database: flattenDatabase(database),
+        writeFileSync: (relativePath, contents) => {
+          const targetDir = getTargetDir();
+          fs.writeFileSync(path.resolve(targetDir, relativePath), contents);
+        },
       },
-    });
+      config,
+    );
   };

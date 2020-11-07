@@ -5,16 +5,25 @@ import {
   DEFAULT_CONFIG_FILE,
   PERMITTED_SEXTANT_CONFIG_FILENAMES,
 } from './constants';
-import { Database, SextantConfigFile } from './types';
+import {
+  Database,
+  DefaultConfig,
+  SextantConfigFile,
+  SextantPluginDeclaration,
+} from './types';
 import { SextantPlugin } from './createSextantPlugin';
 
 export const executeConfigFile = (database: Database) => {
   const config = getConfig();
 
-  config.plugins?.forEach((plugin, index) => {
+  config.plugins?.forEach((pluginDeclaration, index) => {
+    const [plugin, config] = unwrapPluginFromArrayDeclaration(
+      pluginDeclaration,
+    );
+
     switch (typeof plugin) {
       case 'function': {
-        return plugin(database);
+        return plugin(database, config);
       }
       case 'string': {
         let pluginRequireId = plugin;
@@ -27,9 +36,9 @@ export const executeConfigFile = (database: Database) => {
           | { default: SextantPlugin } = require(pluginRequireId);
 
         if (typeof requiredPlugin === 'function') {
-          return requiredPlugin(database);
+          return requiredPlugin(database, config);
         }
-        return requiredPlugin.default(database);
+        return requiredPlugin.default(database, config);
       }
       default:
         console.log(`An incorrect plugin syntax was passed in your config.`);
@@ -71,4 +80,13 @@ export const ensureConfigFileExists = () => {
   if (!fs.existsSync(configFileLocation)) {
     fs.writeFileSync(configFileLocation, DEFAULT_CONFIG_FILE);
   }
+};
+
+export const unwrapPluginFromArrayDeclaration = (
+  pluginDeclaration: SextantPluginDeclaration,
+): [SextantPlugin | string, DefaultConfig] => {
+  if (Array.isArray(pluginDeclaration)) {
+    return [pluginDeclaration[0], pluginDeclaration[1] || {}];
+  }
+  return [pluginDeclaration, {}];
 };
