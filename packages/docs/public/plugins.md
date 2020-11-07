@@ -26,7 +26,7 @@ _TODO - Documentation incoming_
 
 ### Jest
 
-Use Sextant to describe and structure your tests and receive meaningfull code coverage reports on your scenarios.
+Describe and structure your [Jest](https://jestjs.io/) tests based on your features. Get meaningful coverage reports based on actual scenarios, not code coverage.
 
 _TODO - Documentation incoming_
 
