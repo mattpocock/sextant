@@ -39,7 +39,7 @@ Actors can communicate with each other by sending messages. In Sextant, these ar
 3. The `database` sends back a `POSTS` event to the `server`
 4. The `server` then forwards that on to the `frontend`
 
-Different events play out in different scenarios.
+Events are the core currency of Sextant - everything that happens in your application is an event between two actors. Different sequences of events lead to different scenarios.
 
 ### Type safety with GraphQL
 

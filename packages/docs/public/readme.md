@@ -15,7 +15,15 @@ This means:
 - Your documentation never goes out of date
 - You get type-safe code across languages and domains
 
-> Sextant is currently under development. Please do report any issues you find at our [repository](https://github.com/mattpocock/sextant)
+> Sextant is currently under development. We'd love your help finding issues and thinking about features at our [repository](https://github.com/mattpocock/sextant)
+
+<!-- ## Recipes
+
+### Build an Express API
+
+Using our ``
+
+### Get test cove -->
 
 ## Installation
 
@@ -25,7 +33,7 @@ Install Sextant globally via npm or yarn:
 
 `yarn global add sextant`
 
-## Running it locally
+## Running via CLI
 
 Once installed, run `sextant ./target-directory` to run Sextant pointing at the `./target-directory`.
 
@@ -37,4 +45,23 @@ This will:
 
 ## Installing your first plugin
 
-Let's install the
+Once you've started building some features and scenarios, we can start using
+
+Let's install the `@sextant-tools/plugin-express` plugin, which can be used to build a type-safe [ExpressJS](https://expressjs.com/) API using Sextant.
+
+1. Run `npm install @sextant-tools/plugin-express express` to install the plugin, and the `express` package.
+2. Change your `sextant.config.js` file so it looks like this:
+
+```js
+module.exports = {
+  plugins: ['@sextant-tools/plugin-express'],
+};
+```
+
+3. Stop the terminal running `sextant` and restart it.
+
+You should now see some generated files - one which contains mainly Typescript declarations, and one which contains some functions to do with `express`.
+
+You can use these functions, such as `makeSextantExpressRoutes`, to implement your code based on what's in your Sextant documentation.
+
+Check out the plugin's [documentation](plugins#express) to learn how to use these functions.
