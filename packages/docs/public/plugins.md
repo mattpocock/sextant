@@ -1,6 +1,6 @@
 # Plugins
 
-Plugins are what give Sextant its power. Not only can you diagram an application, but you can take those diagrams and turn them into code.
+Plugins are what give Sextant its power. Not only can you diagram an application - you can take those diagrams and turn them into code.
 
 You can [create your own plugins](advanced#creating-a-plugin), or choose from those built by the community.
 
