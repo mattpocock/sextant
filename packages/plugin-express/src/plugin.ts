@@ -4,18 +4,31 @@ import Handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export const plugin = createSextantPlugin((context) => {
-  const typeFile = buildBaseTypeFiles(context.database);
+export interface PluginExpressConfig {
+  typescriptFileName: string;
+  expressFileName: string;
+}
 
-  const template = Handlebars.compile(
-    fs
-      .readFileSync(
-        path.resolve(__dirname, '../templates/express-plugin.ts.hbs'),
-      )
-      .toString(),
-  );
+export const plugin = createSextantPlugin<PluginExpressConfig>(
+  (
+    context,
+    { expressFileName = 'sextant-express.generated.ts', typescriptFileName },
+  ) => {
+    const typeFile = buildBaseTypeFiles(context.database);
 
-  context.writeFileSync('sextant-express.generated.ts', template({}));
+    const template = Handlebars.compile(
+      fs
+        .readFileSync(
+          path.resolve(__dirname, '../templates/express-plugin.ts.hbs'),
+        )
+        .toString(),
+    );
 
-  context.writeFileSync(typeFile.filename, typeFile.content);
-});
+    context.writeFileSync(expressFileName, template({}));
+
+    context.writeFileSync(
+      typescriptFileName || typeFile.filename,
+      typeFile.content,
+    );
+  },
+);
