@@ -1,16 +1,20 @@
 import { TsVisitor } from '@graphql-codegen/typescript';
 import {
   FlattenedDatabase,
+  getEnvironmentsWithSteps,
   getStepsFromSequences,
   Step,
 } from '@sextant-tools/core';
 import * as fs from 'fs';
-import * as camelcase from 'lodash/camelCase';
-import * as upperFirst from 'lodash/upperFirst';
+import * as path from 'path';
 import { buildSchema, parse, printSchema, visit } from 'graphql';
 import Handlebars from 'handlebars';
-import * as helpers from 'handlebars-helpers';
-import * as path from 'path';
+import * as camelcase from 'lodash/camelCase';
+import * as upperFirst from 'lodash/upperFirst';
+
+Handlebars.registerHelper('pascalcase', (str) => {
+  return upperFirst(camelcase(str));
+});
 
 export const buildBaseTypeFiles = (
   database: FlattenedDatabase,
@@ -27,46 +31,89 @@ export const buildBaseTypeFiles = (
     return {
       ...service,
       typescriptDef,
-      environmentsWithSteps: service.environments.map((env) => {
-        return {
-          ...env,
-          from: service.environments
-            .map((fromEnv) => {
-              return {
-                env: fromEnv.name,
-                in: allSteps.filter((step) => {
-                  return step.to === env.id && step.from === fromEnv.id;
-                }),
-                out: allSteps.filter((step) => {
-                  return step.from === env.id && step.to === fromEnv.id;
-                }),
-              };
-            })
-            .filter((fromEnv) => {
-              return fromEnv.in.length > 0 || fromEnv.out.length > 0;
-            }),
-          to: service.environments
-            .map((toEnv) => {
-              return {
-                env: toEnv.name,
-                in: allSteps.filter((step) => {
-                  return step.from === env.id && step.to === toEnv.id;
-                }),
-                out: allSteps.filter((step) => {
-                  return step.to === env.id && step.from === toEnv.id;
-                }),
-              };
-            })
-            .filter((fromEnv) => {
-              return fromEnv.in.length > 0 || fromEnv.out.length > 0;
-            }),
-        };
-      }),
+      environmentsWithSteps: getEnvironmentsWithSteps(
+        service.environments,
+        allSteps,
+      ),
     };
   });
 
-  helpers({
-    handlebars: Handlebars,
+  const environmentIdMap: Record<string, string> = database.services.reduce(
+    (map, service) => {
+      service.environments.forEach((env) => {
+        map[env.id] = env.name;
+      });
+      return map;
+    },
+    {} as Record<string, string>,
+  );
+
+  const allStepsWithServiceNamePrefix: (Step & {
+    serviceName: string;
+    rawEvent: string;
+  })[] = database.services.reduce(
+    (steps, service) => {
+      return steps.concat(
+        getStepsFromSequences(service.sequences).map((step) => {
+          return {
+            ...step,
+            event: `${service.name}.${step.event}`,
+            to: environmentIdMap[step.to],
+            from: environmentIdMap[step.from],
+            rawEvent: step.event,
+            serviceName: service.name,
+          };
+        }),
+      );
+    },
+    [] as (Step & {
+      serviceName: string;
+      rawEvent: string;
+    })[],
+  );
+
+  const uniqueEnvironmentNameSet = new Set<string>();
+
+  Object.values(environmentIdMap).forEach((name) =>
+    uniqueEnvironmentNameSet.add(name),
+  );
+
+  const uniqueEnvironmentNames = Array.from(uniqueEnvironmentNameSet);
+
+  const environments = uniqueEnvironmentNames.map((sourceName) => {
+    return {
+      name: sourceName,
+      from: uniqueEnvironmentNames
+        .map((fromName) => {
+          return {
+            env: fromName,
+            in: allStepsWithServiceNamePrefix.filter((step) => {
+              return step.to === sourceName && step.from === fromName;
+            }),
+            out: allStepsWithServiceNamePrefix.filter((step) => {
+              return step.from === sourceName && step.to === fromName;
+            }),
+          };
+        })
+        .filter((fromEnv) => {
+          return fromEnv.in.length > 0 || fromEnv.out.length > 0;
+        }),
+      to: uniqueEnvironmentNames
+        .map((toName) => {
+          return {
+            env: toName,
+            in: allStepsWithServiceNamePrefix.filter((step) => {
+              return step.from === sourceName && step.to === toName;
+            }),
+            out: allStepsWithServiceNamePrefix.filter((step) => {
+              return step.to === sourceName && step.from === toName;
+            }),
+          };
+        })
+        .filter((fromEnv) => {
+          return fromEnv.in.length > 0 || fromEnv.out.length > 0;
+        }),
+    };
   });
 
   const template = Handlebars.compile(
@@ -79,6 +126,7 @@ export const buildBaseTypeFiles = (
 
   const result = template({
     services,
+    environments,
   });
 
   return {
@@ -150,14 +198,16 @@ const getTypescriptedEventPayloads = (
       prepend: result.prepend.join('\n\n'),
       content: [result.content, ...emptyTypeDefs].join('\n\n'),
     };
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
   return {
     prepend: '',
     content: '',
   };
 };
 
-const typeRegex = /^type ([A-Z|a-z|_]{1,}) \{/gm;
+const typeRegex = /^type ([A-Z|_]{1,}) \{/gm;
 
 const appendServiceIdToEventPayloads = (
   eventPayloads: string,

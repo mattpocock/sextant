@@ -1,6 +1,14 @@
-import { Database, FlattenedDatabase, Sequence, Step } from './types';
-import produce from 'immer';
 import humanId from 'human-id';
+import produce from 'immer';
+import * as camelcase from 'lodash/camelCase';
+import {
+  Database,
+  Environment,
+  FlattenedDatabase,
+  Sequence,
+  Service,
+  Step,
+} from './types';
 
 const uuid = () => humanId();
 
@@ -8,12 +16,98 @@ export const flattenDatabase = (database: Database): FlattenedDatabase => {
   return {
     services: Object.values(database.services).map((service) => {
       return {
-        ...service,
-        environments: Object.values(service.environments),
-        sequences: Object.values(service.sequences),
+        ...sanitizeService(service),
+        environments: Object.values(service.environments).map(
+          sanitizeEnvironment,
+        ),
+        sequences: Object.values(service.sequences).map(sanitizeSequence),
       };
     }),
   };
+};
+
+const sanitizeName = (name: string): string => {
+  return camelcase(name.trim());
+};
+
+export const sanitizeService = (service: Service): Service => {
+  return {
+    ...service,
+    name: sanitizeName(service.name),
+  };
+};
+
+export const sanitizeEnvironment = (environment: Environment): Environment => {
+  return {
+    ...environment,
+    name: sanitizeName(environment.name),
+  };
+};
+
+export const sanitizeSequence = (sequence: Sequence): Sequence => {
+  return {
+    ...sequence,
+    name: sanitizeName(sequence.name),
+    steps: sequence.steps.map(sanitizeStep),
+  };
+};
+
+export const sanitizeStep = (step: Step): Step => {
+  return {
+    ...step,
+  };
+};
+
+export interface StepDescriptor {
+  env: string;
+  in: Step[];
+  out: Step[];
+}
+
+export type EnvironmentWithStep = Environment & {
+  from: StepDescriptor[];
+  to: StepDescriptor[];
+};
+
+export const getEnvironmentsWithSteps = (
+  environments: Environment[],
+  steps: Step[],
+): EnvironmentWithStep[] => {
+  return environments.map((env) => {
+    return {
+      ...env,
+      from: environments
+        .map((fromEnv) => {
+          return {
+            env: fromEnv.name,
+            in: steps.filter((step) => {
+              return step.to === env.id && step.from === fromEnv.id;
+            }),
+            out: steps.filter((step) => {
+              return step.from === env.id && step.to === fromEnv.id;
+            }),
+          };
+        })
+        .filter((fromEnv) => {
+          return fromEnv.in.length > 0 || fromEnv.out.length > 0;
+        }),
+      to: environments
+        .map((toEnv) => {
+          return {
+            env: toEnv.name,
+            in: steps.filter((step) => {
+              return step.from === env.id && step.to === toEnv.id;
+            }),
+            out: steps.filter((step) => {
+              return step.to === env.id && step.from === toEnv.id;
+            }),
+          };
+        })
+        .filter((fromEnv) => {
+          return fromEnv.in.length > 0 || fromEnv.out.length > 0;
+        }),
+    };
+  });
 };
 
 /** Sequences */
