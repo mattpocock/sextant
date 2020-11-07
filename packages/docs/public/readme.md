@@ -45,7 +45,7 @@ This will:
 
 ## Installing your first plugin
 
-Once you've started building some features and scenarios, we can start using
+Once you've started building some features and scenarios, we can start using plugins to generate code from your diagrams.
 
 Let's install the `@sextant-tools/plugin-express` plugin, which can be used to build a type-safe [ExpressJS](https://expressjs.com/) API using Sextant.
 

@@ -4,6 +4,8 @@
   "workspaces": [
     "packages/*"
   ],
+  "license": "MIT",
+  "homepage": "https://docs.sextant.tools",
   "private": true,
   "devDependencies": {
     "@changesets/cli": "^2.11.1",
