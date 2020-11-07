@@ -1,17 +1,26 @@
 import humanId from 'human-id';
 import produce from 'immer';
-import * as camelcase from 'lodash/camelCase';
+import {
+  sanitizeEnvironment,
+  sanitizeSequence,
+  sanitizeService,
+} from './sanitizeUtilities';
 import {
   Database,
   Environment,
   FlattenedDatabase,
   Sequence,
-  Service,
   Step,
 } from './types';
 
 const uuid = () => humanId();
 
+/**
+ * Flattens the database into a series of arrays, instead
+ * of keyed objects.
+ *
+ * Also sanitizes various names by camelcasing them
+ */
 export const flattenDatabase = (database: Database): FlattenedDatabase => {
   return {
     services: Object.values(database.services).map((service) => {
@@ -23,38 +32,6 @@ export const flattenDatabase = (database: Database): FlattenedDatabase => {
         sequences: Object.values(service.sequences).map(sanitizeSequence),
       };
     }),
-  };
-};
-
-const sanitizeName = (name: string): string => {
-  return camelcase(name.trim());
-};
-
-export const sanitizeService = (service: Service): Service => {
-  return {
-    ...service,
-    name: sanitizeName(service.name),
-  };
-};
-
-export const sanitizeEnvironment = (environment: Environment): Environment => {
-  return {
-    ...environment,
-    name: sanitizeName(environment.name),
-  };
-};
-
-export const sanitizeSequence = (sequence: Sequence): Sequence => {
-  return {
-    ...sequence,
-    name: sanitizeName(sequence.name),
-    steps: sequence.steps.map(sanitizeStep),
-  };
-};
-
-export const sanitizeStep = (step: Step): Step => {
-  return {
-    ...step,
   };
 };
 

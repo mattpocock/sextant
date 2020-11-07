@@ -1,4 +1,4 @@
-import { SextantPlugin } from './createSextantPlugin';
+import { SextantContext } from './createSextantPlugin';
 
 export interface SextantConfigFile {
   plugins?: SextantPluginDeclaration[];
@@ -62,3 +62,13 @@ export interface Environment {
   id: string;
   name: string;
 }
+
+export type SextantPlugin = <TConfig extends {}>(
+  database: Database,
+  config: TConfig,
+) => void;
+
+export type SextantPluginImplementation<TConfig extends {}> = (
+  sextantContext: SextantContext,
+  config: TConfig,
+) => void;

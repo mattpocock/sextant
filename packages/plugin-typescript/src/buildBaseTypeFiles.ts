@@ -9,8 +9,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { buildSchema, parse, printSchema, visit } from 'graphql';
 import Handlebars from 'handlebars';
-import * as camelcase from 'lodash/camelCase';
-import * as upperFirst from 'lodash/upperFirst';
+import * as camelcase from 'lodash.camelcase';
+import * as upperFirst from 'lodash.upperfirst';
 
 Handlebars.registerHelper('pascalcase', (str) => {
   return upperFirst(camelcase(str));

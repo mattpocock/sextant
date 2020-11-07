@@ -9,9 +9,9 @@ import {
   Database,
   DefaultConfig,
   SextantConfigFile,
+  SextantPlugin,
   SextantPluginDeclaration,
 } from './types';
-import { SextantPlugin } from './createSextantPlugin';
 
 export const executeConfigFile = (database: Database) => {
   const config = getConfig();
