@@ -18,7 +18,7 @@ These two things are features of your application. Some applications may have on
 
 You would express both of these scenarios in different 'scenario diagrams' in Sextant.
 
-> The names of 'features' and 'scenarios' were inspired by the [Gherkin language](https://cucumber.io/docs/gherkin/reference/), and BDD as a whole.
+> The names of 'feature' and 'scenario' were inspired by the [Gherkin language](https://cucumber.io/docs/gherkin/reference/), and BDD as a whole.
 
 ## Actors
 
