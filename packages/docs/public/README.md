@@ -47,14 +47,14 @@ This will:
 
 Once you've started building some features and scenarios, we can start using plugins to generate code from your diagrams.
 
-Let's install the `@sextant-tools/plugin-express` plugin, which can be used to build a type-safe [ExpressJS](https://expressjs.com/) API using Sextant.
+Let's install the `@sextant-tools/plugin-javascript-express` plugin, which can be used to build a type-safe [ExpressJS](https://expressjs.com/) API using Sextant.
 
-1. Run `npm install @sextant-tools/plugin-express express` to install the plugin, and the `express` package.
+1. Run `npm install @sextant-tools/plugin-javascript-express express` to install the plugin, and the `express` package.
 2. Change your `sextant.config.js` file so it looks like this:
 
 ```js
 module.exports = {
-  plugins: ['@sextant-tools/plugin-express'],
+  plugins: ['@sextant-tools/plugin-javascript-express'],
 };
 ```
 

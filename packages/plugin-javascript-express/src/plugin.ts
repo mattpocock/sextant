@@ -1,5 +1,5 @@
 import { createSextantPlugin } from '@sextant-tools/core';
-import { buildBaseTypeFiles } from '@sextant-tools/plugin-typescript';
+import { buildBaseTypeFiles } from '@sextant-tools/plugin-javascript-operations';
 import Handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';

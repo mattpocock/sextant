@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@sextant-tools/core": "0.0.5",
+    "@sextant-tools/docs": "0.0.1",
+    "sextant": "0.3.0",
+    "@sextant-tools/plugin-javascript-express": "0.0.5",
+    "@sextant-tools/plugin-javascript-operations": "0.0.5"
+  },
+  "changesets": []
+}

@@ -5,10 +5,10 @@
       "path": "./packages/core"
     },
     {
-      "path": "./packages/plugin-typescript"
+      "path": "./packages/plugin-javascript-operations"
     },
     {
-      "path": "./packages/plugin-express"
+      "path": "./packages/plugin-javascript-express"
     },
   ]
 }

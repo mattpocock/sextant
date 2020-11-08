@@ -1,5 +1,5 @@
 {
-  "name": "@sextant-tools/plugin-express",
+  "name": "@sextant-tools/plugin-javascript-express",
   "version": "0.0.5",
   "license": "MIT",
   "repository": {
@@ -12,7 +12,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@sextant-tools/plugin-typescript": "0.0.5",
+    "@sextant-tools/plugin-javascript-operations": "0.0.5",
     "@sextant-tools/core": "0.0.5",
     "handlebars": "^4.7.6"
   }

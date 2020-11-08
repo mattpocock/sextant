@@ -30,7 +30,7 @@
 
 - 97e3584: Added npm details
 - Updated dependencies [97e3584]
-  - @sextant-tools/plugin-typescript@0.0.5
+  - @sextant-tools/plugin-javascript-operations@0.0.5
   - @sextant-tools/core@0.0.5
 
 ## 0.2.6
@@ -39,7 +39,7 @@
 
 - Added a description field to services and sequences
 - Updated dependencies [undefined]
-  - @sextant-tools/plugin-typescript@0.0.4
+  - @sextant-tools/plugin-javascript-operations@0.0.4
   - @sextant-tools/core@0.0.4
 
 ## 0.2.5
@@ -48,7 +48,7 @@
 
 - f2238a6: Removed uuid and replaced with human-id for easier to read filenames
 - Updated dependencies [f2238a6]
-  - @sextant-tools/plugin-typescript@0.0.3
+  - @sextant-tools/plugin-javascript-operations@0.0.3
   - @sextant-tools/core@0.0.3
 
 ## 0.2.4
@@ -69,7 +69,7 @@
 
 - Fixed dependencies
 - Updated dependencies [undefined]
-  - @sextant-tools/plugin-typescript@0.0.2
+  - @sextant-tools/plugin-javascript-operations@0.0.2
   - @sextant-tools/core@0.0.2
 
 ## 0.2.1

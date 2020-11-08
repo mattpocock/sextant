@@ -1,4 +1,4 @@
-# @sextant-tools/plugin-typescript
+# @sextant-tools/plugin-javascript-operations
 
 ## 0.0.5
 
