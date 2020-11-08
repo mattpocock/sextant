@@ -74,4 +74,6 @@ export const makeSextantExpressSdk = <
   // @ts-ignore
   event: SextantEvent<IFeature, IFrom, ITo>,
   // @ts-ignore
-): Promise<SextantEvent<IFeature, ITo, IFrom>> => {};
+): Promise<SextantEvent<IFeature, ITo, IFrom>> => {
+  return fetcher(feature, event);
+};
