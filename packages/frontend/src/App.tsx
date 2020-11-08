@@ -75,13 +75,18 @@ const HomePage = () => {
             <h1 className="flex items-center font-bold tracking-widest uppercase text-primary-800">
               sextant
             </h1>
-            <button
-              className="flex items-center mr-4 space-x-2 text-sm tracking-wider text-gray-700"
-              onClick={() => dispatch('GET_SHARE_LINK')}
-            >
-              <HeroIconGlobe className="w-5 h-5 text-gray-600" />
-              <span>Share</span>
-            </button>
+            <div className="flex items-center mr-4 space-x-10 text-sm tracking-wider text-gray-800">
+              <a href="https://docs.sextant.tools" target="_blank">
+                Docs
+              </a>
+              <button
+                className="flex items-center space-x-2 text-primary-800"
+                onClick={() => dispatch('GET_SHARE_LINK')}
+              >
+                <HeroIconGlobe className="w-5 h-5 text-primary-600" />
+                <span>Share</span>
+              </button>
+            </div>
           </div>
           <div className="flex flex-grow overflow-hidden border-t-2">
             <div className="flex-shrink-0 w-48 h-full px-4 py-4 border-r-2">
