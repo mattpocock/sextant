@@ -31,63 +31,63 @@ interface Context {
 }
 
 type Event =
-  | { type: 'DELETE_ENVIRONMENT'; featureId: string; envId: string }
+  | { type: 'DELETE_ACTOR'; featureId: string; envId: string }
   | {
-      type: 'UPDATE_SERVICE_EVENT_PAYLOAD';
+      type: 'UPDATE_FEATURE_EVENT_PAYLOAD';
       featureId: string;
       eventPayloadString: string;
     }
   | {
-      type: 'UPDATE_SEQUENCE_DESCRIPTION';
+      type: 'UPDATE_SCENARIO_DESCRIPTION';
       featureId: string;
       scenarioId: string;
       description: string;
     }
   | {
-      type: 'UPDATE_SERVICE_DESCRIPTION';
+      type: 'UPDATE_FEATURE_DESCRIPTION';
       featureId: string;
       description: string;
     }
   | {
-      type: 'SERVICE_NOT_FOUND';
+      type: 'FEATURE_NOT_FOUND';
     }
   | {
-      type: 'UPDATE_SERVICE_NAME';
+      type: 'UPDATE_FEATURE_NAME';
       featureId: string;
       name: string;
     }
   | {
-      type: 'ADD_SEQUENCE';
+      type: 'ADD_SCENARIO';
       featureId: string;
     }
   | {
-      type: 'DUPLICATE_SEQUENCE';
-      featureId: string;
-      scenarioId: string;
-    }
-  | {
-      type: 'DELETE_SEQUENCE';
+      type: 'DUPLICATE_SCENARIO';
       featureId: string;
       scenarioId: string;
     }
   | {
-      type: 'UPDATE_SEQUENCE_NAME';
+      type: 'DELETE_SCENARIO';
+      featureId: string;
+      scenarioId: string;
+    }
+  | {
+      type: 'UPDATE_SCENARIO_NAME';
       featureId: string;
       scenarioId: string;
       name: string;
     }
   | {
-      type: 'ADD_SERVICE';
+      type: 'ADD_FEATURE';
     }
   | {
-      type: 'ADD_ENVIRONMENT';
+      type: 'ADD_ACTOR';
       featureId: string;
     }
   | {
       type: 'GET_SHARE_LINK';
     }
   | {
-      type: 'UPDATE_ENVIRONMENT_NAME';
+      type: 'UPDATE_ACTOR_NAME';
       featureId: string;
       scenarioId: string;
       envId: string;
@@ -174,7 +174,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
       editing: {
         initial: 'idle',
         on: {
-          SERVICE_NOT_FOUND: [
+          FEATURE_NOT_FOUND: [
             {
               cond: 'databaseFromContextHasAtLeastOneFeature',
               actions: ['goToFirstFeature'],
@@ -185,7 +185,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
               target: 'editing',
             },
           ],
-          UPDATE_SERVICE_EVENT_PAYLOAD: {
+          UPDATE_FEATURE_EVENT_PAYLOAD: {
             actions: assign((context, event) => {
               return {
                 database: updateFeatureEventPayload(
@@ -197,7 +197,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             }),
             target: '.throttling',
           },
-          ADD_ENVIRONMENT: {
+          ADD_ACTOR: {
             actions: assign((context, event) => {
               return {
                 database: addActor(context.database, event.featureId),
@@ -205,7 +205,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             }),
             target: '.throttling',
           },
-          DELETE_ENVIRONMENT: [
+          DELETE_ACTOR: [
             {
               cond: 'canDeleteActor',
               actions: ['deleteActor'],
@@ -215,7 +215,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
               actions: ['tellUserWeCannotDeleteTheActor'],
             },
           ],
-          ADD_SEQUENCE: {
+          ADD_SCENARIO: {
             actions: assign((context, event) => {
               return {
                 database: addScenario(context.database, event.featureId),
@@ -223,7 +223,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             }),
             target: '.throttling',
           },
-          DELETE_SEQUENCE: {
+          DELETE_SCENARIO: {
             actions: assign((context, event) => {
               return {
                 database: deleteScenario(
@@ -235,7 +235,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             }),
             target: '.throttling',
           },
-          UPDATE_SERVICE_NAME: {
+          UPDATE_FEATURE_NAME: {
             target: '.throttling',
             actions: [
               assign((context, event) => {
@@ -252,7 +252,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           GET_SHARE_LINK: {
             actions: 'copyShareLinkToClipboard',
           },
-          DUPLICATE_SEQUENCE: {
+          DUPLICATE_SCENARIO: {
             target: '.throttling',
             actions: [
               assign((context, event) => {
@@ -266,7 +266,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
               }),
             ],
           },
-          ADD_SERVICE: {
+          ADD_FEATURE: {
             target: '.throttling',
             actions: [
               assign((context) => {
@@ -276,7 +276,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
               }),
             ],
           },
-          UPDATE_SEQUENCE_DESCRIPTION: {
+          UPDATE_SCENARIO_DESCRIPTION: {
             target: '.throttling',
             actions: [
               assign((context, event) => {
@@ -291,7 +291,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
               }),
             ],
           },
-          UPDATE_SERVICE_DESCRIPTION: {
+          UPDATE_FEATURE_DESCRIPTION: {
             target: '.throttling',
             actions: [
               assign((context, event) => {
@@ -407,7 +407,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             ],
             target: '.throttling',
           },
-          UPDATE_ENVIRONMENT_NAME: {
+          UPDATE_ACTOR_NAME: {
             actions: assign((context, event) => {
               return {
                 database: updateActorName(
@@ -421,7 +421,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             }),
             target: '.throttling',
           },
-          UPDATE_SEQUENCE_NAME: {
+          UPDATE_SCENARIO_NAME: {
             actions: assign((context, event) => {
               return {
                 database: updateScenarioName(

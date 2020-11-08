@@ -59,7 +59,7 @@ const HomePage = () => {
   useEffect(() => {
     if (!feature) {
       dispatch({
-        type: 'SERVICE_NOT_FOUND',
+        type: 'FEATURE_NOT_FOUND',
       });
     }
     // eslint-disable-next-line
@@ -105,7 +105,7 @@ const HomePage = () => {
               <button
                 onClick={() => {
                   dispatch({
-                    type: 'ADD_SERVICE',
+                    type: 'ADD_FEATURE',
                   });
                 }}
                 className="px-3 py-1 text-sm text-gray-700 bg-gray-200"
@@ -122,7 +122,7 @@ const HomePage = () => {
                     tagName="h1"
                     onChange={(e) => {
                       dispatch({
-                        type: 'UPDATE_SERVICE_NAME',
+                        type: 'UPDATE_FEATURE_NAME',
                         name: e.target.value,
                         featureId: selectedFeatureId,
                       });
@@ -133,7 +133,7 @@ const HomePage = () => {
                     tagName="p"
                     onChange={(e) => {
                       dispatch({
-                        type: 'UPDATE_SERVICE_DESCRIPTION',
+                        type: 'UPDATE_FEATURE_DESCRIPTION',
                         description: e.target.value,
                         featureId: selectedFeatureId,
                       });
@@ -147,7 +147,7 @@ const HomePage = () => {
                       title={scenario.name}
                       onChangeTitle={(title) => {
                         dispatch({
-                          type: 'UPDATE_SEQUENCE_NAME',
+                          type: 'UPDATE_SCENARIO_NAME',
                           name: title,
                           scenarioId: scenario.id,
                           featureId: selectedFeatureId,
@@ -156,7 +156,7 @@ const HomePage = () => {
                       description={scenario.description}
                       onChangeDescription={(description) => {
                         dispatch({
-                          type: 'UPDATE_SEQUENCE_DESCRIPTION',
+                          type: 'UPDATE_SCENARIO_DESCRIPTION',
                           description,
                           scenarioId: scenario.id,
                           featureId: feature.id,
@@ -164,14 +164,14 @@ const HomePage = () => {
                       }}
                       onDuplicate={() => {
                         dispatch({
-                          type: 'DUPLICATE_SEQUENCE',
+                          type: 'DUPLICATE_SCENARIO',
                           scenarioId: scenario.id,
                           featureId: selectedFeatureId,
                         });
                       }}
                       onDelete={() => {
                         dispatch({
-                          type: 'DELETE_SEQUENCE',
+                          type: 'DELETE_SCENARIO',
                           scenarioId: scenario.id,
                           featureId: selectedFeatureId,
                         });
@@ -209,20 +209,20 @@ const HomePage = () => {
                         }}
                         onDeleteActor={(id) => {
                           dispatch({
-                            type: 'DELETE_ENVIRONMENT',
+                            type: 'DELETE_ACTOR',
                             envId: id,
                             featureId: selectedFeatureId,
                           });
                         }}
                         onCreateActor={() => {
                           dispatch({
-                            type: 'ADD_ENVIRONMENT',
+                            type: 'ADD_ACTOR',
                             featureId: selectedFeatureId,
                           });
                         }}
                         onEditActor={(newName, id) => {
                           dispatch({
-                            type: 'UPDATE_ENVIRONMENT_NAME',
+                            type: 'UPDATE_ACTOR_NAME',
                             envId: id,
                             name: newName,
                             scenarioId: scenario.id,
@@ -238,7 +238,7 @@ const HomePage = () => {
                     className="h-12 px-4 bg-gray-200"
                     onClick={() => {
                       dispatch({
-                        type: 'ADD_SEQUENCE',
+                        type: 'ADD_SCENARIO',
                         featureId: selectedFeatureId,
                       });
                     }}
@@ -256,7 +256,7 @@ const HomePage = () => {
                   value={feature?.eventPayloads || ''}
                   onChange={(eventPayloads) => {
                     dispatch({
-                      type: 'UPDATE_SERVICE_EVENT_PAYLOAD',
+                      type: 'UPDATE_FEATURE_EVENT_PAYLOAD',
                       eventPayloadString: eventPayloads,
                       featureId: selectedFeatureId,
                     });
