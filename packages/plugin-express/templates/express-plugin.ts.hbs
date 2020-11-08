@@ -1,6 +1,6 @@
 import {
-  SextantAllEventsToEnvironment,
-  SextantEnvironments,
+  SextantAllEventsToActor,
+  SextantActors,
   SextantFeatures,
   SextantEvent,
 } from './sextant-types.generated';
@@ -8,17 +8,17 @@ import { RequestHandler } from 'express';
 
 /**
  * An express request handler that can handle
- * all events from one environment to another
+ * all events from one actor to another
  */
-export type SextantExpressSingleEnvironmentHandler<
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
+export type SextantExpressSingleActorHandler<
+  IFrom extends keyof SextantActors,
+  ITo extends keyof SextantActors[IFrom]['to'] = any
 > = RequestHandler<
   any,
   // @ts-ignore
-  SextantAllEventsToEnvironment<ITo, IFrom>,
+  SextantAllEventsToActor<ITo, IFrom>,
   // @ts-ignore
-  SextantAllEventsToEnvironment<IFrom, ITo>
+  SextantAllEventsToActor<IFrom, ITo>
 >;
 
 /**
@@ -26,9 +26,9 @@ export type SextantExpressSingleEnvironmentHandler<
  */
 export type SextantExpressHandler<
   IFeature extends keyof SextantFeatures,
-  IFrom extends keyof SextantFeatures[IFeature]['environments'] = any,
+  IFrom extends keyof SextantFeatures[IFeature]['actors'] = any,
   // @ts-ignore
-  ITarget extends keyof SextantFeatures[IFeature]['environments'][IFrom]['from'] = any
+  ITarget extends keyof SextantFeatures[IFeature]['actors'][IFrom]['from'] = any
 > = RequestHandler<
   any,
   // @ts-ignore
@@ -41,8 +41,8 @@ export type SextantExpressHandler<
  * implementation details per feature
  */
 export const makeExpressHandlers = <
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
+  IFrom extends keyof SextantActors,
+  ITo extends keyof SextantActors[IFrom]['to'] = any
 >(
   from: IFrom,
   to: ITo,
@@ -58,8 +58,8 @@ export const makeExpressHandlers = <
 };
 
 export const makeSextantExpressSdk = <
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
+  IFrom extends keyof SextantActors,
+  ITo extends keyof SextantActors[IFrom]['to'] = any
 >(
   from: IFrom,
   to: ITo,
