@@ -1,5 +1,11 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.1
+
+### Patch Changes
+
+- f0b36be: Fixed a bug where failing GraphQL files were not being printed
+
 ## 0.1.0-next.0
 
 ### Minor Changes
