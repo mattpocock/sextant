@@ -1,6 +1,13 @@
 export interface SextantFeatures {
   {{#each features }}
   '{{this.name}}': {
+    scenarios:
+      {{#each this.scenarios}}
+        | "{{this.name}}"
+      {{/each}}
+      {{#unless this.scenarios}}
+      never;
+      {{/unless}}
     actors: {
       {{#each this.actorsWithSteps}}
       '{{this.name}}': {
@@ -79,6 +86,16 @@ export interface SextantActors {
       {{/each}}
     }
   };
+  {{/each}}
+}
+
+export const sextantScenarios = {
+  {{#each features}}
+  '{{this.name}}': [
+    {{#each this.scenarios}}
+    '{{this.name}}',
+    {{/each}}
+  ],
   {{/each}}
 }
 
