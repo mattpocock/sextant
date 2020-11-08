@@ -75,7 +75,10 @@ const HomePage = () => {
             <h1 className="flex items-center font-bold tracking-widest uppercase text-primary-800">
               sextant
             </h1>
-            <div className="flex items-center mr-4 space-x-10 text-sm tracking-wider text-gray-800">
+            <div className="flex items-center mr-4 space-x-10 text-sm tracking-wider text-gray-700">
+              <a href="https://github.com/mattpocock/sextant" target="_blank">
+                GitHub
+              </a>
               <a href="https://docs.sextant.tools" target="_blank">
                 Docs
               </a>
