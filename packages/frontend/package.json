@@ -31,6 +31,7 @@
     "start": "concurrently \"craco start\" \"npm run codegen\" \"npm run start:api\"",
     "start:api": "TARGET_DIR=\"./sextant\" ts-node-dev -T --project tsconfig.server.json src/bin/server/devServer.ts",
     "start:demo": "REACT_APP_DATABASE_SAVE_MODE=localStorage concurrently \"craco start\" \"npm run codegen\"",
+    "dev:codegen": "ts-node-dev -T --respawn --project tsconfig.server.json src/bin/index.ts codegen ./sextant",
     "build": "(cd ../../ && yarn build) && npm run codegen -- --once && craco build && npm run build:api && npm run chmod:index",
     "build:demo": "(cd ../../ && yarn build) && npm run codegen -- --once && REACT_APP_DATABASE_SAVE_MODE=localStorage craco build",
     "build:api": "tsc --project tsconfig.server.build.json",

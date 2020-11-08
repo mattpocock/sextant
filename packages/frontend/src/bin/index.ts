@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
-import express from 'express';
-import * as path from 'path';
-import { setupServer } from './server/setupServer';
-import open from 'open';
 import { program } from 'commander';
-import { ensureConfigFileExists } from '@sextant-tools/core';
+import { codegen } from './commands/codegen';
+import { run } from './commands/run';
 
 program
   .description('Start the sextant server pointing at a target directory.')
@@ -15,18 +12,16 @@ program
     '3000',
   )
   .action((event, [targetDir, port]) => {
-    const app = express();
-    process.env.TARGET_DIR = targetDir;
+    run(targetDir, port);
+  });
 
-    ensureConfigFileExists();
-
-    setupServer(app);
-
-    app.use('/', express.static(path.resolve(__dirname, '../build')));
-
-    app.listen(port || 3000, () => {
-      open(`http://localhost:${port || 3000}`);
-    });
+program
+  .command('codegen <target-dir>')
+  .description(
+    'Generate code from your plugins without opening the Sextant GUI',
+  )
+  .action((event, { args }) => {
+    codegen(args[0]);
   });
 
 program.parse(process.argv);
