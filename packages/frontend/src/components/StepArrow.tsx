@@ -10,20 +10,18 @@ export const StepArrow = (props: {
     to: string;
     event: string;
   };
-  environments: {
+  actors: {
     id: string;
     name: string;
   }[];
   onChangeEvent: (eventName: string) => void;
   onDelete: () => void;
 }) => {
-  const startIndex = props.environments.findIndex(
+  const startIndex = props.actors.findIndex(
     (env) => env.id === props.step.from,
   );
 
-  const endIndex = props.environments.findIndex(
-    (env) => env.id === props.step.to,
-  );
+  const endIndex = props.actors.findIndex((env) => env.id === props.step.to);
 
   const doesTheArrowGoRight = endIndex > startIndex;
 

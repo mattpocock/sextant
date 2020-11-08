@@ -1,17 +1,11 @@
 import humanId from 'human-id';
 import produce from 'immer';
 import {
-  sanitizeEnvironment,
-  sanitizeSequence,
-  sanitizeService,
+  sanitizeActor,
+  sanitizeScenario,
+  sanitizeFeature,
 } from './sanitizeUtilities';
-import {
-  Database,
-  Environment,
-  FlattenedDatabase,
-  Sequence,
-  Step,
-} from './types';
+import { Database, Actor, FlattenedDatabase, Scenario, Step } from './types';
 
 const uuid = () => humanId();
 
@@ -23,13 +17,11 @@ const uuid = () => humanId();
  */
 export const flattenDatabase = (database: Database): FlattenedDatabase => {
   return {
-    services: Object.values(database.services).map((service) => {
+    features: Object.values(database.features).map((feature) => {
       return {
-        ...sanitizeService(service),
-        environments: Object.values(service.environments).map(
-          sanitizeEnvironment,
-        ),
-        sequences: Object.values(service.sequences).map(sanitizeSequence),
+        ...sanitizeFeature(feature),
+        actors: Object.values(feature.actors).map(sanitizeActor),
+        scenarios: Object.values(feature.scenarios).map(sanitizeScenario),
       };
     }),
   };
@@ -41,19 +33,19 @@ export interface StepDescriptor {
   out: Step[];
 }
 
-export type EnvironmentWithStep = Environment & {
+export type ActorWithStep = Actor & {
   from: StepDescriptor[];
   to: StepDescriptor[];
 };
 
-export const getEnvironmentsWithSteps = (
-  environments: Environment[],
+export const getActorsWithSteps = (
+  actors: Actor[],
   steps: Step[],
-): EnvironmentWithStep[] => {
-  return environments.map((env) => {
+): ActorWithStep[] => {
+  return actors.map((env) => {
     return {
       ...env,
-      from: environments
+      from: actors
         .map((fromEnv) => {
           return {
             env: fromEnv.name,
@@ -68,7 +60,7 @@ export const getEnvironmentsWithSteps = (
         .filter((fromEnv) => {
           return fromEnv.in.length > 0 || fromEnv.out.length > 0;
         }),
-      to: environments
+      to: actors
         .map((toEnv) => {
           return {
             env: toEnv.name,
@@ -87,78 +79,78 @@ export const getEnvironmentsWithSteps = (
   });
 };
 
-/** Sequences */
-export const addSequence = (
+/** Scenarios */
+export const addScenario = (
   database: Database,
-  serviceId: string,
+  featureId: string,
 ): Database => {
   return produce(database, (draft) => {
-    const service = draft.services[serviceId];
+    const feature = draft.features[featureId];
     const id = uuid();
-    service.sequences[id] = {
+    feature.scenarios[id] = {
       id,
       description: 'Description',
-      name: 'New Sequence',
-      order: Object.keys(service.sequences).length,
+      name: 'New Scenario',
+      order: Object.keys(feature.scenarios).length,
       steps: [],
     };
   });
 };
 
-export const addService = (database: Database) => {
+export const addFeature = (database: Database) => {
   return produce(database, (draft) => {
     const id = uuid();
-    draft.services[id] = {
+    draft.features[id] = {
       id,
-      environments: {},
+      actors: {},
       description: 'Description',
       eventPayloads: '',
-      name: 'New Service',
-      sequences: {},
+      name: 'New Feature',
+      scenarios: {},
     };
   });
 };
 
-export const updateSequenceName = (
+export const updateScenarioName = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
   name: string,
 ): Database => {
   return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].name = name;
+    draft.features[featureId].scenarios[scenarioId].name = name;
   });
 };
 
-export const updateSequenceDescription = (
+export const updateScenarioDescription = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
   description: string,
 ): Database => {
   return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].description = description;
+    draft.features[featureId].scenarios[scenarioId].description = description;
   });
 };
 
-export const deleteSequence = (
+export const deleteScenario = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
 ): Database =>
   produce(database, (draft) => {
-    delete draft.services[serviceId].sequences[sequenceId];
+    delete draft.features[featureId].scenarios[scenarioId];
   });
 
-export const duplicateSequence = (
+export const duplicateScenario = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
 ): Database =>
   produce(database, (draft) => {
     const newId = uuid();
-    draft.services[serviceId].sequences[newId] = {
-      ...draft.services[serviceId].sequences[sequenceId],
+    draft.features[featureId].scenarios[newId] = {
+      ...draft.features[featureId].scenarios[scenarioId],
       id: newId,
     };
   });
@@ -170,19 +162,19 @@ export const addStep = ({
   database,
   fromEnvId,
   index,
-  sequenceId,
-  serviceId,
+  scenarioId,
+  featureId,
   toEnvId,
 }: {
   database: Database;
-  serviceId: string;
-  sequenceId: string;
+  featureId: string;
+  scenarioId: string;
   fromEnvId: string;
   toEnvId: string;
   index: number;
 }): Database =>
   produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps.splice(index, 0, {
+    draft.features[featureId].scenarios[scenarioId].steps.splice(index, 0, {
       event: DEFAULT_EVENT_NAME,
       id: uuid(),
       from: fromEnvId,
@@ -192,120 +184,120 @@ export const addStep = ({
 
 export const updateStepEventName = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
   stepIndex: number,
   name: string,
 ): Database =>
   produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps[
+    draft.features[featureId].scenarios[scenarioId].steps[
       stepIndex
     ].event = name;
   });
 
 export const deleteStep = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
   stepIndex: number,
 ): Database => {
   return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId].steps.splice(stepIndex, 1);
+    draft.features[featureId].scenarios[scenarioId].steps.splice(stepIndex, 1);
   });
 };
 
-/** Environment */
-export const addEnvironment = (database: Database, serviceId: string) => {
+/** Actor */
+export const addActor = (database: Database, featureId: string) => {
   return produce(database, (draft) => {
     const newId = uuid();
-    draft.services[serviceId].environments[newId] = {
+    draft.features[featureId].actors[newId] = {
       id: newId,
-      name: 'New Environment',
+      name: 'New Actor',
     };
   });
 };
 
-export const updateEnvironmentName = (
+export const updateActorName = (
   database: Database,
-  serviceId: string,
-  sequenceId: string,
+  featureId: string,
+  scenarioId: string,
   envId: string,
   name: string,
 ) => {
   return produce(database, (draft) => {
-    draft.services[serviceId].sequences[sequenceId];
-    draft.services[serviceId].environments[envId].name = name;
+    draft.features[featureId].scenarios[scenarioId];
+    draft.features[featureId].actors[envId].name = name;
   });
 };
 
-export const deleteEnvironment = (
+export const deleteActor = (
   database: Database,
-  serviceId: string,
+  featureId: string,
   envId: string,
 ) => {
-  Object.values(database.services[serviceId].sequences).forEach((service) => {
-    service.steps.forEach((step) => {
+  Object.values(database.features[featureId].scenarios).forEach((feature) => {
+    feature.steps.forEach((step) => {
       if (step.from === envId || step.to === envId) {
         throw new Error(
-          'This environment cannot be deleted because steps depend on it.',
+          'This actor cannot be deleted because steps depend on it.',
         );
       }
     });
   });
 
   return produce(database, (draft) => {
-    delete draft.services[serviceId].environments[envId];
+    delete draft.features[featureId].actors[envId];
   });
 };
 
-export const getStepsFromSequences = (sequences: Sequence[]): Step[] => {
-  return sequences.reduce((accum, sequence) => {
+export const getStepsFromScenarios = (scenarios: Scenario[]): Step[] => {
+  return scenarios.reduce((accum, scenario) => {
     return accum.concat(
-      sequence.steps.reduce((stepAccum, step) => {
+      scenario.steps.reduce((stepAccum, step) => {
         return stepAccum.concat(step);
       }, [] as Step[]),
     );
   }, [] as Step[]);
 };
 
-export const updateServiceEventPayload = (
+export const updateFeatureEventPayload = (
   database: Database,
-  serviceId: string,
+  featureId: string,
   eventPayloads: string,
 ) => {
   return produce(database, (draft) => {
-    draft.services[serviceId].eventPayloads = eventPayloads;
+    draft.features[featureId].eventPayloads = eventPayloads;
   });
 };
 
-export const updateServiceName = (
+export const updateFeatureName = (
   database: Database,
-  serviceId: string,
+  featureId: string,
   name: string,
 ) => {
   return produce(database, (draft) => {
-    draft.services[serviceId].name = name;
+    draft.features[featureId].name = name;
   });
 };
 
-export const updateServiceDescription = (
+export const updateFeatureDescription = (
   database: Database,
-  serviceId: string,
+  featureId: string,
   description: string,
 ) => {
   return produce(database, (draft) => {
-    draft.services[serviceId].description = description;
+    draft.features[featureId].description = description;
   });
 };
 
-export const updateServiceEventPayloadWithFunc = (
+export const updateFeatureEventPayloadWithFunc = (
   database: Database,
-  serviceId: string,
+  featureId: string,
   func: (eventPayload: string) => string,
 ) => {
   return produce(database, (draft) => {
-    draft.services[serviceId].eventPayloads = func(
-      draft.services[serviceId].eventPayloads,
+    draft.features[featureId].eventPayloads = func(
+      draft.features[featureId].eventPayloads,
     );
   });
 };

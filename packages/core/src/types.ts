@@ -1,4 +1,5 @@
 import { SextantContext } from './createSextantPlugin';
+import { DatabaseV1 } from './databaseMigrations';
 
 export interface SextantConfigFile {
   plugins?: SextantPluginDeclaration[];
@@ -18,13 +19,14 @@ export type SextantPluginDeclaration =
   | [SextantPlugin]
   | [SextantPlugin, DefaultConfig];
 
-export interface Database {
-  services: Record<string, Service>;
+export interface DatabaseV2 {
+  version: 2;
+  features: Record<string, Feature>;
 }
 
-export interface Service {
-  sequences: Record<string, Sequence>;
-  environments: Record<string, Environment>;
+export interface Feature {
+  scenarios: Record<string, Scenario>;
+  actors: Record<string, Actor>;
   eventPayloads: string;
   name: string;
   description: string;
@@ -32,18 +34,18 @@ export interface Service {
 }
 
 export interface FlattenedDatabase {
-  services: FlattenedService[];
+  features: FlattenedFeature[];
 }
 
-export interface FlattenedService {
-  sequences: Sequence[];
-  environments: Environment[];
+export interface FlattenedFeature {
+  scenarios: Scenario[];
+  actors: Actor[];
   eventPayloads: string;
   name: string;
   id: string;
 }
 
-export interface Sequence {
+export interface Scenario {
   id: string;
   name: string;
   description: string;
@@ -58,10 +60,14 @@ export interface Step {
   to: string;
 }
 
-export interface Environment {
+export interface Actor {
   id: string;
   name: string;
 }
+
+export type Database = DatabaseV2;
+
+export type DatabaseOfUnknownVersion = DatabaseV1 | DatabaseV2;
 
 export type SextantPlugin = <TConfig extends {}>(
   database: Database,

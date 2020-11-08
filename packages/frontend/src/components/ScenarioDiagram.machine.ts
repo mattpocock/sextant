@@ -2,15 +2,15 @@ import { Machine, assign } from '@xstate/compiled';
 
 interface Context {
   indexChosen: number;
-  environmentChosen: string;
+  actorChosen: string;
 }
 
-type Event = { type: 'CLICK_PLUS_ICON'; index: number; environment: string };
+type Event = { type: 'CLICK_PLUS_ICON'; index: number; actor: string };
 
-export const sequenceDiagramMachine = Machine<
+export const scenarioDiagramMachine = Machine<
   Context,
   Event,
-  'sequenceDiagram'
+  'scenarioDiagram'
 >(
   {
     initial: 'idle',
@@ -48,7 +48,7 @@ export const sequenceDiagramMachine = Machine<
     guards: {
       isSameAsChosen: (context, event) => {
         return (
-          context.environmentChosen === event.environment &&
+          context.actorChosen === event.actor &&
           context.indexChosen === event.index
         );
       },
@@ -59,7 +59,7 @@ export const sequenceDiagramMachine = Machine<
     actions: {
       assignFirstItemChosen: assign((context, event) => {
         return {
-          environmentChosen: event.environment,
+          actorChosen: event.actor,
           indexChosen: event.index,
         };
       }),

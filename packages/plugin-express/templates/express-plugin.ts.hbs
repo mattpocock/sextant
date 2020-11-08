@@ -1,77 +1,63 @@
 import {
-  SextantAllEventsToEnvironment,
-  SextantEnvironments,
-  SextantServices,
-  SextantEvent,
+SextantAllEventsToActor,
+SextantActors,
+SextantFeatures,
+SextantEvent,
 } from './sextant-types.generated';
 import { RequestHandler } from 'express';
 
 /**
- * An express request handler that can handle
- * all events from one environment to another
- */
-export type SextantExpressSingleEnvironmentHandler<
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
-> = RequestHandler<
-  any,
-  // @ts-ignore
-  SextantAllEventsToEnvironment<ITo, IFrom>,
-  // @ts-ignore
-  SextantAllEventsToEnvironment<IFrom, ITo>
->;
-
-/**
- * An express request handler that handles one service only
- */
-export type SextantExpressHandler<
-  IService extends keyof SextantServices,
-  IFrom extends keyof SextantServices[IService]['environments'] = any,
-  // @ts-ignore
-  ITarget extends keyof SextantServices[IService]['environments'][IFrom]['from'] = any
-> = RequestHandler<
-  any,
-  // @ts-ignore
-  SextantEvent<IService, ITarget, IFrom>,
-  SextantEvent<IService, IFrom, ITarget>
->;
-
-/**
- * Build multiple express request handlers by passing in
- * implementation details per feature
- */
-export const makeExpressHandlers = <
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
->(
-  from: IFrom,
-  to: ITo,
-  params: {
+* An express request handler that can handle
+* all events from one actor to another
+*/
+export type SextantExpressSingleActorHandler< IFrom extends keyof SextantActors, ITo extends keyof
+  SextantActors[IFrom]['to']=any> = RequestHandler< any, // @ts-ignore SextantAllEventsToActor<ITo, IFrom>,
     // @ts-ignore
-    [K in keyof SextantServices]?: SextantExpressHandler<K, IFrom, ITo>;
-  },
-): { service: keyof SextantServices; handler: RequestHandler }[] => {
-  return Object.entries(params).map(([service, handler]) => ({
-    service: service as keyof SextantServices,
-    handler,
-  }));
-};
+    SextantAllEventsToActor<IFrom, ITo>
+      >;
 
-export const makeSextantExpressSdk = <
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['to'] = any
->(
-  from: IFrom,
-  to: ITo,
-  fetcher: <IService extends keyof SextantServices>(
-    service: IService,
-    // @ts-ignore
-    event: SextantEvent<IService, IFrom, ITo>,
-  ) => // @ts-ignore
-  Promise<SextantEvent<IService, ITo, IFrom>>,
-) => <IService extends keyof SextantServices>(
-  service: IService,
-  // @ts-ignore
-  event: SextantEvent<IService, IFrom, ITo>,
-  // @ts-ignore
-): Promise<SextantEvent<IService, ITo, IFrom>> => {};
+      /**
+      * An express request handler that handles one feature only
+      */
+      export type SextantExpressHandler< IFeature extends keyof SextantFeatures, IFrom extends keyof
+        SextantFeatures[IFeature]['actors']=any, // @ts-ignore ITarget extends keyof
+        SextantFeatures[IFeature]['actors'][IFrom]['from']=any> = RequestHandler< any, // @ts-ignore
+          SextantEvent<IFeature, ITarget, IFrom>,
+          SextantEvent<IFeature, IFrom, ITarget>
+            >;
+
+            /**
+            * Build multiple express request handlers by passing in
+            * implementation details per feature
+            */
+            export const makeExpressHandlers = < IFrom extends keyof SextantActors, ITo extends keyof
+              SextantActors[IFrom]['to']=any>(
+              from: IFrom,
+              to: ITo,
+              params: {
+              // @ts-ignore
+              [K in keyof SextantFeatures]?: SextantExpressHandler<K, IFrom, ITo>;
+                },
+                ): { feature: keyof SextantFeatures; handler: RequestHandler }[] => {
+                return Object.entries(params).map(([feature, handler]) => ({
+                feature: feature as keyof SextantFeatures,
+                handler,
+                }));
+                };
+
+                export const makeSextantExpressSdk = < IFrom extends keyof SextantActors, ITo extends keyof
+                  SextantActors[IFrom]['to']=any>(
+                  from: IFrom,
+                  to: ITo,
+                  fetcher: <IFeature extends keyof SextantFeatures>(
+                    feature: IFeature,
+                    // @ts-ignore
+                    event: SextantEvent<IFeature, IFrom, ITo>,
+                      ) => // @ts-ignore
+                      Promise<SextantEvent<IFeature, ITo, IFrom>>,
+                        ) => <IFeature extends keyof SextantFeatures>(
+                          feature: IFeature,
+                          // @ts-ignore
+                          event: SextantEvent<IFeature, IFrom, ITo>,
+                            // @ts-ignore
+                            ): Promise<SextantEvent<IFeature, ITo, IFrom>> => {};

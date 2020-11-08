@@ -1,157 +1,131 @@
-export interface SextantServices {
-  {{#each services }}
-  '{{this.name}}': {
-    environments: {
-      {{#each this.environmentsWithSteps}}
-      '{{this.name}}': {
-        from: {
-          {{#each this.from}}
-          '{{this.env}}': {
-            in:
-            {{#each this.in}}
-              | {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
-            {{/each}}
-            {{#unless this.in}}never;{{/unless}}
-            out:
-            {{#each this.out}}
-              | {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
-            {{/each}}
-            {{#unless this.out}}never;{{/unless}}
-          }
-          {{/each}}
-        }
-        to: {
-          {{#each this.to}}
-          '{{this.env}}': {
-            in:
-            {{#each this.in}}
-              | {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
-            {{/each}}
-            {{#unless this.in}}never;{{/unless}}
-            out:
-            {{#each this.out}}
-              | {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
-            {{/each}}
-            {{#unless this.out}}never;{{/unless}}
-          }
-          {{/each}}
-        }
-      }
-      {{/each}}
-    }
-  }
-  {{/each}}
+export interface SextantFeatures {
+{{#each features }}
+'{{this.name}}': {
+actors: {
+{{#each this.actorsWithSteps}}
+'{{this.name}}': {
+from: {
+{{#each this.from}}
+'{{this.env}}': {
+in:
+{{#each this.in}}
+| {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.in}}never;{{/unless}}
+out:
+{{#each this.out}}
+| {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.out}}never;{{/unless}}
+}
+{{/each}}
+}
+to: {
+{{#each this.to}}
+'{{this.env}}': {
+in:
+{{#each this.in}}
+| {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.in}}never;{{/unless}}
+out:
+{{#each this.out}}
+| {{pascalcase ../../../name}}__{{this.event}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.out}}never;{{/unless}}
+}
+{{/each}}
+}
+}
+{{/each}}
+}
+}
+{{/each}}
 }
 
-export interface SextantEnvironments {
-  {{#each environments}}
-  '{{this.name}}': {
-    from: {
-      {{#each this.from}}
-      '{{this.env}}': {
-        in:
-        {{#each this.in}}
-          | {{pascalcase this.serviceName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
-        {{/each}}
-        {{#unless this.in}}never;{{/unless}}
-        out:
-        {{#each this.out}}
-          | {{pascalcase this.serviceName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
-        {{/each}}
-        {{#unless this.out}}never;{{/unless}}
-      }
-      {{/each}}
-    }
-    to: {
-      {{#each this.to}}
-      '{{this.env}}': {
-        in:
-        {{#each this.in}}
-          | {{pascalcase this.serviceName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
-        {{/each}}
-        out:
-        {{#each this.out}}
-          | {{pascalcase this.serviceName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
-        {{/each}}
-        {{#unless this.out}}never;{{/unless}}
-      }
-      {{/each}}
-    }
-  };
-  {{/each}}
+export interface SextantActors {
+{{#each actors}}
+'{{this.name}}': {
+from: {
+{{#each this.from}}
+'{{this.env}}': {
+in:
+{{#each this.in}}
+| {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.in}}never;{{/unless}}
+out:
+{{#each this.out}}
+| {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.out}}never;{{/unless}}
+}
+{{/each}}
+}
+to: {
+{{#each this.to}}
+'{{this.env}}': {
+in:
+{{#each this.in}}
+| {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
+{{/each}}
+out:
+{{#each this.out}}
+| {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
+{{/each}}
+{{#unless this.out}}never;{{/unless}}
+}
+{{/each}}
+}
+};
+{{/each}}
 }
 
 export interface EventConfig {
-  in: { type: string };
-  out: { type: string };
+in: { type: string };
+out: { type: string };
 }
 
 type SextantPromise<TEventConfig extends EventConfig> = (
   event: TEventConfig["in"],
-) => Promise<TEventConfig["out"]> | TEventConfig["out"];
+  ) => Promise<TEventConfig["out"]> | TEventConfig["out"];
 
-/**
- * A handler type built by Sextant.
- *
- * Usage:
- *
- * ```ts
- * const handler: SextantHandler<
- *   'serviceName',
- *   'fromThisEnvironment',
- *   'toThisEnvironment',
- * > = () => {};
- * ```
- */
-export type SextantHandler<
-  IService extends keyof SextantServices,
-  IFrom extends keyof SextantServices[IService]["environments"] = any,
-  // @ts-ignore
-  ITarget extends keyof SextantServices[IService]["environments"][IFrom]["from"] = any
-> = SextantPromise<
-  // @ts-ignore
-  SextantServices[IService]["environments"][IFrom]["to"][ITarget]
->;
+    /**
+    * A handler type built by Sextant.
+    *
+    * Usage:
+    *
+    * ```ts
+    * const handler: SextantHandler< * 'featureName' , * 'fromThisActor' , * 'toThisActor' , *> = () => {};
+      * ```
+      */
+      export type SextantHandler< IFeature extends keyof SextantFeatures, IFrom extends keyof
+        SextantFeatures[IFeature]["actors"]=any, // @ts-ignore ITarget extends keyof
+        SextantFeatures[IFeature]["actors"][IFrom]["from"]=any> = SextantPromise< // @ts-ignore
+          SextantFeatures[IFeature]["actors"][IFrom]["to"][ITarget]>;
 
-/**
- * An event type built by Sextant.
- *
- * Usage:
- *
- * ```ts
- * const event: SextantEvent<'serviceName', 'fromThisEnvironment', 'toThisEnvironment'>;
- * const specificEvent: SextantEvent<
- *   'serviceName',
- *   'fromThisEnvironment',
- *   'toThisEnvironment',
- *   'SPECIFIC_EVENT_TYPE'
- * >;
- * ```
- */
-export type SextantEvent<
-  IService extends keyof SextantServices,
-  IFrom extends keyof SextantServices[IService]["environments"] = any,
-  // @ts-ignore
-  ITarget extends keyof SextantServices[IService]["environments"][IFrom]["from"] = any,
-  // @ts-ignore
-  IType extends SextantServices[IService]["environments"][IFrom]["to"][ITarget]["in"]["type"] = any
-> = Extract<
-  // @ts-ignore
-  SextantServices[IService]["environments"][IFrom]["to"][ITarget]["in"],
-  { type: IType }
->;
+          /**
+          * An event type built by Sextant.
+          *
+          * Usage:
+          *
+          * ```ts
+          * const event: SextantEvent<'featureName', 'fromThisActor' , 'toThisActor'>;
+            * const specificEvent: SextantEvent< * 'featureName' , * 'fromThisActor' , * 'toThisActor' ,
+              * 'SPECIFIC_EVENT_TYPE' *>;
+              * ```
+              */
+              export type SextantEvent< IFeature extends keyof SextantFeatures, IFrom extends keyof
+                SextantFeatures[IFeature]["actors"]=any, // @ts-ignore ITarget extends keyof
+                SextantFeatures[IFeature]["actors"][IFrom]["from"]=any, // @ts-ignore IType extends
+                SextantFeatures[IFeature]["actors"][IFrom]["to"][ITarget]["in"]["type"]=any> = Extract< // @ts-ignore
+                  SextantFeatures[IFeature]["actors"][IFrom]["to"][ITarget]["in"], { type: IType }>;
 
-/**
- * Fetch all events from an environment to another environment,
- * across services
- */
-export type SextantAllEventsToEnvironment<
-  IFrom extends keyof SextantEnvironments,
-  ITo extends keyof SextantEnvironments[IFrom]['from'] = any,
-  // @ts-ignore
-  IType extends SextantEnvironments[IFrom]['from'][ITo]['out']['type'] = any
-> = Extract<
-  // @ts-ignore
-  SextantEnvironments[IFrom]['from'][ITo]['out'],
-  { type: IType }
->;
+                  /**
+                  * Fetch all events from an actor to another actor,
+                  * across features
+                  */
+                  export type SextantAllEventsToActor< IFrom extends keyof SextantActors, ITo extends keyof
+                    SextantActors[IFrom]['from']=any, // @ts-ignore IType extends
+                    SextantActors[IFrom]['from'][ITo]['out']['type']=any> = Extract< // @ts-ignore
+                      SextantActors[IFrom]['from'][ITo]['out'], { type: IType }>;
