@@ -19,6 +19,10 @@ export const setupServer = (app: Express) => {
     res.json(database);
   });
 
+  app.get('/api/ping', async (req, res) => {
+    res.json({}).status(200);
+  });
+
   app.post('/api/saveToDatabase', async (req, res) => {
     try {
       await saveDatabase(req.body);

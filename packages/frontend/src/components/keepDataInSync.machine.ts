@@ -117,6 +117,9 @@ type Event =
   | {
       type: 'done.invoke.loadDatabase';
       data: Database | undefined;
+    }
+  | {
+      type: 'REPORT_SERVER_NOT_RUNNING';
     };
 
 export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
@@ -137,7 +140,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
         },
       },
     },
-
+    on: {
+      REPORT_SERVER_NOT_RUNNING: '.serverNotRunning',
+    },
     states: {
       loading: {
         invoke: {
@@ -154,11 +159,12 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             },
           ],
           onError: {
-            target: 'errored',
+            target: 'recoveringFromError',
           },
         },
       },
-      errored: {
+      serverNotRunning: {},
+      recoveringFromError: {
         always: [
           {
             cond: 'databaseFromContextHasAtLeastOneFeature',

@@ -1,6 +1,7 @@
 import { Feature } from '@sextant-tools/core';
 import { useMachine } from '@xstate/compiled/react';
 import AceEditor from 'react-ace';
+import { useInterval } from './components/useInterval';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-graphqlschema';
 import 'ace-builds/src-noconflict/theme-xcode';
@@ -18,6 +19,7 @@ import {
   ScenarioDiagramWrapper,
 } from './components/ScenarioDiagram';
 import { useSearchParams } from './components/useSearchParams';
+import { getDatabaseSaveMode } from './components/getDatabaseSaveMode';
 
 const HomePage = () => {
   const history = useHistory();
@@ -56,6 +58,20 @@ const HomePage = () => {
     feature,
   ]);
 
+  useInterval(
+    () => {
+      if (state.matches('editing') && getDatabaseSaveMode() === 'cli') {
+        fetch(`/api/ping`).catch((e) => {
+          dispatch({
+            type: 'REPORT_SERVER_NOT_RUNNING',
+          });
+        });
+      }
+    },
+    2500,
+    [state.matches('editing')],
+  );
+
   useEffect(() => {
     if (!feature) {
       dispatch({
@@ -66,7 +82,16 @@ const HomePage = () => {
   }, [feature, state.value]);
 
   switch (true) {
-    case state.matches('errored'):
+    case state.matches('serverNotRunning'):
+      return (
+        <div className="max-w-lg p-6 text-gray-700">
+          <p>
+            Sextant couldn't reach the terminal where the application is
+            running. Try restarting it.
+          </p>
+        </div>
+      );
+    case state.matches('recoveringFromError'):
       return <div>Something went wrong</div>;
     case Boolean(state.matches('editing') && feature): {
       return (
