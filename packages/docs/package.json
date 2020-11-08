@@ -1,0 +1,13 @@
+{
+  "name": "@sextant-tools/docs",
+  "version": "0.0.1",
+  "author": "Matt Pocock",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "docsify-cli": "^4.4.1"
+  },
+  "scripts": {
+    "start": "docsify serve ./public"
+  }
+}

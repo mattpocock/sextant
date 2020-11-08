@@ -4,6 +4,8 @@
   "workspaces": [
     "packages/*"
   ],
+  "license": "MIT",
+  "homepage": "https://docs.sextant.tools",
   "private": true,
   "devDependencies": {
     "@changesets/cli": "^2.11.1",
@@ -20,6 +22,7 @@
     "core": "yarn workspace @sextant-tools/core",
     "frontend": "yarn workspace sextant",
     "ts": "yarn workspace @sextant-tools/plugin-typescript",
+    "docs": "yarn workspace @sextant-tools/docs",
     "fe": "yarn frontend",
     "build": "tsc -b ./tsconfig.monorepo.json",
     "dev": "yarn build --watch",
