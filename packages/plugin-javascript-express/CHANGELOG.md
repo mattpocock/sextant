@@ -1,5 +1,13 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.2
+
+### Patch Changes
+
+- 942a3b8: Fixed a bug where 'never' would sometimes not be printed, causing a TS error
+- Updated dependencies [942a3b8]
+  - @sextant-tools/plugin-javascript-operations@0.1.0-next.2
+
 ## 0.1.0-next.1
 
 ### Patch Changes
