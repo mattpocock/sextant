@@ -126,7 +126,8 @@ export const buildBaseTypeFiles = (
 
   return {
     content: [
-      features?.[0]?.typescriptDef?.prepend || '',
+      features?.find((feature) => Boolean(feature.typescriptDef.prepend))
+        ?.typescriptDef?.prepend || '',
       ...features.map((feature) => {
         return feature.typescriptDef.content;
       }),
@@ -141,6 +142,10 @@ const getTypescriptedEventPayloads = (
   featureId: string,
   steps: Step[],
 ) => {
+  let toReturn: { prepend: string; content: string } = {
+    content: '',
+    prepend: '',
+  };
   try {
     const eventPayloads = appendFeatureIdToEventPayloads(
       untransformedEventPayloads,
@@ -169,36 +174,33 @@ const getTypescriptedEventPayloads = (
       content: [...visitorResult.definitions].join('\n'),
     };
 
-    const typeDefSet = new Set<string>();
-
-    const emptyTypeDefs = steps
-      .filter((step) => {
-        const shouldFilterOut = result.content.includes(
-          `export type ${featureId}__${step.event}`,
-        );
-
-        if (typeDefSet.has(step.event)) {
-          return false;
-        }
-
-        typeDefSet.add(step.event);
-
-        return !shouldFilterOut;
-      })
-      .map((step) => {
-        return `export type ${featureId}__${step.event} = {};`;
-      });
-
-    return {
+    toReturn = {
       prepend: result.prepend.join('\n\n'),
-      content: [result.content, ...emptyTypeDefs].join('\n\n'),
+      content: result.content,
     };
-  } catch (e) {
-    console.log(e);
-  }
+  } catch (e) {}
+  const typeDefSet = new Set<string>();
+
+  const emptyTypeDefs = steps
+    .filter((step) => {
+      const shouldFilterOut = toReturn.content.includes(
+        `export type ${featureId}__${step.event}`,
+      );
+
+      if (typeDefSet.has(step.event)) {
+        return false;
+      }
+
+      typeDefSet.add(step.event);
+
+      return !shouldFilterOut;
+    })
+    .map((step) => {
+      return `export type ${featureId}__${step.event} = {};`;
+    });
   return {
-    prepend: '',
-    content: '',
+    prepend: toReturn.prepend,
+    content: [toReturn.content, ...emptyTypeDefs].join('\n\n'),
   };
 };
 
