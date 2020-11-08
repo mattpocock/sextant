@@ -53,7 +53,7 @@ export const makeExpressHandlers = <
 ): { feature: keyof SextantFeatures; handler: RequestHandler }[] => {
   return Object.entries(params).map(([feature, handler]) => ({
     feature: feature as keyof SextantFeatures,
-    handler,
+    handler: handler as RequestHandler,
   }));
 };
 

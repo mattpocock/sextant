@@ -1,5 +1,11 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.3
+
+### Patch Changes
+
+- Fixed a bug with the previous deploy
+
 ## 0.1.0-next.2
 
 ### Patch Changes

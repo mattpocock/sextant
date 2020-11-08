@@ -69,7 +69,7 @@ export interface SextantActors {
         {{#each this.in}}
           | {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }
         {{/each}}
-        {{#unless this.out}}never;{{/unless}}
+        {{#unless this.in}}never;{{/unless}}
         out:
         {{#each this.out}}
           | {{pascalcase this.featureName}}__{{this.rawEvent}} & { type: "{{this.event}}" }

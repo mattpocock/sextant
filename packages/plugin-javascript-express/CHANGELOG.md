@@ -1,5 +1,19 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.4
+
+### Patch Changes
+
+- Fixed a typing bug
+
+## 0.1.0-next.3
+
+### Patch Changes
+
+- Fixed a bug with the previous deploy
+- Updated dependencies [undefined]
+  - @sextant-tools/plugin-javascript-operations@0.1.0-next.3
+
 ## 0.1.0-next.2
 
 ### Patch Changes
