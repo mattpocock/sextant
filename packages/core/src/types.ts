@@ -1,3 +1,23 @@
+import { SextantContext } from './createSextantPlugin';
+
+export interface SextantConfigFile {
+  plugins?: SextantPluginDeclaration[];
+}
+
+export interface DefaultConfig {}
+
+/**
+ * Either an inline string describing a module to be imported,
+ * or an inline plugin
+ */
+export type SextantPluginDeclaration =
+  | string
+  | [string]
+  | [string, DefaultConfig]
+  | SextantPlugin
+  | [SextantPlugin]
+  | [SextantPlugin, DefaultConfig];
+
 export interface Database {
   services: Record<string, Service>;
 }
@@ -42,3 +62,13 @@ export interface Environment {
   id: string;
   name: string;
 }
+
+export type SextantPlugin = <TConfig extends {}>(
+  database: Database,
+  config: TConfig,
+) => void;
+
+export type SextantPluginImplementation<TConfig extends {}> = (
+  sextantContext: SextantContext,
+  config: TConfig,
+) => void;

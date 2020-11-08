@@ -1,5 +1,9 @@
 import * as path from 'path';
 
+/**
+ * Get the directory that the user targeted
+ * when they ran the 'sextant' command
+ */
 export const getTargetDir = () => {
   if (process.env.TARGET_DIR) {
     return path.resolve(process.cwd(), process.env.TARGET_DIR as string);
