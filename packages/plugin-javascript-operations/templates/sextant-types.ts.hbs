@@ -87,9 +87,13 @@ export interface EventConfig {
   out: { type: string };
 }
 
+type MaybePromise<T> = Promise<T> | T;
+
 type SextantPromise<TEventConfig extends EventConfig> = (
-  event: TEventConfig["in"],
-) => Promise<TEventConfig["out"]> | TEventConfig["out"];
+  event: TEventConfig['in'],
+) => MaybePromise<
+  TEventConfig['out'] extends never ? void : TEventConfig['out']
+>;
 
 /**
  * A handler type built by Sextant.
