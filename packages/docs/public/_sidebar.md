@@ -2,3 +2,4 @@
 - [Core Concepts](core-concepts.md)
 - [Plugins](plugins.md)
 - [Advanced](advanced.md)
+- [API Reference](api.md)
