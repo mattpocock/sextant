@@ -1,5 +1,17 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.0
+
+### Minor Changes
+
+- 1838475: Changed terminology of services, environments and sequences to features, actors and scenarios
+
+### Patch Changes
+
+- Updated dependencies [1838475]
+  - @sextant-tools/core@0.1.0-next.0
+  - @sextant-tools/plugin-javascript-operations@0.1.0-next.0
+
 ## 0.0.5
 
 ### Patch Changes

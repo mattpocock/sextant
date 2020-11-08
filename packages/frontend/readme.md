@@ -1,4 +1,18 @@
-![Sextant](https://raw.githubusercontent.com/mattpocock/sextant/master/assets/social-card.png "Sextant Logo")
+![Sextant](https://raw.githubusercontent.com/mattpocock/sextant/master/assets/social-card.png 'Sextant Logo')
+
+# Sextant
+
+Application logic getting out of control?
+
+You should try Sextant.
+
+It's a GUI that lets you **chart your application flows, then implement them with generated code**.
+
+## Links
+
+Check out [the demo version](https://demo.sextant.tools) to try the Sextant GUI in your browser.
+
+Check out [the Sextant docs](https://docs.sextant.tools) to learn how Sextant can power up your development workflow.
 
 ## Getting Started
 
@@ -13,54 +27,3 @@ To run:
 This opens the Sextant GUI, ready for you to start creating flows and services.
 
 Sextant will generate type files in this directory, so choose carefully!
-
-### Demo
-
-[Try the demo version here](https://demo.sextant.tools)
-
-## Using the types
-
-Sextant generates two main types currently:
-
-### SextantEvent
-
-```ts
-/**
- * This gets the type of any event passed from "fromThisEnvironment"
- * to "toThisEnvironment"
- */
-const event: SextantEvent<
-  "serviceName",
-  "fromThisEnvironment",
-  "toThisEnvironment"
->;
-
-/**
- * This gets the type of a specific event passed from
- * "fromThisEnvironment" to "toThisEnvironment"
- */
-const specificEvent: SextantEvent<
-  "serviceName",
-  "fromThisEnvironment",
-  "toThisEnvironment",
-  "SPECIFIC_EVENT_TYPE"
->;
-```
-
-### SextantHandler
-
-```ts
-/**
- * This type describes a function which handles events from
- * "fromThisEnvironment" to "toThisEnvironment"
- */
-const handler: SextantHandler<
-  "serviceName",
-  "fromThisEnvironment",
-  "toThisEnvironment"
-> = () => {};
-```
-
-## Suggestions
-
-Got ideas for what else Sextant could be useful for? Open an issue, and let's build what you need.

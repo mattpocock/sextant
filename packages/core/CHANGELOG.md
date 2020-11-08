@@ -1,5 +1,11 @@
 # @sextant-tools/core
 
+## 0.1.0-next.0
+
+### Minor Changes
+
+- 1838475: Changed terminology of services, environments and sequences to features, actors and scenarios
+
 ## 0.0.5
 
 ### Patch Changes

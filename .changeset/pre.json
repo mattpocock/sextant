@@ -8,5 +8,9 @@
     "@sextant-tools/plugin-javascript-express": "0.0.5",
     "@sextant-tools/plugin-javascript-operations": "0.0.5"
   },
-  "changesets": []
+  "changesets": [
+    "afraid-mayflies-glow",
+    "fair-apricots-behave",
+    "proud-toes-provide"
+  ]
 }

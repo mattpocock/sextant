@@ -1,5 +1,18 @@
 # sextant
 
+## 0.4.0-next.0
+
+### Minor Changes
+
+- 6ab9a5c: Added a 'codegen' command to generate plugin code without opening the Sextant GUI
+- 1838475: Changed terminology of services, environments and sequences to features, actors and scenarios
+
+### Patch Changes
+
+- 8e18083: Added a link to the docs in the Sextant GUI
+- Updated dependencies [1838475]
+  - @sextant-tools/core@0.1.0-next.0
+
 ## 0.3.0
 
 ### Minor Changes
