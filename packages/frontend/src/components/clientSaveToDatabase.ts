@@ -1,4 +1,4 @@
-import { Database } from '@sextant-tools/core';
+import { Database, migrateDatabase } from '@sextant-tools/core';
 import { useHistory } from 'react-router-dom';
 import { getDatabaseSaveMode } from './getDatabaseSaveMode';
 import { getSearchParams } from './useSearchParams';
@@ -49,11 +49,13 @@ export const clientLoadDatabase = (): Promise<Database | undefined> => {
     case 'localStorage':
       try {
         return Promise.resolve(
-          JSON.parse(
-            atob(
-              getSearchParams<{ [SEARCH_PARAMS_KEY]: string }>(
-                window.location.search || '',
-              )?.[SEARCH_PARAMS_KEY] || '',
+          migrateDatabase(
+            JSON.parse(
+              atob(
+                getSearchParams<{ [SEARCH_PARAMS_KEY]: string }>(
+                  window.location.search || '',
+                )?.[SEARCH_PARAMS_KEY] || '',
+              ),
             ),
           ),
         );

@@ -1,4 +1,4 @@
-import { Service } from '@sextant-tools/core';
+import { Feature } from '@sextant-tools/core';
 import { useMachine } from '@xstate/compiled/react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/ext-language_tools';
@@ -14,30 +14,30 @@ import {
 import HeroIconGlobe from './components/icons/HeroIconGlobe';
 import { keepDataInSyncMachine } from './components/keepDataInSync.machine';
 import {
-  SequenceDiagram,
-  SequenceDiagramWrapper,
-} from './components/SequenceDiagram';
+  ScenarioDiagram,
+  ScenarioDiagramWrapper,
+} from './components/ScenarioDiagram';
 import { useSearchParams } from './components/useSearchParams';
 
 const HomePage = () => {
   const history = useHistory();
-  const params = useSearchParams<{ serviceId: string }>();
+  const params = useSearchParams<{ featureId: string }>();
 
   const [state, dispatch] = useMachine(keepDataInSyncMachine, {
     actions: {
-      goToInitialService() {
+      goToInitialFeature() {
         history.replace(
           `/?${assignToSearchParams(window.location.search, {
-            serviceId: 'initial',
+            featureId: 'initial',
           })}`,
         );
       },
-      goToFirstService(context) {
-        const targetServiceId = Object.values(context.database.services)[0].id;
+      goToFirstFeature(context) {
+        const targetFeatureId = Object.values(context.database.features)[0].id;
 
         history.replace(
           `/?${assignToSearchParams(window.location.search, {
-            serviceId: targetServiceId,
+            featureId: targetFeatureId,
           })}`,
         );
       },
@@ -47,28 +47,28 @@ const HomePage = () => {
     },
   });
 
-  const selectedServiceId = params?.serviceId as string;
+  const selectedFeatureId = params?.featureId as string;
 
-  const service: Service | undefined =
-    state.context.database.services[selectedServiceId || ''];
+  const feature: Feature | undefined =
+    state.context.database.features[selectedFeatureId || ''];
 
-  const sequences = useMemo(() => Object.values(service?.sequences || {}), [
-    service,
+  const scenarios = useMemo(() => Object.values(feature?.scenarios || {}), [
+    feature,
   ]);
 
   useEffect(() => {
-    if (!service) {
+    if (!feature) {
       dispatch({
         type: 'SERVICE_NOT_FOUND',
       });
     }
     // eslint-disable-next-line
-  }, [service, state.value]);
+  }, [feature, state.value]);
 
   switch (true) {
     case state.matches('errored'):
       return <div>Something went wrong</div>;
-    case Boolean(state.matches('editing') && service): {
+    case Boolean(state.matches('editing') && feature): {
       return (
         <div className="flex flex-col h-screen overflow-hidden">
           <div className="flex items-center justify-between flex-shrink-0 h-12 px-4 border-t-4 border-primary-600">
@@ -85,18 +85,18 @@ const HomePage = () => {
           </div>
           <div className="flex flex-grow overflow-hidden border-t-2">
             <div className="flex-shrink-0 w-48 h-full px-4 py-4 border-r-2">
-              <h1 className="mb-2">Services</h1>
+              <h1 className="mb-2">Features</h1>
               <div className="mb-4 space-y-2">
-                {Object.values(state.context.database.services).map(
-                  (service) => {
+                {Object.values(state.context.database.features).map(
+                  (feature) => {
                     return (
                       <Link
                         to={`/?${assignToSearchParams(window.location.search, {
-                          serviceId: service.id,
+                          featureId: feature.id,
                         })}`}
                         className="block text-sm text-gray-700"
                       >
-                        {service?.name}
+                        {feature?.name}
                       </Link>
                     );
                   },
@@ -110,7 +110,7 @@ const HomePage = () => {
                 }}
                 className="px-3 py-1 text-sm text-gray-700 bg-gray-200"
               >
-                Add Service
+                Add Feature
               </button>
             </div>
             <div className="flex flex-grow overflow-hidden">
@@ -118,121 +118,119 @@ const HomePage = () => {
                 <div>
                   <ContentEditable
                     className="inline-block text-2xl"
-                    html={service?.name}
+                    html={feature?.name}
                     tagName="h1"
                     onChange={(e) => {
                       dispatch({
                         type: 'UPDATE_SERVICE_NAME',
                         name: e.target.value,
-                        serviceId: selectedServiceId,
+                        featureId: selectedFeatureId,
                       });
                     }}
                   ></ContentEditable>
                   <ContentEditable
-                    html={service?.description || ''}
+                    html={feature?.description || ''}
                     tagName="p"
                     onChange={(e) => {
                       dispatch({
                         type: 'UPDATE_SERVICE_DESCRIPTION',
                         description: e.target.value,
-                        serviceId: selectedServiceId,
+                        featureId: selectedFeatureId,
                       });
                     }}
                     className="mt-1 text-xs leading-relaxed text-gray-700"
                   ></ContentEditable>
                 </div>
-                {sequences.map((sequence, sequenceIndex) => {
+                {scenarios.map((scenario, scenarioIndex) => {
                   return (
-                    <SequenceDiagramWrapper
-                      title={sequence.name}
+                    <ScenarioDiagramWrapper
+                      title={scenario.name}
                       onChangeTitle={(title) => {
                         dispatch({
                           type: 'UPDATE_SEQUENCE_NAME',
                           name: title,
-                          sequenceId: sequence.id,
-                          serviceId: selectedServiceId,
+                          scenarioId: scenario.id,
+                          featureId: selectedFeatureId,
                         });
                       }}
-                      description={sequence.description}
+                      description={scenario.description}
                       onChangeDescription={(description) => {
                         dispatch({
                           type: 'UPDATE_SEQUENCE_DESCRIPTION',
                           description,
-                          sequenceId: sequence.id,
-                          serviceId: service.id,
+                          scenarioId: scenario.id,
+                          featureId: feature.id,
                         });
                       }}
                       onDuplicate={() => {
                         dispatch({
                           type: 'DUPLICATE_SEQUENCE',
-                          sequenceId: sequence.id,
-                          serviceId: selectedServiceId,
+                          scenarioId: scenario.id,
+                          featureId: selectedFeatureId,
                         });
                       }}
                       onDelete={() => {
                         dispatch({
                           type: 'DELETE_SEQUENCE',
-                          sequenceId: sequence.id,
-                          serviceId: selectedServiceId,
+                          scenarioId: scenario.id,
+                          featureId: selectedFeatureId,
                         });
                       }}
                     >
-                      <SequenceDiagram
-                        environments={Object.values(
-                          service?.environments || {},
-                        )}
-                        steps={sequence.steps}
+                      <ScenarioDiagram
+                        actors={Object.values(feature?.actors || {})}
+                        steps={scenario.steps}
                         onAddStep={({ index, from, to }) => {
                           dispatch({
                             type: 'ADD_STEP',
                             index,
                             fromEnvId: from,
                             toEnvId: to,
-                            sequenceId: sequence.id,
-                            serviceId: selectedServiceId,
+                            scenarioId: scenario.id,
+                            featureId: selectedFeatureId,
                           });
                         }}
                         onEditEvent={(newEvent, index) => {
                           dispatch({
                             type: 'UPDATE_STEP_NAME',
                             name: newEvent,
-                            sequenceId: sequence.id,
-                            serviceId: selectedServiceId,
+                            scenarioId: scenario.id,
+                            featureId: selectedFeatureId,
                             stepIndex: index,
                           });
                         }}
                         onDeleteStep={(index) => {
                           dispatch({
                             type: 'DELETE_STEP',
-                            sequenceId: sequence.id,
-                            serviceId: selectedServiceId,
+                            scenarioId: scenario.id,
+                            featureId: selectedFeatureId,
                             stepIndex: index,
                           });
                         }}
-                        onDeleteEnvironment={(id) => {
+                        onDeleteActor={(id) => {
                           dispatch({
                             type: 'DELETE_ENVIRONMENT',
                             envId: id,
-                            serviceId: selectedServiceId,
+                            featureId: selectedFeatureId,
                           });
                         }}
-                        onCreateEnvironment={() => {
+                        onCreateActor={() => {
                           dispatch({
                             type: 'ADD_ENVIRONMENT',
-                            serviceId: selectedServiceId,
+                            featureId: selectedFeatureId,
                           });
                         }}
-                        onEditEnvironment={(newName, id) => {
+                        onEditActor={(newName, id) => {
                           dispatch({
                             type: 'UPDATE_ENVIRONMENT_NAME',
                             envId: id,
                             name: newName,
-                            sequenceId: sequence.id,
-                            serviceId: selectedServiceId,
+                            scenarioId: scenario.id,
+                            featureId: selectedFeatureId,
                           });
                         }}
-                      ></SequenceDiagram>
-                    </SequenceDiagramWrapper>
+                      ></ScenarioDiagram>
+                    </ScenarioDiagramWrapper>
                   );
                 })}
                 <div>
@@ -241,11 +239,11 @@ const HomePage = () => {
                     onClick={() => {
                       dispatch({
                         type: 'ADD_SEQUENCE',
-                        serviceId: selectedServiceId,
+                        featureId: selectedFeatureId,
                       });
                     }}
                   >
-                    New Sequence
+                    New Scenario
                   </button>
                 </div>
               </div>
@@ -255,12 +253,12 @@ const HomePage = () => {
                   mode="graphqlschema"
                   theme="xcode"
                   tabSize={2}
-                  value={service?.eventPayloads || ''}
+                  value={feature?.eventPayloads || ''}
                   onChange={(eventPayloads) => {
                     dispatch({
                       type: 'UPDATE_SERVICE_EVENT_PAYLOAD',
                       eventPayloadString: eventPayloads,
-                      serviceId: selectedServiceId,
+                      featureId: selectedFeatureId,
                     });
                   }}
                   enableBasicAutocompletion

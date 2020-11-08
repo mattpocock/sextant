@@ -1,29 +1,29 @@
 import * as camelcase from 'lodash.camelcase';
-import { Environment, Sequence, Service, Step } from './types';
+import { Actor, Scenario, Feature, Step } from './types';
 
 const sanitizeName = (name: string): string => {
   return camelcase(name.trim());
 };
 
-export const sanitizeService = (service: Service): Service => {
+export const sanitizeFeature = (feature: Feature): Feature => {
   return {
-    ...service,
-    name: sanitizeName(service.name),
+    ...feature,
+    name: sanitizeName(feature.name),
   };
 };
 
-export const sanitizeEnvironment = (environment: Environment): Environment => {
+export const sanitizeActor = (actor: Actor): Actor => {
   return {
-    ...environment,
-    name: sanitizeName(environment.name),
+    ...actor,
+    name: sanitizeName(actor.name),
   };
 };
 
-export const sanitizeSequence = (sequence: Sequence): Sequence => {
+export const sanitizeScenario = (scenario: Scenario): Scenario => {
   return {
-    ...sequence,
-    name: sanitizeName(sequence.name),
-    steps: sequence.steps.map(sanitizeStep),
+    ...scenario,
+    name: sanitizeName(scenario.name),
+    steps: scenario.steps.map(sanitizeStep),
   };
 };
 

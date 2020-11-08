@@ -1,21 +1,21 @@
 import {
-  addEnvironment,
-  addSequence,
-  addService,
+  addActor,
+  addScenario,
+  addFeature,
   addStep,
   Database,
   DEFAULT_EVENT_NAME,
-  deleteEnvironment,
-  deleteSequence,
+  deleteActor,
+  deleteScenario,
   deleteStep,
-  duplicateSequence,
-  updateEnvironmentName,
-  updateSequenceDescription,
-  updateSequenceName,
-  updateServiceDescription,
-  updateServiceEventPayload,
-  updateServiceEventPayloadWithFunc,
-  updateServiceName,
+  duplicateScenario,
+  updateActorName,
+  updateScenarioDescription,
+  updateScenarioName,
+  updateFeatureDescription,
+  updateFeatureEventPayload,
+  updateFeatureEventPayloadWithFunc,
+  updateFeatureName,
   updateStepEventName,
 } from '@sextant-tools/core';
 import { assign, Machine } from '@xstate/compiled';
@@ -31,21 +31,21 @@ interface Context {
 }
 
 type Event =
-  | { type: 'DELETE_ENVIRONMENT'; serviceId: string; envId: string }
+  | { type: 'DELETE_ENVIRONMENT'; featureId: string; envId: string }
   | {
       type: 'UPDATE_SERVICE_EVENT_PAYLOAD';
-      serviceId: string;
+      featureId: string;
       eventPayloadString: string;
     }
   | {
       type: 'UPDATE_SEQUENCE_DESCRIPTION';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       description: string;
     }
   | {
       type: 'UPDATE_SERVICE_DESCRIPTION';
-      serviceId: string;
+      featureId: string;
       description: string;
     }
   | {
@@ -53,27 +53,27 @@ type Event =
     }
   | {
       type: 'UPDATE_SERVICE_NAME';
-      serviceId: string;
+      featureId: string;
       name: string;
     }
   | {
       type: 'ADD_SEQUENCE';
-      serviceId: string;
+      featureId: string;
     }
   | {
       type: 'DUPLICATE_SEQUENCE';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
     }
   | {
       type: 'DELETE_SEQUENCE';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
     }
   | {
       type: 'UPDATE_SEQUENCE_NAME';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       name: string;
     }
   | {
@@ -81,37 +81,37 @@ type Event =
     }
   | {
       type: 'ADD_ENVIRONMENT';
-      serviceId: string;
+      featureId: string;
     }
   | {
       type: 'GET_SHARE_LINK';
     }
   | {
       type: 'UPDATE_ENVIRONMENT_NAME';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       envId: string;
       name: string;
     }
   | {
       type: 'ADD_STEP';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       fromEnvId: string;
       toEnvId: string;
       index: number;
     }
   | {
       type: 'UPDATE_STEP_NAME';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       stepIndex: number;
       name: string;
     }
   | {
       type: 'DELETE_STEP';
-      serviceId: string;
-      sequenceId: string;
+      featureId: string;
+      scenarioId: string;
       stepIndex: number;
     }
   | {
@@ -124,13 +124,14 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
     initial: 'loading',
     context: {
       database: {
-        services: {
+        version: 2,
+        features: {
           initial: {
             id: 'initial',
             description: 'Description',
             name: 'Initial',
-            environments: {},
-            sequences: {},
+            actors: {},
+            scenarios: {},
             eventPayloads: '',
           },
         },
@@ -143,12 +144,12 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           src: 'loadDatabase',
           onDone: [
             {
-              cond: 'databaseHasAtLeastOneService',
+              cond: 'databaseHasAtLeastOneFeature',
               actions: ['saveDatabaseToContext'],
               target: 'editing',
             },
             {
-              actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+              actions: ['saveDefaultDatabaseToContext', 'goToInitialFeature'],
               target: 'editing',
             },
           ],
@@ -160,12 +161,12 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
       errored: {
         always: [
           {
-            cond: 'databaseFromContextHasAtLeastOneService',
-            actions: ['goToFirstService'],
+            cond: 'databaseFromContextHasAtLeastOneFeature',
+            actions: ['goToFirstFeature'],
             target: 'editing',
           },
           {
-            actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+            actions: ['saveDefaultDatabaseToContext', 'goToInitialFeature'],
             target: 'editing',
           },
         ],
@@ -175,21 +176,21 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
         on: {
           SERVICE_NOT_FOUND: [
             {
-              cond: 'databaseFromContextHasAtLeastOneService',
-              actions: ['goToFirstService'],
+              cond: 'databaseFromContextHasAtLeastOneFeature',
+              actions: ['goToFirstFeature'],
               target: 'editing',
             },
             {
-              actions: ['saveDefaultDatabaseToContext', 'goToInitialService'],
+              actions: ['saveDefaultDatabaseToContext', 'goToInitialFeature'],
               target: 'editing',
             },
           ],
           UPDATE_SERVICE_EVENT_PAYLOAD: {
             actions: assign((context, event) => {
               return {
-                database: updateServiceEventPayload(
+                database: updateFeatureEventPayload(
                   context.database,
-                  event.serviceId,
+                  event.featureId,
                   event.eventPayloadString,
                 ),
               };
@@ -199,25 +200,25 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           ADD_ENVIRONMENT: {
             actions: assign((context, event) => {
               return {
-                database: addEnvironment(context.database, event.serviceId),
+                database: addActor(context.database, event.featureId),
               };
             }),
             target: '.throttling',
           },
           DELETE_ENVIRONMENT: [
             {
-              cond: 'canDeleteEnvironment',
-              actions: ['deleteEnvironment'],
+              cond: 'canDeleteActor',
+              actions: ['deleteActor'],
               target: '.throttling',
             },
             {
-              actions: ['tellUserWeCannotDeleteTheEnvironment'],
+              actions: ['tellUserWeCannotDeleteTheActor'],
             },
           ],
           ADD_SEQUENCE: {
             actions: assign((context, event) => {
               return {
-                database: addSequence(context.database, event.serviceId),
+                database: addScenario(context.database, event.featureId),
               };
             }),
             target: '.throttling',
@@ -225,10 +226,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           DELETE_SEQUENCE: {
             actions: assign((context, event) => {
               return {
-                database: deleteSequence(
+                database: deleteScenario(
                   context.database,
-                  event.serviceId,
-                  event.sequenceId,
+                  event.featureId,
+                  event.scenarioId,
                 ),
               };
             }),
@@ -239,9 +240,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 return {
-                  database: updateServiceName(
+                  database: updateFeatureName(
                     context.database,
-                    event.serviceId,
+                    event.featureId,
                     event.name,
                   ),
                 };
@@ -256,10 +257,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 return {
-                  database: duplicateSequence(
+                  database: duplicateScenario(
                     context.database,
-                    event.serviceId,
-                    event.sequenceId,
+                    event.featureId,
+                    event.scenarioId,
                   ),
                 };
               }),
@@ -270,7 +271,7 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context) => {
                 return {
-                  database: addService(context.database),
+                  database: addFeature(context.database),
                 };
               }),
             ],
@@ -280,10 +281,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 return {
-                  database: updateSequenceDescription(
+                  database: updateScenarioDescription(
                     context.database,
-                    event.serviceId,
-                    event.sequenceId,
+                    event.featureId,
+                    event.scenarioId,
                     event.description,
                   ),
                 };
@@ -295,9 +296,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 return {
-                  database: updateServiceDescription(
+                  database: updateFeatureDescription(
                     context.database,
-                    event.serviceId,
+                    event.featureId,
                     event.description,
                   ),
                 };
@@ -308,9 +309,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 return {
-                  database: updateServiceEventPayloadWithFunc(
+                  database: updateFeatureEventPayloadWithFunc(
                     context.database,
-                    event.serviceId,
+                    event.featureId,
                     (eventPayload) => {
                       return addEvent(eventPayload, DEFAULT_EVENT_NAME);
                     },
@@ -323,8 +324,8 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
                     database: context.database,
                     fromEnvId: event.fromEnvId,
                     index: event.index,
-                    sequenceId: event.sequenceId,
-                    serviceId: event.serviceId,
+                    scenarioId: event.scenarioId,
+                    featureId: event.featureId,
                     toEnvId: event.toEnvId,
                   }),
                 };
@@ -336,14 +337,14 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 const eventName =
-                  context.database.services[event.serviceId].sequences[
-                    event.sequenceId
+                  context.database.features[event.featureId].scenarios[
+                    event.scenarioId
                   ].steps[event.stepIndex].event;
 
                 return {
-                  database: updateServiceEventPayloadWithFunc(
+                  database: updateFeatureEventPayloadWithFunc(
                     context.database,
-                    event.serviceId,
+                    event.featureId,
                     (eventString) => {
                       return removeEvent(eventString, eventName);
                     },
@@ -354,8 +355,8 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
                 return {
                   database: deleteStep(
                     context.database,
-                    event.serviceId,
-                    event.sequenceId,
+                    event.featureId,
+                    event.scenarioId,
                     event.stepIndex,
                   ),
                 };
@@ -367,13 +368,13 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
             actions: [
               assign((context, event) => {
                 const targetEvent =
-                  context.database.services[event.serviceId].sequences[
-                    event.sequenceId
+                  context.database.features[event.featureId].scenarios[
+                    event.scenarioId
                   ].steps[event.stepIndex].event;
                 return {
-                  database: updateServiceEventPayloadWithFunc(
+                  database: updateFeatureEventPayloadWithFunc(
                     context.database,
-                    event.serviceId,
+                    event.featureId,
                     (currentEventPayloads) => {
                       if (event.name === '') {
                         return removeEvent(currentEventPayloads, targetEvent);
@@ -396,8 +397,8 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
                 return {
                   database: updateStepEventName(
                     context.database,
-                    event.serviceId,
-                    event.sequenceId,
+                    event.featureId,
+                    event.scenarioId,
                     event.stepIndex,
                     event.name,
                   ),
@@ -409,10 +410,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           UPDATE_ENVIRONMENT_NAME: {
             actions: assign((context, event) => {
               return {
-                database: updateEnvironmentName(
+                database: updateActorName(
                   context.database,
-                  event.serviceId,
-                  event.sequenceId,
+                  event.featureId,
+                  event.scenarioId,
                   event.envId,
                   event.name,
                 ),
@@ -423,10 +424,10 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
           UPDATE_SEQUENCE_NAME: {
             actions: assign((context, event) => {
               return {
-                database: updateSequenceName(
+                database: updateScenarioName(
                   context.database,
-                  event.serviceId,
-                  event.sequenceId,
+                  event.featureId,
+                  event.scenarioId,
                   event.name,
                 ),
               };
@@ -458,20 +459,20 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
       },
     },
     guards: {
-      databaseFromContextHasAtLeastOneService: (context) => {
+      databaseFromContextHasAtLeastOneFeature: (context) => {
         return Object.keys(context.database).length > 0;
       },
-      databaseHasAtLeastOneService: (context, event) => {
-        return Object.keys(event.data?.services || {}).length > 0;
+      databaseHasAtLeastOneFeature: (context, event) => {
+        return Object.keys(event.data?.features || {}).length > 0;
       },
-      canDeleteEnvironment: ({ database }, { envId, serviceId }) => {
+      canDeleteActor: ({ database }, { envId, featureId }) => {
         try {
-          Object.values(database.services[serviceId].sequences).forEach(
-            (service) => {
-              service.steps.forEach((step) => {
+          Object.values(database.features[featureId].scenarios).forEach(
+            (feature) => {
+              feature.steps.forEach((step) => {
                 if (step.from === envId || step.to === envId) {
                   throw new Error(
-                    'This environment cannot be deleted because steps depend on it.',
+                    'This actor cannot be deleted because steps depend on it.',
                   );
                 }
               });
@@ -484,9 +485,9 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
       },
     },
     actions: {
-      tellUserWeCannotDeleteTheEnvironment: () => {
+      tellUserWeCannotDeleteTheActor: () => {
         alert(
-          'You cannot delete this environment because it has steps associated with it.',
+          'You cannot delete this actor because it has steps associated with it.',
         );
       },
       copyShareLinkToClipboard(context) {
@@ -500,34 +501,31 @@ export const keepDataInSyncMachine = Machine<Context, Event, 'keepDataInSync'>(
       saveDefaultDatabaseToContext: assign((context) => {
         return {
           database: {
-            services: {
+            version: 2,
+            features: {
               initial: {
                 description: 'Description',
-                environments: {},
+                actors: {},
                 eventPayloads: '',
                 id: 'initial',
-                name: 'Your First Service',
-                sequences: {},
+                name: 'Your First Feature',
+                scenarios: {},
               },
             },
           },
         };
       }),
       saveDatabaseToContext: assign((context, event) => {
-        if (event.data?.services) {
+        if (event.data?.features) {
           return {
             database: event.data,
           };
         }
         return {};
       }),
-      deleteEnvironment: assign((context, event) => {
+      deleteActor: assign((context, event) => {
         return {
-          database: deleteEnvironment(
-            context.database,
-            event.serviceId,
-            event.envId,
-          ),
+          database: deleteActor(context.database, event.featureId, event.envId),
         };
       }),
     },

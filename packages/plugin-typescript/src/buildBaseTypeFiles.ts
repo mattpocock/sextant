@@ -1,8 +1,8 @@
 import { TsVisitor } from '@graphql-codegen/typescript';
 import {
   FlattenedDatabase,
-  getEnvironmentsWithSteps,
-  getStepsFromSequences,
+  getActorsWithSteps,
+  getStepsFromScenarios,
   Step,
 } from '@sextant-tools/core';
 import * as fs from 'fs';
@@ -19,28 +19,25 @@ Handlebars.registerHelper('pascalcase', (str) => {
 export const buildBaseTypeFiles = (
   database: FlattenedDatabase,
 ): { filename: string; content: string } => {
-  const services = database.services.map((service) => {
-    const allSteps = getStepsFromSequences(service.sequences);
+  const features = database.features.map((feature) => {
+    const allSteps = getStepsFromScenarios(feature.scenarios);
 
     const typescriptDef = getTypescriptedEventPayloads(
-      service.eventPayloads,
-      upperFirst(camelcase(service.name)),
+      feature.eventPayloads,
+      upperFirst(camelcase(feature.name)),
       allSteps,
     );
 
     return {
-      ...service,
+      ...feature,
       typescriptDef,
-      environmentsWithSteps: getEnvironmentsWithSteps(
-        service.environments,
-        allSteps,
-      ),
+      actorsWithSteps: getActorsWithSteps(feature.actors, allSteps),
     };
   });
 
-  const environmentIdMap: Record<string, string> = database.services.reduce(
-    (map, service) => {
-      service.environments.forEach((env) => {
+  const actorIdMap: Record<string, string> = database.features.reduce(
+    (map, feature) => {
+      feature.actors.forEach((env) => {
         map[env.id] = env.name;
       });
       return map;
@@ -48,49 +45,47 @@ export const buildBaseTypeFiles = (
     {} as Record<string, string>,
   );
 
-  const allStepsWithServiceNamePrefix: (Step & {
-    serviceName: string;
+  const allStepsWithFeatureNamePrefix: (Step & {
+    featureName: string;
     rawEvent: string;
-  })[] = database.services.reduce(
-    (steps, service) => {
+  })[] = database.features.reduce(
+    (steps, feature) => {
       return steps.concat(
-        getStepsFromSequences(service.sequences).map((step) => {
+        getStepsFromScenarios(feature.scenarios).map((step) => {
           return {
             ...step,
-            event: `${service.name}.${step.event}`,
-            to: environmentIdMap[step.to],
-            from: environmentIdMap[step.from],
+            event: `${feature.name}.${step.event}`,
+            to: actorIdMap[step.to],
+            from: actorIdMap[step.from],
             rawEvent: step.event,
-            serviceName: service.name,
+            featureName: feature.name,
           };
         }),
       );
     },
     [] as (Step & {
-      serviceName: string;
+      featureName: string;
       rawEvent: string;
     })[],
   );
 
-  const uniqueEnvironmentNameSet = new Set<string>();
+  const uniqueActorNameSet = new Set<string>();
 
-  Object.values(environmentIdMap).forEach((name) =>
-    uniqueEnvironmentNameSet.add(name),
-  );
+  Object.values(actorIdMap).forEach((name) => uniqueActorNameSet.add(name));
 
-  const uniqueEnvironmentNames = Array.from(uniqueEnvironmentNameSet);
+  const uniqueActorNames = Array.from(uniqueActorNameSet);
 
-  const environments = uniqueEnvironmentNames.map((sourceName) => {
+  const actors = uniqueActorNames.map((sourceName) => {
     return {
       name: sourceName,
-      from: uniqueEnvironmentNames
+      from: uniqueActorNames
         .map((fromName) => {
           return {
             env: fromName,
-            in: allStepsWithServiceNamePrefix.filter((step) => {
+            in: allStepsWithFeatureNamePrefix.filter((step) => {
               return step.to === sourceName && step.from === fromName;
             }),
-            out: allStepsWithServiceNamePrefix.filter((step) => {
+            out: allStepsWithFeatureNamePrefix.filter((step) => {
               return step.from === sourceName && step.to === fromName;
             }),
           };
@@ -98,14 +93,14 @@ export const buildBaseTypeFiles = (
         .filter((fromEnv) => {
           return fromEnv.in.length > 0 || fromEnv.out.length > 0;
         }),
-      to: uniqueEnvironmentNames
+      to: uniqueActorNames
         .map((toName) => {
           return {
             env: toName,
-            in: allStepsWithServiceNamePrefix.filter((step) => {
+            in: allStepsWithFeatureNamePrefix.filter((step) => {
               return step.from === sourceName && step.to === toName;
             }),
-            out: allStepsWithServiceNamePrefix.filter((step) => {
+            out: allStepsWithFeatureNamePrefix.filter((step) => {
               return step.to === sourceName && step.from === toName;
             }),
           };
@@ -125,15 +120,15 @@ export const buildBaseTypeFiles = (
   );
 
   const result = template({
-    services,
-    environments,
+    features,
+    actors,
   });
 
   return {
     content: [
-      services?.[0]?.typescriptDef?.prepend || '',
-      ...services.map((service) => {
-        return service.typescriptDef.content;
+      features?.[0]?.typescriptDef?.prepend || '',
+      ...features.map((feature) => {
+        return feature.typescriptDef.content;
       }),
       result,
     ].join('\n\n'),
@@ -143,13 +138,13 @@ export const buildBaseTypeFiles = (
 
 const getTypescriptedEventPayloads = (
   untransformedEventPayloads: string,
-  serviceId: string,
+  featureId: string,
   steps: Step[],
 ) => {
   try {
-    const eventPayloads = appendServiceIdToEventPayloads(
+    const eventPayloads = appendFeatureIdToEventPayloads(
       untransformedEventPayloads,
-      serviceId,
+      featureId,
     );
 
     const schema = buildSchema(eventPayloads);
@@ -179,7 +174,7 @@ const getTypescriptedEventPayloads = (
     const emptyTypeDefs = steps
       .filter((step) => {
         const shouldFilterOut = result.content.includes(
-          `export type ${serviceId}__${step.event}`,
+          `export type ${featureId}__${step.event}`,
         );
 
         if (typeDefSet.has(step.event)) {
@@ -191,7 +186,7 @@ const getTypescriptedEventPayloads = (
         return !shouldFilterOut;
       })
       .map((step) => {
-        return `export type ${serviceId}__${step.event} = {};`;
+        return `export type ${featureId}__${step.event} = {};`;
       });
 
     return {
@@ -209,11 +204,11 @@ const getTypescriptedEventPayloads = (
 
 const typeRegex = /^type ([A-Z|_]{1,}) \{/gm;
 
-const appendServiceIdToEventPayloads = (
+const appendFeatureIdToEventPayloads = (
   eventPayloads: string,
-  serviceId: string,
+  featureId: string,
 ) => {
   return eventPayloads.replace(typeRegex, (match) => {
-    return match.replace(/^type /, `type ${serviceId}__`);
+    return match.replace(/^type /, `type ${featureId}__`);
   });
 };
