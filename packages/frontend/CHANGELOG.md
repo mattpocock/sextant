@@ -1,5 +1,11 @@
 # sextant
 
+## 0.4.0-next.1
+
+### Patch Changes
+
+- 1e5412e: Added a screen that shows when the terminal has been disconnected
+
 ## 0.4.0-next.0
 
 ### Minor Changes

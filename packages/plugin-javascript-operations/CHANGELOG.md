@@ -1,5 +1,12 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.4
+
+### Patch Changes
+
+- ac2df35: Improved the typings of SextantHandler when it doesn't need to return an event
+- 59cbed8: Added an initial commit for plugin-jest, and added scenarios to the typings for plugin-javascript-operations
+
 ## 0.1.0-next.3
 
 ### Patch Changes
