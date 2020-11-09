@@ -23,7 +23,7 @@ export const describeSextantFeature = <IFeature extends keyof SextantFeatures>(
     >,
   ) => void,
 ) => {
-  const testsRegistered = [];
+  const testsRegistered: string[] = [];
   const desiredScenarios = sextantScenarios[featureName] || [];
 
   describe(featureName, () => {
