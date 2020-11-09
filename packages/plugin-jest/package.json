@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/plugin-jest",
-  "version": "0.0.2-next.0",
+  "version": "0.0.2-next.1",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mattpocock/sextant"

@@ -1,6 +1,13 @@
 # @sextant-tools/plugin-jest
 
+## 0.0.2-next.1
+
+### Patch Changes
+
+- 6f77ccb: Fixed a TS issue in jest-plugin
+
 ## 0.0.2-next.0
+
 ### Patch Changes
 
 - 59cbed8: Added an initial commit for plugin-jest, and added scenarios to the typings for plugin-javascript-operations
