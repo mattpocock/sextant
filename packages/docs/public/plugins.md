@@ -22,7 +22,66 @@ _TODO - Documentation incoming_
 
 Generate a full type-safe [Express](https://expressjs.com/) API from events and features declared in Sextant.
 
-_TODO - Documentation incoming_
+#### Installation
+
+`yarn add @sextant-tools/plugin-javascript-express`
+
+```js
+// sextant-config.js
+module.exports = {
+  plugins: [
+    [
+      '@sextant-tools/plugin-javascript-express',
+      {
+        // The filename you'd like to print
+        expressFileName: 'sextant-express.generated.ts',
+      },
+    ],
+  ],
+};
+```
+
+#### makeExpressHandlers
+
+Builds a list of Express request handlers which can be used in an Express app.
+
+```ts
+// Function signature
+function makeExpressHandlers(
+  fromActor: string,
+  toActor: string,
+  handlers: {
+    [featureName: string]: (req: Request, res: Response) => void;
+  },
+): { feature: string; handler: Handler }[];
+```
+
+##### Example Usage
+
+```js
+const app = express();
+
+const handlers = makeExpressHandlers('fromThisActor', 'toThisActor', {
+  featureName: (req, res) => {
+    // The event is passed on req.body
+    const event = req.body;
+
+    // res.json() is typed based on which events can be sent back
+    res.json({
+      type: 'SUCCESS',
+    });
+  },
+});
+
+handlers.forEach(({ handler, feature }) => {
+  /**
+   * Attach the generated handlers to your express app
+   */
+  app.post(`/${feature}`, handler);
+});
+```
+
+> This documentation is incomplete! Please help us out by requesting more info.
 
 ### Jest
 
