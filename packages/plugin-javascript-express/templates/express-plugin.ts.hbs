@@ -67,7 +67,9 @@ export const makeSextantExpressSdk = <
     feature: IFeature,
     // @ts-ignore
     event: SextantEvent<IFeature, IFrom, ITo>,
-  ) => // @ts-ignore
+  ) =>
+  //
+  // @ts-ignore
   Promise<SextantEvent<IFeature, ITo, IFrom>>,
 ) => <IFeature extends keyof SextantFeatures>(
   feature: IFeature,
