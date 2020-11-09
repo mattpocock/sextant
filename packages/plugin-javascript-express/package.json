@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/plugin-javascript-express",
-  "version": "0.1.0-next.5",
+  "version": "0.1.0-next.6",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mattpocock/sextant"

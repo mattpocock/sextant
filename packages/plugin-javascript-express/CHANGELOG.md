@@ -1,5 +1,11 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.6
+
+### Patch Changes
+
+- 50f16c3: Added fix for express plugin failing TS checks
+
 ## 0.1.0-next.5
 
 ### Patch Changes
