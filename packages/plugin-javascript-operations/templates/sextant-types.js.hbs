@@ -1,0 +1,13 @@
+const sextantScenarios = {
+  {{#each features}}
+  '{{this.name}}': [
+    {{#each this.scenarios}}
+    '{{this.name}}',
+    {{/each}}
+  ],
+  {{/each}}
+}
+
+module.exports = {
+  sextantScenarios,
+}

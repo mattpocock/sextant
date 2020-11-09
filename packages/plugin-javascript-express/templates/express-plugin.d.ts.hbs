@@ -40,7 +40,7 @@ export type SextantExpressHandler<
  * Build multiple express request handlers by passing in
  * implementation details per feature
  */
-export const makeExpressHandlers = <
+export function makeExpressHandlers<
   IFrom extends keyof SextantActors,
   ITo extends keyof SextantActors[IFrom]['to'] = any
 >(
@@ -50,14 +50,9 @@ export const makeExpressHandlers = <
     // @ts-ignore
     [K in keyof SextantFeatures]?: SextantExpressHandler<K, IFrom, ITo>;
   },
-): { feature: keyof SextantFeatures; handler: RequestHandler }[] => {
-  return Object.entries(params).map(([feature, handler]) => ({
-    feature: feature as keyof SextantFeatures,
-    handler: handler as RequestHandler,
-  }));
-};
+): { feature: keyof SextantFeatures; handler: RequestHandler }[];
 
-export const makeSextantExpressSdk = <
+export function makeSextantExpressSdk<
   IFrom extends keyof SextantActors,
   ITo extends keyof SextantActors[IFrom]['to'] = any
 >(
@@ -67,15 +62,13 @@ export const makeSextantExpressSdk = <
     feature: IFeature,
     // @ts-ignore
     event: SextantEvent<IFeature, IFrom, ITo>,
-  ) =>
-  //
+  ) => //
   // @ts-ignore
   Promise<SextantEvent<IFeature, ITo, IFrom>>,
-) => <IFeature extends keyof SextantFeatures>(
+): <IFeature extends keyof SextantFeatures>(
   feature: IFeature,
   // @ts-ignore
   event: SextantEvent<IFeature, IFrom, ITo>,
-  // @ts-ignore
-): Promise<SextantEvent<IFeature, ITo, IFrom>> => {
-  return fetcher(feature, event);
-};
+) => //
+// @ts-ignore
+Promise<SextantEvent<IFeature, ITo, IFrom>>;

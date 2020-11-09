@@ -18,7 +18,9 @@ Handlebars.registerHelper('pascalcase', (str) => {
 
 export const buildBaseTypeFiles = (
   database: FlattenedDatabase,
-): { filename: string; content: string } => {
+  // TODO - implement this
+  _fileName?: string,
+): { filename: string; content: string }[] => {
   const features = database.features.map((feature) => {
     const allSteps = getStepsFromScenarios(feature.scenarios);
 
@@ -111,30 +113,47 @@ export const buildBaseTypeFiles = (
     };
   });
 
-  const template = Handlebars.compile(
+  const declarationTemplate = Handlebars.compile(
     fs
       .readFileSync(
-        path.resolve(__dirname, '../templates/sextant-types.ts.hbs'),
+        path.resolve(__dirname, '../templates/sextant-types.d.ts.hbs'),
       )
       .toString(),
   );
 
-  const result = template({
+  const declarationResult = declarationTemplate({
     features,
     actors,
   });
 
-  return {
-    content: [
-      features?.find((feature) => Boolean(feature.typescriptDef.prepend))
-        ?.typescriptDef?.prepend || '',
-      ...features.map((feature) => {
-        return feature.typescriptDef.content;
+  const jsFileTemplate = Handlebars.compile(
+    fs
+      .readFileSync(
+        path.resolve(__dirname, '../templates/sextant-types.js.hbs'),
+      )
+      .toString(),
+  );
+
+  return [
+    {
+      content: [
+        features?.find((feature) => Boolean(feature.typescriptDef.prepend))
+          ?.typescriptDef?.prepend || '',
+        ...features.map((feature) => {
+          return feature.typescriptDef.content;
+        }),
+        declarationResult,
+      ].join('\n\n'),
+      filename: 'sextant-types.generated.d.ts',
+    },
+    {
+      content: jsFileTemplate({
+        features,
+        actors,
       }),
-      result,
-    ].join('\n\n'),
-    filename: 'sextant-types.generated.ts',
-  };
+      filename: 'sextant-types.generated.js',
+    },
+  ];
 };
 
 const getTypescriptedEventPayloads = (

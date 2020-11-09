@@ -1,0 +1,25 @@
+import { SextantFeatures } from './sextant-types.generated';
+
+export interface SextantTestFeatureContext<IScenarioName extends string> {
+  test: SextantTest<IScenarioName>;
+  /**
+   * Test whether all scenarios have been tested
+   */
+  testCoverage: () => void;
+}
+
+export interface SextantTest<IScenarioName extends string> {
+  (name: IScenarioName, fn?: jest.ProvidesCallback, timeout?: number): void;
+}
+
+/**
+ * Describe a feature of Sextant in a jest describe block
+ */
+export function describeSextantFeature<IFeature extends keyof SextantFeatures>(
+  featureName: IFeature,
+  testFunc: (
+    testContext: SextantTestFeatureContext<
+      SextantFeatures[IFeature]['scenarios']
+    >,
+  ) => void,
+): void;

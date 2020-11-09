@@ -1,6 +1,5 @@
 import { createSextantPlugin } from '@sextant-tools/core';
 import { buildBaseTypeFiles } from '@sextant-tools/plugin-javascript-operations';
-import Handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -12,23 +11,26 @@ export interface PluginExpressConfig {
 export const plugin = createSextantPlugin<PluginExpressConfig>(
   (
     context,
-    { expressFileName = 'sextant-jest.generated.ts', typescriptFileName },
+    { expressFileName = 'sextant-jest.generated', typescriptFileName },
   ) => {
-    const typeFile = buildBaseTypeFiles(context.database);
+    const files = buildBaseTypeFiles(context.database, typescriptFileName);
 
-    const template = Handlebars.compile(
-      fs
-        .readFileSync(
-          path.resolve(__dirname, '../templates/jest-plugin.ts.hbs'),
-        )
-        .toString(),
-    );
+    files.forEach((file) => {
+      context.writeFileSync(file.filename, file.content);
+    });
 
-    context.writeFileSync(expressFileName, template({}));
+    const jestDeclarationFile = fs
+      .readFileSync(
+        path.resolve(__dirname, '../templates/jest-plugin.d.ts.hbs'),
+      )
+      .toString();
 
-    context.writeFileSync(
-      typescriptFileName || typeFile.filename,
-      typeFile.content,
-    );
+    context.writeFileSync(expressFileName + '.d.ts', jestDeclarationFile);
+
+    const jsFile = fs
+      .readFileSync(path.resolve(__dirname, '../templates/jest-plugin.js'))
+      .toString();
+
+    context.writeFileSync(expressFileName + '.js', jsFile);
   },
 );

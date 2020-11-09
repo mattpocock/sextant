@@ -89,16 +89,6 @@ export interface SextantActors {
   {{/each}}
 }
 
-export const sextantScenarios = {
-  {{#each features}}
-  '{{this.name}}': [
-    {{#each this.scenarios}}
-    '{{this.name}}',
-    {{/each}}
-  ],
-  {{/each}}
-}
-
 export interface EventConfig {
   in: { type: string };
   out: { type: string };
@@ -177,3 +167,13 @@ export type SextantAllEventsToActor<
   SextantActors[IFrom]['from'][ITo]['out'],
   { type: IType }
 >;
+
+export const sextantScenarios: {
+  {{#each features}}
+  '{{this.name}}': [
+    {{#each this.scenarios}}
+    '{{this.name}}',
+    {{/each}}
+  ],
+  {{/each}}
+};

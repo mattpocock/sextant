@@ -12,23 +12,31 @@ export interface PluginExpressConfig {
 export const plugin = createSextantPlugin<PluginExpressConfig>(
   (
     context,
-    { expressFileName = 'sextant-express.generated.ts', typescriptFileName },
+    { expressFileName = 'sextant-express.generated', typescriptFileName },
   ) => {
-    const typeFile = buildBaseTypeFiles(context.database);
+    const files = buildBaseTypeFiles(context.database, typescriptFileName);
 
-    const template = Handlebars.compile(
+    files.forEach((file) => {
+      context.writeFileSync(file.filename, file.content);
+    });
+
+    const declarationFileTemplate = Handlebars.compile(
       fs
         .readFileSync(
-          path.resolve(__dirname, '../templates/express-plugin.ts.hbs'),
+          path.resolve(__dirname, '../templates/express-plugin.d.ts.hbs'),
         )
         .toString(),
     );
 
-    context.writeFileSync(expressFileName, template({}));
-
     context.writeFileSync(
-      typescriptFileName || typeFile.filename,
-      typeFile.content,
+      expressFileName + '.d.ts',
+      declarationFileTemplate({}),
     );
+
+    const jsFileTemplate = fs
+      .readFileSync(path.resolve(__dirname, '../templates/express-plugin.js'))
+      .toString();
+
+    context.writeFileSync(expressFileName + '.js', jsFileTemplate);
   },
 );
