@@ -1,5 +1,13 @@
 # @sextant-tools/plugin-jest
 
+## 0.0.2-next.2
+
+### Patch Changes
+
+- 7099bec: Rewrote plugins to print javascript and typescript declaration files
+- Updated dependencies [7099bec]
+  - @sextant-tools/plugin-javascript-operations@0.1.0-next.5
+
 ## 0.0.2-next.1
 
 ### Patch Changes
