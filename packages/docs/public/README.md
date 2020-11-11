@@ -62,6 +62,6 @@ module.exports = {
 
 You should now see some generated files - one which contains mainly Typescript declarations, and one which contains some functions to do with `express`.
 
-You can use these functions, such as `makeSextantExpressRoutes`, to implement your code based on what's in your Sextant documentation.
+You can use these functions to implement your code based on what's in your Sextant documentation.
 
 Check out the plugin's [documentation](plugins#express) to learn how to use these functions.
