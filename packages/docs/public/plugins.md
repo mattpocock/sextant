@@ -33,8 +33,8 @@ module.exports = {
     [
       '@sextant-tools/plugin-javascript-express',
       {
-        // The filename you'd like to print
-        expressFileName: 'sextant-express.generated.ts',
+        // The filename (without extension) you'd like to print
+        expressFileName: 'sextant-express',
       },
     ],
   ],
