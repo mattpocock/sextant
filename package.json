@@ -27,7 +27,8 @@
     "build": "tsc -b ./tsconfig.monorepo.json",
     "dev": "yarn build --watch",
     "codegen:machines": "xstate-codegen \"./!(node_modules)/!(node_modules)/**/**.machine.ts\" --once",
-    "postinstall": "npm run build && npm run codegen:machines"
+    "postinstall": "npm run build && npm run codegen:machines",
+    "plugin:dev": "concurrently \"yarn dev\" \"yarn fe dev:codegen\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
