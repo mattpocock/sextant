@@ -7,19 +7,23 @@
     "sextant": "0.3.0",
     "@sextant-tools/plugin-javascript-express": "0.0.5",
     "@sextant-tools/plugin-javascript-operations": "0.0.5",
-    "@sextant-tools/plugin-jest": "0.0.1"
+    "@sextant-tools/plugin-jest": "0.0.1",
+    "@sextant-tools/plugin-javascript-fixtures": "0.0.2-next.2"
   },
   "changesets": [
     "afraid-mayflies-glow",
     "big-cobras-scream",
+    "big-melons-sell",
     "brown-donuts-burn",
     "fair-apricots-behave",
     "gold-ways-applaud",
     "lazy-balloons-itch",
     "olive-goats-tickle",
+    "pink-chicken-kneel",
     "proud-toes-provide",
     "proud-weeks-kneel",
     "selfish-ears-cross",
+    "sharp-islands-reflect",
     "silver-steaks-deliver",
     "tidy-carpets-grow",
     "wild-badgers-argue"

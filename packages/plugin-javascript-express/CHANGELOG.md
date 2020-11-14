@@ -1,5 +1,13 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.8
+
+### Patch Changes
+
+- Updated dependencies [451ad11]
+  - @sextant-tools/core@0.1.0-next.1
+  - @sextant-tools/plugin-javascript-operations@0.1.0-next.6
+
 ## 0.1.0-next.7
 
 ### Patch Changes

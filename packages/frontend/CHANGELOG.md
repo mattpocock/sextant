@@ -1,5 +1,12 @@
 # sextant
 
+## 0.4.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [451ad11]
+  - @sextant-tools/core@0.1.0-next.1
+
 ## 0.4.0-next.1
 
 ### Patch Changes

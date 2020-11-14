@@ -12,6 +12,7 @@ import {
   isListType,
   isObjectType,
 } from 'graphql';
+import humanId from 'human-id';
 import { v4 as uuidv4 } from 'uuid';
 
 export type IMockTypeFn = (
@@ -25,7 +26,12 @@ export type IMockFn = GraphQLFieldResolver<any, any>;
 const defaultMockMap: Map<string, IMockFn> = new Map();
 defaultMockMap.set('Int', () => Math.round(Math.random() * 200) - 100);
 defaultMockMap.set('Float', () => Math.random() * 200 - 100);
-defaultMockMap.set('String', () => 'Hello World');
+defaultMockMap.set('String', () =>
+  humanId({
+    capitalize: false,
+    separator: '-',
+  }),
+);
 defaultMockMap.set('Boolean', () => Math.random() > 0.5);
 defaultMockMap.set('ID', () => uuidv4());
 
