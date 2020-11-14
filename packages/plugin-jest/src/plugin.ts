@@ -1,5 +1,6 @@
 import { createSextantPlugin } from '@sextant-tools/core';
 import { buildBaseTypeFiles } from '@sextant-tools/plugin-javascript-operations';
+import { createMockFiles } from '@sextant-tools/plugin-javascript-fixtures';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -32,5 +33,7 @@ export const plugin = createSextantPlugin<PluginExpressConfig>(
       .toString();
 
     context.writeFileSync(expressFileName + '.js', jsFile);
+
+    createMockFiles(context);
   },
 );

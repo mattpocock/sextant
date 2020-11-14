@@ -14,6 +14,7 @@
   "dependencies": {
     "@sextant-tools/plugin-javascript-operations": "0.1.0-next.5",
     "@sextant-tools/core": "0.1.0-next.0",
+    "@sextant-tools/plugin-javascript-fixtures": "0.0.2-next.2",
     "handlebars": "^4.7.6"
   },
   "devDependencies": {

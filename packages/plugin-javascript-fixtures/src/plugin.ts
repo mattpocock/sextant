@@ -1,6 +1,7 @@
 import {
   createSextantPlugin,
   getStepsFromScenarios,
+  SextantContext,
 } from '@sextant-tools/core';
 import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
@@ -12,6 +13,10 @@ import { mockSchema } from './makeMocksFunction';
 export interface PluginFixturesConfig {}
 
 export const plugin = createSextantPlugin<PluginFixturesConfig>((context) => {
+  createMockFiles(context);
+});
+
+export const createMockFiles = (context: SextantContext) => {
   const fullMockMap: Record<string, Record<string, any>> = {};
 
   context.database.features.forEach((feature) => {
@@ -68,4 +73,4 @@ export const plugin = createSextantPlugin<PluginFixturesConfig>((context) => {
       )
       .toString(),
   );
-});
+};
