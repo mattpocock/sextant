@@ -53,7 +53,7 @@ export const plugin = createSextantPlugin<PluginFixturesConfig>((context) => {
   );
 
   context.writeFileSync(
-    'sextant-fixture-mock.js',
+    'sextant-fixture-mock.generated.js',
     fs
       .readFileSync(
         path.resolve(__dirname, '../templates/sextant-fixture-mock.js'),
@@ -61,7 +61,7 @@ export const plugin = createSextantPlugin<PluginFixturesConfig>((context) => {
       .toString(),
   );
   context.writeFileSync(
-    'sextant-fixture-mock.d.ts',
+    'sextant-fixture-mock.generated.d.ts',
     fs
       .readFileSync(
         path.resolve(__dirname, '../templates/sextant-fixture-mock.d.ts.hbs'),
