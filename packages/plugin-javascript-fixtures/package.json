@@ -1,0 +1,24 @@
+{
+  "name": "@sextant-tools/plugin-javascript-fixtures",
+  "version": "0.0.2-next.2",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/mattpocock/sextant"
+  },
+  "homepage": "https://github.com/mattpocock/sextant",
+  "author": {
+    "name": "Matt Pocock",
+    "email": "mpocock@me.com"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@sextant-tools/core": "0.1.0-next.0",
+    "@sextant-tools/plugin-javascript-operations": "0.1.0-next.5",
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.1",
+    "handlebars": "^4.7.6"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.15"
+  }
+}

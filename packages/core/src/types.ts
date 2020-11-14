@@ -42,6 +42,7 @@ export interface FlattenedFeature {
   actors: Actor[];
   eventPayloads: string;
   name: string;
+  description: string;
   id: string;
 }
 
