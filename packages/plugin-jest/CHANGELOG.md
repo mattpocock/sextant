@@ -1,5 +1,21 @@
 # @sextant-tools/plugin-jest
 
+## 0.0.2-next.5
+
+### Patch Changes
+
+- Fixed a bug where jest-plugin .d.ts files were incorrectly built
+
+## 0.0.2-next.4
+
+### Patch Changes
+
+- Added human id to ensure strings always remain unique.
+- Added the mockEvent utility to the context of describeSextantFeature
+- Updated dependencies [undefined]
+- Updated dependencies [undefined]
+  - @sextant-tools/plugin-javascript-fixtures@0.0.2-next.4
+
 ## 0.0.2-next.3
 
 ### Patch Changes

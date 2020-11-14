@@ -1,5 +1,12 @@
 # @sextant-tools/plugin-jest
 
+## 0.0.2-next.4
+
+### Patch Changes
+
+- Added human id to ensure strings always remain unique.
+- Added the mockEvent utility to the context of describeSextantFeature
+
 ## 0.0.2-next.3
 
 ### Patch Changes
