@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/plugin-javascript-fixtures",
-  "version": "0.0.2-next.4",
+  "version": "0.0.2-next.6",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mattpocock/sextant"

@@ -14,7 +14,8 @@ export const describeSextantFeature = (featureName, testFunc) => {
         testsRegistered.push(name);
         test(name, ...args);
       },
-      mockEvent: (eventName) => mockSextantEvent(featureName, eventName),
+      mockEvent: (eventName, event) =>
+        mockSextantEvent(featureName, eventName, event),
       testCoverage: () => {
         test('Coverage of all Sextant scenarios', () => {
           desiredScenarios.forEach((scenarioName) => {

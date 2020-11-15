@@ -1,5 +1,17 @@
 # @sextant-tools/plugin-jest
 
+## 0.0.2-next.6
+
+### Patch Changes
+
+- Bugfix to sextant fixtures
+
+## 0.0.2-next.5
+
+### Patch Changes
+
+- de253c6: Added the ability to add in partial mocks for event mocking
+
 ## 0.0.2-next.4
 
 ### Patch Changes
