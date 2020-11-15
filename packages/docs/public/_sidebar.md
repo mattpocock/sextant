@@ -1,5 +1,7 @@
 - [Getting Started](/)
 - [Core Concepts](core-concepts.md)
+- Recipes
+  - [Test-Driven-Development](test-driven-development-with-sextant.md)
 - [Plugins](plugins.md)
 - [Advanced](advanced.md)
 - [API Reference](api.md)
