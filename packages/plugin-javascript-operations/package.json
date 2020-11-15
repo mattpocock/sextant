@@ -1,6 +1,6 @@
 {
   "name": "@sextant-tools/plugin-javascript-operations",
-  "version": "0.1.0-next.6",
+  "version": "0.1.0",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mattpocock/sextant"
@@ -13,7 +13,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@graphql-codegen/typescript": "^1.17.11",
-    "@sextant-tools/core": "0.1.0-next.1",
+    "@sextant-tools/core": "0.1.0",
     "fs-extra": "^9.0.1",
     "graphql": "^15.4.0",
     "handlebars": "^4.7.6",

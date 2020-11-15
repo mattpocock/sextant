@@ -1,5 +1,24 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0
+
+### Minor Changes
+
+- 1838475: Changed terminology of services, environments and sequences to features, actors and scenarios
+
+### Patch Changes
+
+- f0b36be: Fixed a bug where failing GraphQL files were not being printed
+- 451ad11: Added a new type to SextantFeatures, which defines every event inside a feature
+- 838cd12: Fixed a bug with the previous deploy
+- ac2df35: Improved the typings of SextantHandler when it doesn't need to return an event
+- 59cbed8: Added an initial commit for plugin-jest, and added scenarios to the typings for plugin-javascript-operations
+- 942a3b8: Fixed a bug where 'never' would sometimes not be printed, causing a TS error
+- 7099bec: Rewrote plugins to print javascript and typescript declaration files
+- Updated dependencies [451ad11]
+- Updated dependencies [1838475]
+  - @sextant-tools/core@0.1.0
+
 ## 0.1.0-next.6
 
 ### Patch Changes

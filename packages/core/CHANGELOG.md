@@ -1,5 +1,15 @@
 # @sextant-tools/core
 
+## 0.1.0
+
+### Minor Changes
+
+- 1838475: Changed terminology of services, environments and sequences to features, actors and scenarios
+
+### Patch Changes
+
+- 451ad11: Added a new type to SextantFeatures, which defines every event inside a feature
+
 ## 0.1.0-next.1
 
 ### Patch Changes
