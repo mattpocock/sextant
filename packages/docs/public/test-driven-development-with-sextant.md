@@ -204,7 +204,7 @@ describeSextantFeature('getUser', (feature) => {
     expect(result.type).toEqual('USER');
   });
 
-  feature.test('notFound', () => {
+  feature.test('notFound', async () => {
     const result = await getUser(
       feature.mockEvent('GET_USER', { id: 'an-id-which-does-not-exist' }),
     );
@@ -213,7 +213,7 @@ describeSextantFeature('getUser', (feature) => {
     expect(result.type).toEqual('NOT_FOUND');
   });
 
-  feature.test('noPermission', () => {
+  feature.test('noPermission', async () => {
     const result = await getUser(
       feature.mockEvent('GET_USER', {
         id: 'an-id-which-you-do-not-have-permission-to-view',
