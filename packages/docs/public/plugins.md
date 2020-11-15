@@ -14,12 +14,6 @@ Most of our plugins currently work with Javascript, but **Sextant plugins can pr
 
 All our Javascript plugins can be used with Typescript. We generate full `.d.ts` files.
 
-### Operations
-
-The `operations` package is a library of utility functions for implementing your application with Sextant.
-
-It also contains various typings that Sextant uses internally for its plugin system.
-
 ---
 
 ### Test Fixtures
@@ -235,3 +229,11 @@ handlers.forEach(({ handler, feature }) => {
 ```
 
 > This documentation is incomplete! Please help us out by requesting more info.
+
+---
+
+### Operations
+
+The `operations` package is a library of utility functions for implementing your application with Sextant.
+
+It also contains various typings that Sextant uses internally for its plugin system.
