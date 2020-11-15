@@ -230,7 +230,7 @@ describeSextantFeature('getUser', (feature) => {
 });
 ```
 
-> The `notFound` and `noPermission` cases will fail for now, because we are returning a mocked `USER` event from our function.
+The `notFound` and `noPermission` cases will fail, because we are returning a mocked `USER` event from our function. If we were to continue developing this, we'd need to use a mocker like [jest.mock](https://jestjs.io/docs/en/mock-functions) to test how the function performed when things failed. But let's leave it here for now.
 
 #### feature.mockEvent
 
