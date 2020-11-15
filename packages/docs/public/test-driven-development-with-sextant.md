@@ -54,7 +54,7 @@ A successful call happens when the lambda sends a `GET_USER` event to cognito, a
 
 Things won't always succeed, though. Sometimes, we'll provide some incorrect information, and Cognito will reply with a `NOT_FOUND` event.
 
-> Note: You can press the `Duplicate` button at the top right of the "Success" panel to use the same Actor structure for a new case.
+> You can press the `Duplicate` button at the top right of the "Success" panel to quickly duplicate a scenario.
 
 ![Diagram of a Not Found case](/images/get-users-not-found.png)
 
