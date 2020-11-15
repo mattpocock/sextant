@@ -11,10 +11,10 @@
       "path": "./packages/plugin-javascript-express"
     },
     {
-      "path": "./packages/plugin-jest"
+      "path": "./packages/plugin-javascript-fixtures"
     },
     {
-      "path": "./packages/plugin-javascript-fixtures"
+      "path": "./packages/plugin-jest"
     },
   ]
 }
