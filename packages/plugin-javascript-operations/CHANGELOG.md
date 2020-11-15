@@ -1,5 +1,13 @@
 # @sextant-tools/plugin-javascript-operations
 
+## 0.1.0-next.6
+
+### Patch Changes
+
+- 451ad11: Added a new type to SextantFeatures, which defines every event inside a feature
+- Updated dependencies [451ad11]
+  - @sextant-tools/core@0.1.0-next.1
+
 ## 0.1.0-next.5
 
 ### Patch Changes

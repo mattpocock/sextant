@@ -1,6 +1,6 @@
 {
   "name": "sextant",
-  "version": "0.4.0-next.1",
+  "version": "0.4.0-next.2",
   "bin": {
     "sextant": "bin/index.js"
   },
@@ -20,7 +20,7 @@
   "license": "MIT",
   "description": "Chart application flows, then implement them in code",
   "dependencies": {
-    "@sextant-tools/core": "0.1.0-next.0",
+    "@sextant-tools/core": "0.1.0-next.1",
     "body-parser": "^1.19.0",
     "commander": "^6.2.0",
     "express": "^4.17.1",
@@ -59,13 +59,13 @@
     ]
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.2",
     "@craco/craco": "^5.7.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/classnames": "^2.2.11",
     "@types/express": "^4.17.8",
+    "@types/fs-extra": "^9.0.3",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.53",
@@ -73,9 +73,9 @@
     "@types/react-router-dom": "^5.1.6",
     "@xstate/react": "^1.0.1",
     "classnames": "^2.2.6",
-    "graphql": "^15.3.0",
+    "graphql": "^15.4.0",
     "human-id": "^2.0.1",
-    "immer": "^7.0.9",
+    "immer": "7.0.14",
     "react": "16.13.1",
     "react-ace": "^9.1.4",
     "react-contenteditable": "^3.3.5",

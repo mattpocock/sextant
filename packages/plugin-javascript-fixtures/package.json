@@ -1,6 +1,6 @@
 {
-  "name": "@sextant-tools/plugin-javascript-express",
-  "version": "0.1.0-next.8",
+  "name": "@sextant-tools/plugin-javascript-fixtures",
+  "version": "0.0.2-next.6",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mattpocock/sextant"
@@ -14,6 +14,12 @@
   "dependencies": {
     "@sextant-tools/core": "0.1.0-next.1",
     "@sextant-tools/plugin-javascript-operations": "0.1.0-next.6",
-    "handlebars": "^4.7.6"
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.1",
+    "handlebars": "^4.7.6",
+    "human-id": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.15"
   }
 }

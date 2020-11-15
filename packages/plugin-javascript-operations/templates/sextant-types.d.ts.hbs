@@ -3,11 +3,16 @@ export interface SextantFeatures {
   '{{this.name}}': {
     scenarios:
       {{#each this.scenarios}}
-        | "{{this.name}}"
+      | "{{this.name}}"
       {{/each}}
       {{#unless this.scenarios}}
       never;
       {{/unless}}
+    events: {
+      {{#each this.allSteps}}
+      '{{this.event}}': {{pascalcase ../name}}__{{this.event}} & { type: "{{this.event}}" }
+      {{/each}}
+    }
     actors: {
       {{#each this.actorsWithSteps}}
       '{{this.name}}': {
@@ -152,6 +157,11 @@ export type SextantEvent<
   SextantFeatures[IFeature]["actors"][IFrom]["to"][ITarget]["in"],
   { type: IType }
 >;
+
+export type SextantEventByFeature<
+  IFeature extends keyof SextantFeatures,
+  IType extends keyof SextantFeatures[IFeature]['events']
+> = SextantFeatures[IFeature]['events'][IType];
 
 /**
  * Fetch all events from an environment to another environment,

@@ -1,26 +1,16 @@
 # @sextant-tools/plugin-jest
 
-## 0.0.2-next.7
-
-### Patch Changes
-
-- Bugfix to sextant fixtures
-- Updated dependencies [undefined]
-  - @sextant-tools/plugin-javascript-fixtures@0.0.2-next.6
-
 ## 0.0.2-next.6
 
 ### Patch Changes
 
-- de253c6: Added the ability to add in partial mocks for event mocking
-- Updated dependencies [de253c6]
-  - @sextant-tools/plugin-javascript-fixtures@0.0.2-next.5
+- Bugfix to sextant fixtures
 
 ## 0.0.2-next.5
 
 ### Patch Changes
 
-- Fixed a bug where jest-plugin .d.ts files were incorrectly built
+- de253c6: Added the ability to add in partial mocks for event mocking
 
 ## 0.0.2-next.4
 
@@ -28,20 +18,15 @@
 
 - Added human id to ensure strings always remain unique.
 - Added the mockEvent utility to the context of describeSextantFeature
-- Updated dependencies [undefined]
-- Updated dependencies [undefined]
-  - @sextant-tools/plugin-javascript-fixtures@0.0.2-next.4
 
 ## 0.0.2-next.3
 
 ### Patch Changes
 
-- 451ad11: Added mock fixtures to output
-- Updated dependencies [451ad11]
+- 451ad11: Initial commit
 - Updated dependencies [451ad11]
   - @sextant-tools/core@0.1.0-next.1
   - @sextant-tools/plugin-javascript-operations@0.1.0-next.6
-  - @sextant-tools/plugin-javascript-fixtures@0.0.2-next.3
 
 ## 0.0.2-next.2
 

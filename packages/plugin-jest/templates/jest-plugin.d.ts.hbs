@@ -1,11 +1,21 @@
-import { SextantFeatures } from './sextant-types.generated';
+import {
+  SextantFeatures,
+  SextantEventByFeature,
+} from './sextant-types.generated';
 
-export interface SextantTestFeatureContext<IScenarioName extends string> {
+export interface SextantTestFeatureContext<
+  IFeature extends keyof SextantFeatures,
+  IScenarioName extends string
+> {
   test: SextantTest<IScenarioName>;
   /**
    * Test whether all scenarios have been tested
    */
   testCoverage: () => void;
+  mockEvent: <IType extends keyof SextantFeatures[IFeature]['events']>(
+    type: IType,
+    event?: Omit<Partial<SextantEventByFeature<IFeature, IType>>, 'type'>
+  ) => SextantEventByFeature<IFeature, IType>;
 }
 
 export interface SextantTest<IScenarioName extends string> {
@@ -19,6 +29,7 @@ export function describeSextantFeature<IFeature extends keyof SextantFeatures>(
   featureName: IFeature,
   testFunc: (
     testContext: SextantTestFeatureContext<
+      IFeature,
       SextantFeatures[IFeature]['scenarios']
     >,
   ) => void,

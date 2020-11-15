@@ -1,0 +1,10 @@
+import { SextantFeatures, SextantEventByFeature } from './sextant-types.generated';
+
+export function mockSextantEvent<
+  IFeature extends keyof SextantFeatures,
+  IType extends keyof SextantFeatures[IFeature]['events']
+>(
+  feature: IFeature,
+  type: IType,
+  event?: Omit<Partial<SextantEventByFeature<IFeature, IType>>, 'type'>
+): SextantEventByFeature<IFeature, IType>;

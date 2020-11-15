@@ -30,10 +30,17 @@ export const buildBaseTypeFiles = (
       allSteps,
     );
 
+    const uniqueStepSet = new Set<string>();
+
     return {
       ...feature,
       typescriptDef,
       actorsWithSteps: getActorsWithSteps(feature.actors, allSteps),
+      allSteps: allSteps.filter((step) => {
+        const hasNotOccurredBefore = !uniqueStepSet.has(step.event);
+        uniqueStepSet.add(step.event);
+        return hasNotOccurredBefore;
+      }),
     };
   });
 
