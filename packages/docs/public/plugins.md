@@ -8,6 +8,8 @@ Most of our plugins currently work with Javascript, but **Sextant plugins can pr
 
 > If you've got an idea for a plugin you'd like to see - submit an issue at our [repository](https://github.com/mattpocock/sextant)! We'd love to hear about it.
 
+---
+
 ## Javascript
 
 All our Javascript plugins can be used with Typescript. We generate full `.d.ts` files.
@@ -16,7 +18,158 @@ All our Javascript plugins can be used with Typescript. We generate full `.d.ts`
 
 The `operations` package is a library of utility functions for implementing your application with Sextant.
 
-_TODO - Documentation incoming_
+It also contains various typings that Sextant uses internally for its plugin system.
+
+---
+
+### Test Fixtures
+
+Generate fixtures for tests based on event types declared in Sextant.
+
+#### Installation
+
+`yarn add @sextant-tools/plugin-javascript-fixtures`
+
+```js
+// sextant-config.js
+module.exports = {
+  plugins: ['@sextant-tools/plugin-javascript-fixtures'],
+};
+```
+
+#### mockSextantEvent
+
+This function allows you to mock any event declared in Sextant. For instance, an event declared like this:
+
+```graphql
+type USER {
+  name: String!
+  phoneNumber: String!
+}
+```
+
+When called like this:
+
+```js
+const event = mockSextantEvent('featureName', 'USER');
+```
+
+Will return an object with this shape:
+
+```json
+{
+  "name": "some-random-string",
+  "phoneNumber": "another-random-string",
+  "type": "USER"
+}
+```
+
+##### Overrides
+
+You can also pass overrides into `mockSextantEvent`. This declaration...
+
+```js
+const event = mockSextantEvent('featureName', 'USER', {
+  name: 'Charles',
+});
+```
+
+...results in this:
+
+```json
+{
+  "name": "Charles",
+  "phoneNumber": "another-random-strings",
+  "type": "USER"
+}
+```
+
+---
+
+### Jest
+
+Describe and structure your [Jest](https://jestjs.io/) tests based on your features. Get meaningful coverage reports based on actual scenarios, not code coverage.
+
+#### Installation
+
+`yarn add @sextant-tools/plugin-jest`
+
+```js
+// sextant-config.js
+module.exports = {
+  plugins: ['@sextant-tools/plugin-jest'],
+};
+```
+
+#### describeSextantFeature
+
+`describeSextantFeature` allows you to build a Jest `describe` block from a feature declared in Sextant.
+
+Let's say you have a `getUsers` feature declared in Sextant with two scenarios: `success` and `failure`:
+
+```js
+describeSextantFeature('getUsers', (feature) => {
+  feature.test('success', () => {
+    // Test what happens in the success case
+  });
+
+  feature.test('failure', () => {
+    // Test what happens in the failure case
+  });
+});
+```
+
+> `describeSextantFeature` is a one-to-one replacement with `describe`, so you can use it to contain `it()` calls too.
+
+#### Feature Context
+
+The test function called by `describeSextantFeature` exposes the `feature` argument, which contains some functions to help you test Sextant features.
+
+##### feature.test
+
+As described above, this tests a scenario of a feature. Tests performed in this way count towards the internal count `testCoverage` uses to check full coverage of Sextant scenarios.
+
+##### feature.testCoverage
+
+This function tests whether you have tested all scenarios specified in Sextant. If one or more is not covered, it will fail the test.
+
+```js
+describeSextantFeature('getUsers', (feature) => {
+  feature.test('success', () => {
+    // Test what happens in the success case
+  });
+
+  /**
+   * This will fail, because we haven't tested the
+   * failure case using feature.test()
+   */
+  feature.testCoverage();
+});
+```
+
+`testCoverage` is scoped to the feature you're currently testing, and does not count tests conducted outside of the block it's called in.
+
+##### feature.mockEvent
+
+`mockEvent` is a shorthand for `mockSextantEvent`, declared in the fixtures package above. It allows you to mock events specific to that feature, like so:
+
+```js
+describeSextantFeature('getUsers', (feature) => {
+  feature.test('success', () => {
+    // Mock a GET_USERS event that should be successful
+    const getUsers = feature.mockEvent('GET_USERS');
+  });
+
+  feature.test('failure', () => {
+    // Mock a GET_USERS event that should end in failure
+    const getUsers = feature.mockEvent('GET_USERS', {
+      id: undefined,
+    });
+  });
+});
+```
+
+---
 
 ### Express
 
@@ -82,15 +235,3 @@ handlers.forEach(({ handler, feature }) => {
 ```
 
 > This documentation is incomplete! Please help us out by requesting more info.
-
-### Jest
-
-Describe and structure your [Jest](https://jestjs.io/) tests based on your features. Get meaningful coverage reports based on actual scenarios, not code coverage.
-
-_TODO - Documentation incoming_
-
-### Test Fixtures
-
-Generate fixtures for tests based on event types declared in Sextant.
-
-_TODO - Documentation incoming_
