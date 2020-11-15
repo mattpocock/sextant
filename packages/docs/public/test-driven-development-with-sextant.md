@@ -1,6 +1,6 @@
 # Test-Driven-Development with Sextant
 
-**TL;DR**: Using Sextant for Test Driven Development (TDD) is heavenly. You can plan and document business requirements visually, generate mock fixtures, and get coverage reports based on your desired functionality.
+**TL;DR**: Using Sextant for Test Driven Development (TDD) is heavenly. You can plan and document business requirements visually, generate mock fixtures, and get coverage reports based on desired functionality instead of lines of code.
 
 ## What is Sextant?
 
