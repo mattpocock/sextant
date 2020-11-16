@@ -96,7 +96,7 @@ Since TDD is all about writing tests before you start writing code, let's start 
 import { describeSextantFeature } from '../sextant-jest.generated';
 ```
 
-3. Let's use that function to describe our Sextant feature, and bootsrap a test for the success case:
+3. Let's use that function to describe our Sextant feature, and bootstrap a test for the success case:
 
 ```ts
 // getUser.test.ts
