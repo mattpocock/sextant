@@ -33,10 +33,10 @@ export const ScenarioDiagramWrapper: React.FC<{
               tagName="h2"
               onChange={(e) => onChangeTitle(e.target.value)}
             ></ContentEditable>
-            <div className="px-3 flex-shrink-0">
+            <div className="px-3 flex-shrink-0 py-2">
               <button
                 onClick={onDuplicate}
-                className="text-xs uppercase px-3 py-2"
+                className="text-xs uppercase px-3 py-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow"
               >
                 Duplicate
               </button>
