@@ -3,6 +3,7 @@ import React from 'react';
 import ContentEditable from 'react-contenteditable';
 import HeroIconPlus from './icons/HeroIconPlus';
 import HeroIconX from './icons/HeroIconX';
+import { RaisedButton } from './RaisedButton';
 import { scenarioDiagramMachine } from './ScenarioDiagram.machine';
 import { StepArrow } from './StepArrow';
 
@@ -34,12 +35,9 @@ export const ScenarioDiagramWrapper: React.FC<{
               onChange={(e) => onChangeTitle(e.target.value)}
             ></ContentEditable>
             <div className="px-3 flex-shrink-0 py-2">
-              <button
-                onClick={onDuplicate}
-                className="text-xs uppercase px-3 py-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow"
-              >
-                Duplicate
-              </button>
+              <RaisedButton onClick={onDuplicate}>
+                Duplicate Scenario
+              </RaisedButton>
             </div>
           </div>
           <ContentEditable

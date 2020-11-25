@@ -20,6 +20,7 @@ import {
 } from './components/ScenarioDiagram';
 import { useSearchParams } from './components/useSearchParams';
 import { getDatabaseSaveMode } from './components/getDatabaseSaveMode';
+import { RaisedButton } from './components/RaisedButton';
 
 const HomePage = () => {
   const history = useHistory();
@@ -135,16 +136,15 @@ const HomePage = () => {
                   },
                 )}
               </div>
-              <button
+              <RaisedButton
                 onClick={() => {
                   dispatch({
                     type: 'ADD_FEATURE',
                   });
                 }}
-                className="px-3 py-1 text-sm text-gray-700 bg-gray-200"
               >
                 Add Feature
-              </button>
+              </RaisedButton>
             </div>
             <div className="flex flex-grow overflow-hidden">
               <div className="flex-col flex-1 p-6 space-y-6 overflow-y-auto">
@@ -267,8 +267,7 @@ const HomePage = () => {
                   );
                 })}
                 <div>
-                  <button
-                    className="h-12 px-4 bg-gray-200"
+                  <RaisedButton
                     onClick={() => {
                       dispatch({
                         type: 'ADD_SCENARIO',
@@ -276,8 +275,8 @@ const HomePage = () => {
                       });
                     }}
                   >
-                    New Scenario
-                  </button>
+                    Create New Scenario
+                  </RaisedButton>
                 </div>
               </div>
               <div className="flex-shrink-0 p-6 space-y-6 overflow-y-auto border-l-2">
